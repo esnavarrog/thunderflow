@@ -1,0 +1,24 @@
+<% if @deliveries.present? %>
+    <% @deliveries.each do |delivery| %>
+        $('#status-list-<%= delivery.id %>').replaceWith("<div id='status-list-<%= delivery.id %>' class='status-list status-list-<%= delivery.status %>'><span><%= enum_i18n(Delivery, :statuses, delivery.status) %></span><div></div></div>");
+        $('#status-<%= delivery.id %>').html("<%= enum_i18n(Delivery, :statuses, delivery.status) %>");
+        $("#last-status-delivery").replaceWith("<%= j render partial:'deliveries/partials/last_status_delivery', locals:{delivery:delivery} %>");
+        <% if current_user.delivery? && delivery.finish? %>
+            $('#delivery-id-<%= delivery.id %>').fadeOut('fast');
+        <% else %>
+            $('#delivery-id-<%= delivery.id %>').replaceWith("<%= j render partial:'deliveries/delivery', locals:{delivery:delivery} %>");
+        <% end %>
+    <% end %>
+<% end %>
+swal({title:'Genial!', text:'Actualización correcta', icon:'success', button:"Aceptar"})
+
+<% if @statuses.present? %>
+    $('#statuses-render').html("<%= j render @statuses %>");
+    $('#paginate-index').html("<%= j paginate @statuses, remote: true %>");
+<% end %>
+
+
+$("input[name='ids[]']").remove();
+$('#button-send-status, #button-asign-massive, .container-massive-select').fadeOut('slow');
+$('.loading').addClass('d-none');
+$('#modal').modal('hide');

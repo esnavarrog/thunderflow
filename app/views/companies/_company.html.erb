@@ -1,0 +1,125 @@
+<% if controller_name == 'welcome' || params[:welcome].present? %>
+    <div id="card-<%= company.id %>" class="col-sm-12 col-md-6 col-lg-4 py-2">
+        <div class="card shadow-sm position-relative">
+            <div class="card-header" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%= company.id %>" aria-expanded="false" aria-controls="collapseExample">
+                <div class="d-flex justify-content-between align-items-center ">
+                    <h1 class="text-truncate">
+                        <%= company.name.try(:titleize) %>
+                    </h1>
+                </div>
+                <div class="card-sub">
+                    <%= company.address_concat %>
+                </div>
+            </div>
+            <%= link_to edit_company_path(company, welcome: true), class:'btn btn-primary-link', remote:true do %>
+                <i class="bi bi-pencil-square"></i>
+            <% end %>
+            <div id="collapse-<%= company.id %>" class="card-body collapse" >
+                <ul class="list-group list-group-flush border rounded">
+                    <li class="list-group-item">
+                        <div>Rut</div>
+                        <%= company.rut.present? ? format_rut(company.rut) : 'Información Faltante' %>
+                    </li>
+                    <li class="list-group-item">
+                        <div>Razón Social</div>
+                        <%= company.fantasy_name.present? ? company.fantasy_name : 'Información Faltante' %>
+                    </li>
+                    <li class="list-group-item">
+                        <div>Dirección</div>
+                        <%= company.address_concat %>
+                    </li>
+                    <li class="list-group-item">
+                        <div>Comuna</div>
+                        <%= company.commune.present? ? company.commune : 'Información Faltante' %>
+                    </li>
+                    <li class="list-group-item">
+                        <div>Email Contacto</div>
+                        <%= company.email.present? ? company.email : 'Información Faltante' %>
+                    </li>
+                    <li class="list-group-item">
+                        <div>Número de Contacto</div>
+                        <%= company.phone_number.present? ? "+56#{company.phone_number}" : 'Información Faltante' %>
+                    </li>
+                    <li class="list-group-item">
+                        <div>Dirección Web</div>
+                        <%= company.web_address.present? ? company.web_address : 'Información Faltante' %>
+                    </li>
+                    <li class="list-group-item">
+                        <div>Estado Empresa</div>
+                        <%= enum_i18n(Company, :statuses, company.status) %>
+                    </li>
+                </ul>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between">
+                    <%= link_to company_path(company), class:'btn btn-outline-primary' do %>
+                        <i class="bi bi-eye"></i>
+                    <% end %>
+                    <%= link_to 'Agendar retiro', get_deliver_path(company_id:company), class:'btn btn-outline-primary', remote:true %>
+                </div>
+            </div>
+        </div>
+    </div>
+<% else %>
+    <div id="company-<%= company.id %>">
+        <div class="px-3 py-2 mb-1 bg-white shadow-sm rounded">
+            <div class="d-flex justify-content-between align-items-center">
+                <%= link_to company_path(company), class:'no-decoration' do %>
+                    <div class="commune-list">
+                        Empresa: <%= company.name.present? ? company.name.try(:titleize) : company.fantasy_name.try(:titleize) %>
+                    </div>
+                    <div class="region-list">
+                        Comuna: <%= company.commune %>
+                    </div>
+                    <div class="id-list">
+                        Id: <%= company.id %>
+                    </div>
+                <% end %>
+
+                <div class="d-flex justify-content-between align-items-center">
+
+                    <div class="">
+                        <div class="badge rounded-pill bg-<%= company.klass_statuses %> mb-1 w-100">
+                            <%= enum_i18n(Company, :statuses, company.status) %>
+                        </div>
+
+                        <div class="date-list">
+                            <%= company.rut %>
+                        </div>
+
+                        <div class="date-list branches-count-<%= company.id %>">
+                            <%= "#{company.branches.count} sucursales" %>
+                        </div>
+                    </div>
+                    <div class="btn-group dropstart">
+                        <div class="btn btn-link pe-0 ps-3 btn-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                            <%= inline_svg_tag('icons/icon_ellipsis.svg', class:'icon-info')%>
+                        </div>
+                        <ul class="dropdown-menu shadow">
+                            <li>
+                                <%= link_to company_path(company), class:'dropdown-item text-success d-flex justify-content-between align-items-center' do %>
+                                    <span>Ver</span> <i class="fa-solid fa-chevron-right"></i>
+                                <% end %>
+                            </li>
+                            <li>
+                                <%= link_to edit_company_path(company), class:'dropdown-item text-success d-flex justify-content-between align-items-center', remote:true do %>
+                                    <span>Editar</span> <i class="fa-solid fa-pencil"></i>
+                                <% end %>
+                            </li>
+                            <li>
+                                <%= link_to new_company_branch_path(company), class:'dropdown-item text-success d-flex justify-content-between align-items-center', remote:true do %>
+                                    <span>Nueva Sucursal</span> <i class="fa-solid fa-code-branch"></i>
+                                <% end %>
+                            </li>
+                            <li>
+                                <%= link_to get_deliver_path(company_id:company), class:'dropdown-item text-success d-flex justify-content-between align-items-center', remote:true do %>
+                                    <span>Nueva Solicitud</span> <i class="fa-solid fa-plus"></i>
+                                <% end %>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<% end %>

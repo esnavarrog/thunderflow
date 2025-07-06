@@ -1,0 +1,8 @@
+
+<%= form_tag download_for_ids_path(format: :xlsx), method: :get do %>
+    <div class="form-group">
+        <%= label_tag :ids, 'Ingresa tus ids separados por comas' %>
+        <%= text_field_tag :ids, {}, class:'form-control' %>
+    </div>
+    <%= submit_tag 'Descargar', class:'btn btn-primary' %>
+<% end %>

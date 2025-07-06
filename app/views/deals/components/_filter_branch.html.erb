@@ -1,0 +1,2 @@
+    <%= label_tag :branch_id, 'Filtro sucursal' %>
+    <%= select_tag 'branch_id[]', options_from_collection_for_select(@company.branches, :id, lambda { |branch| branch.name.titleize }, selected: @branch.present? ? @branch.id : nil), {class:'form-control js-basic-single select_company_deal', multiple: "multiple", placeholder:'Filtrar por sucursal', data:{url:select_company_path, param:"branch_id"}} %>

@@ -1,0 +1,20 @@
+<%= form_tag request_xlsx_path(format: :xlsx), method: :get, id: 'select-date' do %>
+    <%= hidden_field_tag :status, params[:status], class:'status', id:'status-select' %>
+
+    <div class="row">
+        <div class="form-group form-calendar form-calendar-label col-sm-12 col-md-6">
+            <%= label_tag :date_start, 'Fecha Inicio' %>
+            <%= text_field_tag :date_start, {}, class:'form-control datetimepicker', placeholder:'Fecha de Inicio'  %>
+        </div>
+        <div class="form-group form-calendar form-calendar-label col-sm-12 col-md-6">
+            <%= label_tag :date_end, 'Fecha Final' %>
+            <%= text_field_tag :date_end, {}, class:'form-control datetimepicker', placeholder:'Fecha Final'  %>
+        </div>
+
+    </div>
+    <div class="d-flex justify-content-end">
+        <%= button_tag name: 'commit', type: :submit, class:'btn btn-primary mt-3' do %>
+            <i class="bi bi-cloud-download"></i> Exportar
+        <% end %>
+    </div>
+<% end %>

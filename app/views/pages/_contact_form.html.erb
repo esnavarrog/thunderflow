@@ -1,0 +1,18 @@
+<%= form_tag contact_path, method: :get, class:'row', remote:true do |f| %>
+  <div class="form-group">
+    <%= label_tag :email, 'Proporciona tu email' %>
+    <%= text_field_tag :email, {}, class:'form-control' %>
+    <div class="error"></div>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag :message, 'Déjanos tu motivo del contacto' %>
+    <%= text_area_tag :message, nil, {class:'form-control'} %>
+    <div class="error"></div>
+  </div>
+
+  <div class="form-group">
+    <%= submit_tag 'Enviar', class:'btn btn-primary mt-3 w-100' %>
+  </div>
+
+<%end%>

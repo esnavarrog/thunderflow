@@ -1,0 +1,145 @@
+<% if @deliveries.present? %>
+<%= hidden_field_tag :delivery_ids, "#{@deliveries.pluck(:id)}" %>
+    <div class="shadow-sm">
+        <div class="title-deal d-flex justify-content-between">
+            <div>
+                <span class="rounded text-white py-1 px-2 bg-info"><%= @deliveries.count %></span> Solicitudes pendientes de pago del cliente <%= @company.try(:name) %>
+            </div>
+          <% unless current_user.client? %>
+            <span>
+                <%= link_to download_deliveries_deal_path(select_ids: @deliveries.pluck(:id), format: :xlsx), class:'btn btn-primary' do %>
+                    Descargar para editar <i class="bi bi-arrow-bar-down"></i>
+                <% end %>
+            </span>
+          <% end %>
+        </div>
+        <div class="table-responsive max-scroll title-deal-table">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th class="th-date">Fechas</th>
+                        <th>Descripción</th>
+                        <th>Direc. Retiro</th>
+                        <th>Entrega</th>
+                        <% if current_user.admin? %>
+                            <th>Repartidor</th>
+                        <% end %>
+                        <th>Estado</th>
+                        <th>Precio</th>
+                        <% if current_user.admin? %>
+                            <th>Pago repartidor</th>
+                        <% end %>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @deliveries.each do |delivery| %>
+                        <tr>
+                            <td class="prices-deliveries" data-id="<%= delivery.id %>">
+                                <%= link_to delivery.id, delivery %>
+                            </td>
+                            <td>
+                                <div class="dates-deal">
+                                    <div>
+                                        Fecha Retiro:
+                                    </div>
+                                    <%= format_date delivery.date_start %>
+                                </div>
+                                <div class="dates-deal">
+                                    <div>
+                                        Fecha Entrega:
+                                    </div>
+                                    <%= format_date delivery.date_deliver_at %>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="bottom">
+                                    <%= delivery.description %>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="top">
+                                    <%= delivery.branch.commune %>
+                                </div>
+                                <div class="bottom">
+                                    <%= delivery.branch.address_concat %>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="top">
+                                    <%= delivery.commune %>
+                                </div>
+                                <div class="bottom">
+                                    <%= delivery.address_concat %>
+                                </div>
+                            </td>
+                            <% if current_user.admin?%>
+                                <td>
+                                    <% if delivery.user_asign_id %>
+                                        <%= User.find(delivery.user_asign_id).try(:name) || User.find(delivery.user_asign_id).try(:email) %>
+                                    <% else %>
+                                        Sin repartidor
+                                    <% end %>
+                                </td>
+                            <% end %>
+
+                            <td>
+                                <%= enum_i18n(Delivery, :statuses, delivery.status) %>
+                            </td>
+                            <td>
+                                <div class="form-group m-0">
+                                  <% if current_user.admin? %>
+                                    <input type="text" class="<%= delivery.price.present? ? "disabled" : "" %>" value="<%= delivery.price %>" name="" placeholder="--" id="price-<%= delivery.id %>">
+                                  <% else %>
+                                    <%= number_to_currency(delivery.price.to_f / 1.19, precision: 0) %>
+                                  <% end %>
+                                </div>
+                            </td>
+                            <% if current_user.admin? %>
+                                <td>
+                                    <div class="form-group m-0">
+                                        <input type="text" class="<%= delivery.price_deliver.present? ? "disabled" : "" %>" value="<%= delivery.price_deliver %>" name="" placeholder="--" id="price-deliver-<%= delivery.id %>">
+                                    </div>
+                                </td>
+                            <% end %>
+                            <% if current_user.admin? %>
+                              <td>
+                                  <div class="btn btn-outline-primary edit-prices" data-id="<%= delivery.id %>">
+                                      <i class="fa-solid fa-pen-to-square"></i>
+                                  </div>
+                              </td>
+                              <td>
+                                  <div class="btn btn-outline-primary save-prices" data-id="<%= delivery.id %>">
+                                      <i class="fa-solid fa-floppy-disk"></i>
+                                  </div>
+                              </td>
+                            <% end %>
+                            <td>
+                                <div class="btn btn-outline-primary delete-delivery" data-id="<%= delivery.id %>">
+                                    <i class="fa-solid fa-trash"></i>
+                                </div>
+                            </td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+    <div class="d-flex justify-content-end mt-2">
+        <div class="btn btn-primary" id="get-result" data-company="<%= @company.id %>" data-url="<%= get_result_prices_path %>">
+            <%= current_user.client? ? 'Recalcular' : 'Calcular' %>
+        </div>
+    </div>
+    <div id="calc-prices">
+
+      <%= render partial:'deals/form', locals:{ ids: @deliveries.ids } if current_user.client? %>
+    </div>
+<% else %>
+    <div class="d-flex align-items-center justify-content-center p-3 my-3 rounded shadow-sm">
+        El cliente no tiene solicitudes pendientes
+    </div>
+<% end %>

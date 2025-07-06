@@ -1,0 +1,22 @@
+$('.modal-title').html('Agrega tu Solicitud')
+// $('#modal-body-select').html('<%= j render 'branches/partials/select_branch' %>')
+$('#branches').html("<%= j render @branches %>")
+// mostrar datos sucursal, y formulario de despacho
+$('.modal-body').html('<%= j render "deliveries/form" %>')
+$('.branches-count-<%= @company.id %>').html("<%= "#{@company.branches.count} sucursales" %>")
+swal({title:'Genial!', text:"Tu sucursal ha sido inscrita exitosamente. Solicita un despacho en el siguiente formulario.", icon:'success', button:"Aceptar"})
+
+$(".datetimepicker").flatpickr({
+    dateFormat: "d-m-Y",
+    minDate: "today",
+    locale: "es"
+});
+$(".datetimepicker-time").flatpickr({
+    dateFormat: "H:i",
+    noCalendar: true,
+    locale: "es",
+    time_24hr: true,
+    enableTime: true
+});
+
+launchmap(<%= @delivery.latitude.present? ? @delivery.latitude : false %>, <%= @delivery.longitude.present? ? @delivery.longitude : false %>, 'delivery_');

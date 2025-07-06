@@ -1,0 +1,44 @@
+<%= form_with model: @commune_price, id: 'commune-price-new-form', class: 'container', data: { remote: true } do |commune_price_form| %>
+  <%= commune_price_form.hidden_field :name_profile, value: params[:name_profile] || @commune_price.name_profile %>
+  <div id="branch-info-step" class="row">
+    <% region_name = @commune_price.region_name || 'Metropolitana de Santiago' %>
+    <div class="col-12 col-sm-6">
+      <div class="form-group">
+        <%= commune_price_form.label :region_name, 'Región', class: 'form-label' %>
+        <%= commune_price_form.select :region_name, options_for_select(AdministrativeAreas::REGIONS.map { |region| [region[:name], region[:name]] }, selected: region_name), { prompt: 'Seleccione una región' }, class: 'form-control region-input js-basic-single', data: { url: communes_administrative_areas_path(commune_price: true) } %>
+        <div class="error"></div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6">
+      <div class="form-group">
+        <%= commune_price_form.label :commune, 'Comuna', class: 'form-label' %>
+        <% added_communes = CommunePrice.where(name_profile: params[:name_profile]).pluck(:commune) %>
+        <% available_communes = AdministrativeAreas.communes_regions(region_name).reject { |commune| added_communes.include?(commune) } %>
+        <%= commune_price_form.select :commune, options_for_select(available_communes.map { |commune| [commune, commune] }, selected: @commune_price.commune), { prompt: 'Seleccione una comuna' }, class: 'form-control commune-input js-basic-single' %>
+        <div class="error"></div>
+      </div>
+    </div>
+
+    <div class="col-12 col-sm-6">
+      <div class="form-group">
+        <%= commune_price_form.label :price, 'Precio comuna', class: 'form-label' %>
+        <%= commune_price_form.number_field :price, class:'form-control', placeholder:'6000' %>
+        <div class="error"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="address-step" class="row mt-2">
+
+    <div class="col-12 col-sm-6">
+      <div class="form-group">
+        <div class="d-grid">
+          <%= commune_price_form.submit 'Guardar', class: 'btn btn-primary'%>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<% end %>

@@ -1,0 +1,58 @@
+<div id="integration-<%= integration.id %>">
+  <div class="px-3 py-2 mb-1 bg-white shadow-sm rounded">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <%= link_to edit_company_integration_path(@company, integration), class:'no-decoration', remote: true do %>
+          <div class="commune-list">
+            <%= integration.name.titleize %>
+          </div>
+        <% end %>
+        <div class="region-list">
+          <%= integration.url %>
+        </div>
+        <div class="region-list">
+          <%= enum_i18n(Integration, :app_type, integration.app_type )%>
+        </div>
+      </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <div>
+            <div class="date-list">
+              <span><%= format_date_human integration.created_at %></span>
+            </div>
+            <div class="date-list">
+              <span><%= enum_i18n(Integration, :app_types, integration.app_type )%></span>
+            </div>
+          </div>
+          <% if policy(integration).edit? %>
+            <div class="btn-group dropstart">
+              <div class="btn btn-link pe-0 ps-3 btn-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                <%= inline_svg_tag('icons/icon_ellipsis.svg', class:'icon-info')%>
+              </div>
+              <ul class="dropdown-menu shadow">
+                <% if policy(integration).edit? %>
+                  <li>
+                      <%= link_to edit_integration_path(integration),
+                              class:'dropdown-item text-success d-flex justify-content-between align-items-center',
+                              remote:true do %>
+                          <span>Editar</span> <i class="fa-solid fa-pencil"></i>
+                      <% end %>
+                  </li>
+                <% end %>
+                <% if policy(integration).destroy? %>
+                  <li>
+                    <%= link_to integration_path(integration),
+                            class:'dropdown-item text-danger d-flex justify-content-between align-items-center',
+                            data:{confirm:'Estas seguro de eliminar el recurso de API, la perderás permanentemente.'},
+                            remote:true,
+                            method: :delete do %>
+                        <span>Eliminar</span> <i class="fa-solid fa-trash"></i>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </div>
+          <% end %>
+        </div>
+    </div>
+  </div>
+</div>

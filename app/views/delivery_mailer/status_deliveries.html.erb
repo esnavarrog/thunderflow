@@ -1,0 +1,32 @@
+
+<table class="body">
+    <tr class="">
+        <td>
+            <table>
+                <tr>
+                    <td class="text-center image-logo">
+                        <%= email_image_tag("logo_altyro.png") %>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="bottom-text">
+                <p>
+                    Hola <%= @delivery.complete_name.present? ? @delivery.complete_name.titleize : 'cliente' %>,
+                </p>
+                <% if @delivery.delivered? %>
+                    <%= render 'delivered' %>
+                <% elsif @delivery.returned? %>
+                    <%= render 'returned' %>
+                <% elsif @delivery.rejected? %>
+                    <%= render 'rejected' %>
+                <% else %>
+                    <%= render 'default' %>
+                <% end %>
+            </div>
+        </td>
+    </tr>
+</table>

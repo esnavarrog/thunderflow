@@ -1,0 +1,25 @@
+
+<%= render partial: 'partials/title_module', locals:{sector:'Empresas'} %>
+<% if @companies.present? %>
+    <div class="container mt-3">
+        <%= render 'companies/partials/filter_company' %>
+    </div>
+    <div class="container mt-3">
+        <div id="companies-index" class="row">
+            <%= render @companies %>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="paginate-deliveries paginates paginates-index">
+            <%= paginate @companies, remote: true %>
+        </div>
+    </div>
+<% else %>
+    <div class="container">
+        <div class="d-flex justify-content-center align-items-center rounded shadow-sm bg-white p-3 mt-3 text-primary">
+            <span>Agrega tu empresa para poder operar.</span>
+        </div>
+    </div>
+<% end %>
+

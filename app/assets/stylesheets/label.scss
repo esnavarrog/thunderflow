@@ -1,0 +1,41 @@
+@import 'variables';
+
+#label-body {
+  text-align: center;
+  width: 100%;
+  max-width: 700px;
+
+  h2 {
+    width: 100%;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+  }
+
+  table {
+    width: 100%;
+    font-size: 21px;
+    padding: 20px;
+
+    tbody {
+      width: 100%;
+    }
+  }
+
+  .separaor-table {
+    padding: 5px;
+  }
+
+  .label-title {
+    font-size: 24px;
+  }
+
+  .label-header {
+    font-size: 16px;
+  }
+
+  #label-birdti-logo {
+    width: 250px;
+    height: 150px;
+  }
+}

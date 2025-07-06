@@ -1,0 +1,5 @@
+// app/views/default_profile_prices/error.js.erb
+$('#liveToast').toast('show');
+$('#liveToast').find('strong').html('Error');
+$('#liveToast').find('small').html('<%= j format_time Time.current %>');
+$('#liveToast').find('.toast-body').html('Error al guardar el precio por defecto: <%= j @default_price.errors.full_messages.join(", ") %>');

@@ -1,0 +1,101 @@
+// Place all the styles related to the Profiles controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+@import 'variables';
+.box-profile-form{
+    form{
+        width: 100%;
+    }
+    input{
+        border: 0;
+        width: 100%;
+        padding: 5px .5rem;
+        transition: border-bottom 0.5s ease-in;
+    }
+    input:focus-visible{
+        outline: none;
+        border-bottom: 1px solid #ccc;
+    }
+    select{
+        padding: .5rem 5px;
+        border-radius: 6px;
+        border: 0;
+        background-color: $background;
+    }
+    .name{
+        color: $secondary;
+    }
+    .email{
+        color: $info;
+    }
+    .disabled{
+        opacity: 1 !important;
+    }
+    
+}
+
+.img-container{
+    overflow: hidden;
+    height: 18.75rem;
+    width: 18.75rem;
+    border-radius: 3rem;
+    border: 3px solid $primary;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:hover {
+        position: relative;
+        z-index: 1;
+        cursor: pointer;
+        &::before {
+            content: '';
+            position: absolute;
+            z-index: 2;
+            height: 18.75rem;
+            width: 18.75rem;
+            background: rgba(0,0,0,0.5);
+            pointer-events: none;
+        }
+        &:after {
+            content: 'Cambiar Imagen';
+            position: absolute;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #37BEB0 !important;
+            padding: 0.5rem 1rem 0.5rem 1rem;
+            pointer-events: none;
+        }
+    }
+}
+
+.img-profile{
+    
+    max-width: 100%;
+
+}
+
+.icon-profile{
+    width: 1.1rem;
+    height: 1.1rem;
+}
+
+.box-deliveries{
+    .header{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color:$primary;
+        padding: 14px;
+        font-weight: 500;
+    }
+    .content{
+        padding: 14px;
+        max-height: 500px;
+        overflow: auto;
+        .date-start{
+            font-size: .7rem;
+        }
+    }
+}

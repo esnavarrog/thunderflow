@@ -1,0 +1,2 @@
+module DefaultProfilePricesHelper
+end

@@ -1,0 +1,98 @@
+<div class="container">
+    
+    <div class="row">
+        <div class="col-sm-12 col-md-4 p-2 mt-2">
+            
+            
+            <%= render partial:'deliveries/partials/last_status_delivery', locals:{delivery:@delivery} %>
+            <div class="bg-white rounded border p-3 mb-2 shadow-sm">
+                <% if @delivery.integration_type %>
+                    <div class="badge rounded-pill bg-primary mb-2">
+                        <%= enum_i18n(Delivery, :integration_types, @delivery.integration_type) %>
+                    </div>
+                <% end %>
+                <div class="d-flex " type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%= @delivery.id %>" >
+                    <div class="w-100">
+                      <% unless current_user.delivery? %>
+                        <div class="text-center p-1 border rounded bg-light">
+                            <small>Origen: </small>
+                            <div class="text-info"><%= @delivery.branch.invert ? "#{@delivery.address_concat} #{@delivery.dpto}" : "#{@delivery.branch.address_concat} #{@delivery.branch.dpto}" %></div>
+                        </div>
+                        <div class="d-flex justify-content-center my-2">
+                            <i class="fa-solid fa-arrow-down"></i>
+                        </div>
+                      <% end %>
+                        <div class="text-center p-1 border rounded bg-light">
+                            <small>Destino: </small>
+                            <div class="text-info"><%= @delivery.branch.invert ? "#{@delivery.branch.address_concat} #{@delivery.branch.dpto}" : "#{@delivery.address_concat} #{@delivery.dpto}" %></div>
+                        </div>
+                        <div class="d-flex justify-content-end mt-2">
+                            <small class="text-small-link">Detalles <i class="fa-solid fa-chevron-down"></i></small> 
+                        </div>
+                    </div>
+                    
+                </div>
+
+                <div id="collapse-<%= @delivery.id %>" class=" collapse">
+                    <div>
+                        <%= render 'deliveries/partials/data' %>
+                    </div>
+
+                </div>
+                
+            </div>
+
+            <div class="d-flex justify-content-around buttons-map rounded shadow-sm">
+                <div id="seeMap" class="button-map">Ver mapa <i class="fa-regular fa-map"></i></div>
+                <a id="navigate-map" class="button-map" href="" target="_blank">Navegar al destino <i class="fa-solid fa-route"></i></a>
+            </div>
+        
+            <div class="map-container mt-2">
+                <div id="brewers" data-lat="<%= @delivery.latitude %>" data-long="<%= @delivery.longitude %>">
+                </div>
+                <div id="brewers-branch" data-lat="<%= @delivery.branch.latitude %>" data-long="<%= @delivery.branch.longitude %>">
+                </div>
+                <div id="map" class="maps"></div>
+            </div>
+        </div>
+        <div id="statuses" class="container col-sm-12 col-md-8 ">
+            <% if !current_user.delivery? %>
+                <div class="row mt-2 px-2">
+                    <div class="d-flex justify-content-between align-items-center col-sm-12 rounded bg-white shadow-sm border border-info py-2 px-3 mt-2">
+                        <div>
+                            <div>Estado del pago de la solicitud:</div> 
+                            <div class="badge rounded-pill bg-warning">
+                                <%= enum_i18n(Delivery, :status_pays, @delivery.status_pay) %>
+                            </div>
+                        </div>
+                        <% unless @delivery.payed? %>
+                            <div>
+                                <%# link_to 'Pagar', new_deal_path(delivery_id:@delivery), class:'btn btn-primary' %>
+                            </div>
+                        <% end %>
+            
+                    </div>
+                </div>
+            <% end %>
+            <div class="mt-3">
+                <% if @delivery.statuses.present? %>
+                    <h5>Historial de estados</h5>
+                    <div id="statuses-render" class="shadow-sm">
+                        <%= render @statuses %>
+                    </div>
+                    <div id="paginates-index" class="paginates d-flex justify-content-end align-items-center">
+                        <%= paginate @statuses, remote: true %>
+                    </div>
+                <% else %>
+                    <div id="statuses-render">
+                        <div class="d-flex justify-content-center align-items-center p-3-1 my-3 rounded border border-primary bg-white">
+                            <h4 class="m-0">Aún no tienes actualizaciones de estado</h4>
+                        </div>
+                    </div>
+    
+                <% end %>
+            </div>
+        </div>
+    </div>
+    
+</div>

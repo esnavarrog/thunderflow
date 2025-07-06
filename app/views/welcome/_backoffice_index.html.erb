@@ -1,0 +1,71 @@
+<div class="container mt-3">
+    <section class="row mb-3">
+        <!-- report of deliveries -->
+        <div class="col-md-3 my-2">
+            <%= link_to "Reportes", report_form_path, class:'btn btn-outline-primary', remote:true if current_user.admin? %>
+        </div>
+        <div class="col-md-3 my-2">
+            <%= link_to "Descargar por ids", open_modal_ids_path, class:'btn btn-outline-primary', remote:true if current_user.admin? %>
+        </div>
+    </section>
+
+    <%= form_with(url: metrics_path, method: :get, data:{remote:true}, class:'row mb-3') do |f| %>
+        <div class="form-group col-sm-12 col-md-6 col-lg-3">
+            <%= f.select :month, I18n.t('date.month_names').compact.each_with_index.map { |m, i| [m, i+1] }, { include_blank: true, selected: Date.current.month }, class: 'form-control' %>
+        </div>
+        <div class="form-group col-sm-12 col-md-6 col-lg-3">
+            <%= f.select :year, (Date.current.year - 3..Date.current.year).to_a.reverse, { include_blank: true, selected: Date.current.year }, class: 'form-control', class: 'form-control' %>
+        </div>
+        <div class="col-sm-12 col-md-6 col-lg-2">
+            <%= f.submit 'Filtrar', class: 'btn btn-primary' %>
+        </div>
+    <% end %>
+
+    <div id="metrics"></div>
+
+    <section id="charts-welcome" class="row mb-3"></section>
+
+    <section class="row mb-3">
+        <div class="col-sm-12 col-md-6 mb-3">
+            <div class="h-100 bg-white rounded-4 p-2 shadow-sm">
+                <div class="p-2 mb-2 text-info header-count-deliveries">
+                    <div>Conteo de solicitudes asignadas</div>
+                    <small class="text-success">Solo muestra las solicitudes que tengan el estado "Asignado".  (Solo repartidor con solicitud asignada)</small>
+                </div>
+                <div class="d-flex justify-content-between text-secondary p-2 bg-light rounded-top">
+                    <span>Repartidor</span>
+                    <span>Asignaciones</span>
+                </div>
+                <div class="mxh-300">
+                    <% @dealers.each do |dealer| %>
+                        <div class="d-flex justify-content-between mb-2 p-2 border-top bg-white">
+                            <span class="text-secondary"><%= link_to dealer.name || dealer.email, profile_path(dealer), class:'link-profile-user' %></span>
+                            <span><%= dealer.deliveries_asigned_count %></span>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 col-md-6 mb-3">
+            <div class="h-100 bg-white rounded-4 p-2 shadow-sm">
+                <div class="p-2 mb-2 text-info header-count-deliveries">
+                    <div>Conteo de solicitudes por entregar</div>
+                    <small class="text-success">Muestra las solicitudes que aún no se entregan o devuelven. (Solo repartidor con solicitud asignada)</small>
+                </div>
+                <div class="d-flex justify-content-between text-secondary p-2 bg-light rounded-top">
+                    <span>Repartidor</span>
+                    <span>Asignaciones</span>
+                </div>
+                <div class="mxh-300">
+                    <% @dealers_for_deliver.each do |dealer| %>
+                        <div class="d-flex justify-content-between mb-2 p-2 border-top bg-white">
+                            <span class="text-secondary"><%= link_to dealer.name || dealer.email, profile_path(dealer), class:'link-profile-user' %></span>
+                            <span><%= dealer.deliveries_asigned_count %></span>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>

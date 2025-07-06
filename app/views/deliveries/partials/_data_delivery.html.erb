@@ -1,0 +1,26 @@
+<li class="list-group-item">
+    <div>Orden Pedido</div>
+    <%= delivery.id %>
+</li>
+
+<li class="list-group-item">
+    <div>Dirección</div>
+    <%= delivery.address_concat %>
+</li>
+
+<li class="list-group-item">
+    <div>Receptor</div>
+    <%= "#{delivery.contact_name.try(:titleize)} #{delivery.try(:contact_lastname)}" %>
+</li>
+<li class="list-group-item <%= delivery.rut.present? ? '' : 'd-none' %>">
+    <div>Rut Receptor</div>
+    <%= delivery.rut %>
+</li>
+<li class="list-group-item <%= delivery.phone_number.present? ? '' : 'd-none' %>">
+    <div>Número Contacto</div>
+    <%= delivery.phone_number %>
+</li>
+
+<li class="list-group-item">
+    <%= delivery.weight %><small>kg</small>, <%= delivery.height %><small>cm alto</small>, <%= delivery.width %><small>cm ancho</small>, <%= delivery.depth %><small>cm largo</small>
+</li>

@@ -1,0 +1,79 @@
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th>
+      <div class="text-center select-massive">
+        <div class="form-check d-flex justify-content-center align-items-end">
+          <input class="form-check-input select-all-delivery" type="checkbox" value="" id="local">
+        </div>
+      </div>
+    </th>
+    <th class="text-center sort-table" data-target="#search-form_top #order" data-order="id">
+      ID
+      <span class="sort-icon text-nowrap">
+        <%= inline_svg_tag("icons/icon_sort.svg") %>
+      </span>
+    </th>
+    <th class="text-center">
+      Estado Pago
+    </th>
+    <% if policy(:application).backoffice? %>
+      <th class="text-center">
+        Permitido sin pago
+      </th>
+    <% end %>
+    <% if policy(:application).backoffice? && current_user.admin? %>
+      <td class="text-center">
+        Con o Sin Cobro
+      </td>
+    <% end %>
+    <th class="scope sort-table" data-target="#search-form_top #order" data-order="status">
+      Estado
+      <span class="sort-icon text-nowrap">
+        <%= inline_svg_tag("icons/icon_sort.svg") %>
+      </span>
+    </th>
+    <% if policy(:application).backoffice? %>
+      <th>
+        Cliente
+      </th>
+    <% end %>
+    <th class="scope sort-table" data-target="#search-form_top #order" data-order="date_start">
+      Fecha de Retiro
+      <span class="sort-icon text-nowrap">
+        <%= inline_svg_tag("icons/icon_sort.svg") %>
+      </span>
+    </th>
+    <% if policy(:application).backoffice? %>
+      <th>
+        Destinatario
+      </th>
+    <% else %>
+      <th class="scope">
+        Comuna Retiro
+      </th>
+      <th>Dirección retiro</th>
+    <% end %>
+    <th class="scope sort-table" data-target="#search-form_top #order" data-order="commune_delivery">
+      Comuna Entrega
+      <span class="sort-icon text-nowrap">
+        <%= inline_svg_tag("icons/icon_sort.svg") %>
+      </span>
+    </th>
+    <th>Dirección entrega</th>
+    <% if policy(:application).backoffice? %>
+      <th class="sort-table" data-target="#search-form_top #order" data-order="driver">
+        Repartidor
+        <span class="sort-icon text-nowrap">
+          <%= inline_svg_tag("icons/icon_sort.svg") %>
+        </span>
+      </th>
+    <% end %>
+    <th class="scope text-center">Seguimiento</th>
+    <th></th>
+  </tr>
+  </thead>
+  <tbody id="deliveries-index">
+    <%= render @deliveries %>
+  </tbody>
+</table>

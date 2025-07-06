@@ -1,0 +1,26 @@
+<p>
+    Lamentamos informarte que tu pedido ha sido devuelto. Nos gustaría asegurarte que estamos trabajando para resolver esta situación de manera eficiente.
+</p>
+<% if @status.description.present? %>
+    <p>
+        El repartidor nos ha dejado esta observación.
+        - <%= @status.description %>
+    </p>
+<% end %>
+<p>
+    Te recomendamos ponerse en contacto directamente con el vendedor para obtener más información sobre los motivos específicos de la devolución y encontrar una solución adecuada.
+</p>
+<p>
+    Puedes obtener mas detalles en el siguiente link: <%= link_to @delivery.order_number, tracking_index_url(order_number:@delivery.order_number) %>
+</p>
+
+<p>
+    Fecha de entrega: <%= format_date @delivery.date_deliver_at %>
+</p>
+<p>
+    Agradecemos tu comprensión y esperamos que se resuelva esta situación de manera satisfactoria.
+</p>
+
+<p>
+    ¡Que tengas un excelente día!
+</p>

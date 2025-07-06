@@ -1,0 +1,72 @@
+<table class="body">
+  <tr class="">
+    <td>
+      <table>
+        <tr>
+          <td class="text-center image-logo">
+            <%= email_image_tag("logo_altyro.png") %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="bottom-text">
+        <div class="container mt-3">
+          <% type = @withdrawal_receipt.retired? ? 'Retiro' : 'Devolución' %>
+          <table class="border w-100">
+            <tr class="border">
+              <td colspan="2" class="text-center text-bold">
+                Comprobante de <%= type.downcase %> de mercadería
+              </td>
+            </tr>
+            <tr class="border">
+              <td>Empresa / Tienda</td>
+              <td>
+                <%= link_to @withdrawal_receipt.company.name.try(:titleize), @withdrawal_receipt.company %>
+              </td>
+            </tr>
+            <tr class="border">
+              <td>Fecha</td>
+              <td>
+                <%= format_date @withdrawal_receipt.issued_at %>
+              </td>
+            </tr>
+            <tr class="border">
+              <td colspan="2" class="text-center text-bold">
+                <%= "#{type} de paquetes" %>
+              </td>
+            </tr>
+            <% if @withdrawal_receipt.retired? %>
+              <tr class="border">
+                <td>Cantidad Planilla</td>
+                <td>
+                  <%= @withdrawal_receipt.sender_local_plain %>
+                </td>
+              </tr>
+            <% else %>
+              <tr class="border">
+                <td>Nombre Cliente</td>
+                <td>
+                  <%= @withdrawal_receipt.name_client %>
+                </td>
+              </tr>
+            <% end %>
+            <tr class="border">
+              <td>Cantidad Recibida</td>
+              <td>
+                <%= @withdrawal_receipt.sender_local_check %>
+              </td>
+            </tr>
+            <tr class="border">
+              <td colspan="2" class="text-center text-bold">
+                Total: <span id="total-sender-withdrawal-receipt"><%= @withdrawal_receipt&.sender_local_check || 0 %></span>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+    </td>
+  </tr>
+</table>

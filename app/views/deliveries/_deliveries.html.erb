@@ -1,0 +1,43 @@
+<tr>
+    <td>
+        <%= delivery.id %>
+    </td>
+    <td>
+        <div class="top">
+            <%= delivery.branch.name %>
+        </div>
+        <div class="bottom">
+            <%= link_to "##{delivery.branch.id}", delivery.branch %>
+        </div>
+    </td>
+    <td>
+        <%= delivery.branch.commune %>
+    </td>
+    <td>
+        <%= delivery.commune %>
+    </td>
+    <td>
+        <div class="top">
+            <%=  delivery.branch.company.name.titleize.truncate(15) %>
+        </div>
+        <div class="bottom">
+            <%= link_to "##{delivery.branch.company.id}", delivery.branch.company, data:{bs_toggle:"popover", bs_trigger:"hover focus", bs_content:"#{delivery.branch.company.name.titleize}", bs_title:"#{delivery.branch.company.name.titleize}"}, tabindex:"0" %>
+        </div>
+        
+    </td>
+    <td>
+        <%= format_date_time delivery.date_start %>
+    </td>
+    <td>
+        <%= format_date_time delivery.date_end %>
+    </td>
+    <td>
+        <%= enum_i18n(Delivery, :statuses, delivery.status) %>
+    </td>
+    <td>
+        <%= link_to delivery_path(delivery), class:'btn btn-link' do %>
+            <i class="bi bi-chevron-right"></i>
+        <% end %>
+    </td>
+
+</tr>

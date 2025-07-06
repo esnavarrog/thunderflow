@@ -1,0 +1,35 @@
+<div class="rounded shadow-sm p-2 mb-3 d-flex justify-content-center">
+    Se presentaron los siguientes errores, por favor corrígelos en tu archivo he intenta nuevamente.
+</div>
+
+<% if @without_params %>
+    <div class="mt-2 shadow-sm rounded p-2">
+        <div>No pudimos extraer la información del archivo</div>
+        <div>Asegúrate que toda la información solicitada esté correctamente escrita, no agregues columnas fuera de las proporcionadas en la plantilla, esto puede generar errores inesperados al subir la información.</div>
+    </div>
+<% else %>
+  <table class="table table-borderless">
+    <thead>
+    <tr>
+      <th class="text-center align-middle">Fila</th>
+      <th class="text-left align-middle">Error</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @errors.keys.each do |key| %>
+      <tr>
+        <td class="text-center align-middle">
+          <%= key %>
+        </td>
+        <td>
+          <% @errors[key][:messages].each do |error| %>
+            <div class="row">
+              <%= error %>
+            </div>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>

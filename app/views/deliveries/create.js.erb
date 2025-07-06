@@ -1,0 +1,5 @@
+
+$('#table-deliveries').html("<%= j render 'deliveries/tables/table_deliveries' %>");
+$('#modal').modal('hide');
+$('.deliveries-count-<%= @branch.id %>').html("<%= "#{@branch.deliveries.count} solicitudes" %>")
+swal( {title:'Genial!', text:"Tu solicitud ha sido ingresada exitosamente.", icon:'success', button:"Aceptar"})

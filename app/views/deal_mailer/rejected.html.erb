@@ -1,0 +1,56 @@
+<table>
+    <tr class="">
+        <td>
+            <table>
+                <tr>
+                    <td class="text-center image-logo pb-32">
+                        <%= email_image_tag("logo_altyro.png") %>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <div class="pt-48 pb-32">
+                El Cliente <%= @deal.company.name %> rechazó el cobro #<%= @deal.id %>, por favor revisar he informar al cliente.
+            </div>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="pb-32">
+            El cobro tiene las siguientes solicitudes:
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <table class="table-striped">
+                <thead>
+                    <tr>
+                        <th>id</th>
+                        <th>Seguimiento</th>
+                        <th>Dirección retiro</th>
+                        <th>Dirección destino</th>
+                        <th>Detalle</th>
+                        <th>Costo</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% @deal.deliveries.each do |delivery| %>
+                        <tr>
+                            <td><%= delivery.id %></td>
+                            <td><%= link_to delivery.order_number, tracking_index_url(order_number: delivery.order_number) %></td>
+                            <td><%= delivery.branch.address_concat %></td>
+                            <td><%= delivery.address_concat %></td>
+                            <td><%= delivery.description %></td>
+                            <td><%= number_to_currency delivery.price, precision:0 %></td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>

@@ -1,0 +1,30 @@
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 col-md-4 p-2">
+
+            <div class="bg-white rounded border p-3 my-2">
+                <div class="py-2 px-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%= @user.id %>" >
+                    <h4 class="title">
+                        <%= @user.email %>
+                    </h4>
+                </div>
+
+                <ul id="collapse-<%= @user.id %>" class="list-group list-group-flush rounded border collapse">
+                    <%= render 'users/partials/data' %>
+
+                </ul>
+                <div class="d-flex justify-content-between mt-3">
+                    <%= link_to edit_user_role_path(id:@user), class:'btn btn-primary', remote:true do %>
+                        <i class="bi bi-pencil-square me-2"></i><span>Editar</span>
+                    <% end %>
+                    
+                </div>
+            </div>
+        
+        </div>
+
+        <div id="table-deliveries" class="col-sm-12 col-md-8">
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,36 @@
+
+<% if @deliveries.present? %>
+<div class="table-responsive rounded bg-white p-3 border mt-3">
+    <table class="table table-striped border">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <!-- <th>Peso</th>
+                <th>Altura</th>
+                <th>Ancho</th>
+                <th>Profundidad</th> -->
+                <th>Sucursal</th>
+                <th>C. Retiro</th>
+                <th>C. Entrega</th>
+                <th>Id Empresa</th>
+                <th class="minw-150">Fecha Retiro</th>
+                <th class="minw-150">Fecha Entrega</th>
+                <th>Estado</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @deliveries.each do |delivery| %>
+                <%= render partial:'deliveries/deliveries', locals: {delivery: delivery}%>
+            <% end %>
+        </tbody>
+    </table>
+</div>
+<div class="paginate-deliveries paginates">
+    <%= paginate @deliveries, remote: true %>
+</div>
+<% else %>
+    <div id="deliveries" class="d-flex justify-content-center align-items-center p-3-1 my-3 rounded border border-primary bg-white">
+        <h4 class="m-0">Aún no tienes solicitudes, agrega <span><%= link_to 'aquí', new_deliver_path(), data:{ bs_toggle:"modal", bs_target:"#modal"}, remote:true %></span></h4>
+    </div>
+<% end %>

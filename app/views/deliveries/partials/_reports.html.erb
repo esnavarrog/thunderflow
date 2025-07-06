@@ -1,0 +1,111 @@
+<div class="reports">
+  <div class="btn-group box-report rounded-4 p-3">
+    <div class="h-100 w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+      <h3>ENTREGAS HOY</h3>
+      <div class="d-flex justify-content-around align-items-center gap-2">
+        <div class="text-center">
+          <div class="number"><%= @deliveries_today.where(status: :delivered).count %></div>
+          <div class="title-number">Entregados</div>
+        </div>
+        <div class="text-center">
+          <div class="number"><%= @deliveries_today.where.not(status: [:delivered, :rejected, :nothing]).count %></div>
+          <div class="title-number">Pendientes</div>
+        </div>
+        <div class="text-center">
+          <div class="number"><%= @deliveries_today.count %></div>
+          <div class="title-number">Totales</div>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown-menu">
+      <% if @deliveries_today.present? %>
+        <%= render partial: 'deliveries/partials/partial_report', locals: { deliveries_day: @deliveries_today } %>
+      <% else %>
+        <div class="dropdown-item text-center">Sin registros</div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="btn-group box-report rounded-4 p-3" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+    <div class="h-100 w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+      <h3>ENTREGAS MAÑANA</h3>
+      <div class="d-flex justify-content-around align-items-center gap-2">
+        <div class="text-center">
+          <div class="number"><%= @deliveries_tomorrow.where(status: :delivered).count %></div>
+          <div class="title-number">Entregados</div>
+        </div>
+        <div class="text-center">
+          <div class="number"><%= @deliveries_tomorrow.where.not(status: [:delivered, :rejected, :nothing]).count %></div>
+          <div class="title-number">Pendientes</div>
+        </div>
+        <div class="text-center">
+          <div class="number"><%= @deliveries_tomorrow.count %></div>
+          <div class="title-number">Totales</div>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown-menu">
+      <% if @deliveries_tomorrow.present? %>
+        <%= render partial: 'deliveries/partials/partial_report', locals: { deliveries_day: @deliveries_tomorrow } %>
+      <% else %>
+        <div class="dropdown-item text-center">Sin registros</div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="btn-group box-report rounded-4 p-3">
+    <div class="h-100 w-100" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+      <h3>TOTALES</h3>
+      <div class="d-flex justify-content-around align-items-center gap-2">
+        <div class="text-center">
+          <div class="number"><%= @deliveries_tomorrow.where(status: :delivered).count + @deliveries_today.where(status: :delivered).count %></div>
+          <div class="title-number">Entregados</div>
+        </div>
+        <div class="text-center">
+          <div class="number"><%= @deliveries_tomorrow.where.not(status: [:delivered, :rejected, :nothing]).count + @deliveries_today.where.not(status: [:delivered, :rejected, :nothing]).count %></div>
+          <div class="title-number">Pendientes</div>
+        </div>
+        <div class="text-center">
+          <div class="number"><%= @deliveries_tomorrow.count + @deliveries_today.count %></div>
+          <div class="title-number">Totales</div>
+        </div>
+      </div>
+    </div>
+    <div class="dropdown-menu">
+      <% if @deliveries_today.present? || @deliveries_tomorrow.present? %>
+        <div class="dropdown-item">
+          <h6 class="text-info">Hoy</h6>
+          <% if @deliveries_today.present? %>
+            <% @deliveries_today.group_by(&:company)&.each do |company, deliveries| %>
+              <div class="name-client">
+                <span><%= link_to company.try(:name).try(:titleize), company, class:'no-decoration' %></span>
+                <span>
+                  <%= Delivery.where(id: deliveries.map(&:id)).count %>
+                </span>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center">Sin registros</div>
+          <% end %>
+        </div>
+        <div class="dropdown-item">
+          <h6 class="text-info">Mañana</h6>
+          <% if @deliveries_tomorrow.present? %>
+            <% @deliveries_tomorrow.group_by(&:company)&.each do |company, deliveries| %>
+              <div class="name-client">
+                <span><%= link_to company.try(:name).try(:titleize), company, class:'no-decoration' %></span>
+                <span>
+                  <%= Delivery.where(id: deliveries.map(&:id)).count %>
+                </span>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center">Sin registros</div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="dropdown-item text-center">Sin registros</div>
+      <% end %>
+    </div>
+  </div>
+</div>

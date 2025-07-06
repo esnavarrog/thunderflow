@@ -1,0 +1,27 @@
+<div class="table-responsive">
+  <div class="d-flex justify-content-between align-items-center p-3">
+    <h4 class="text-success">Agrega cargos adicionales para cobros</h4>
+    <% if action_name == 'index' %>
+      <%= link_to "Nuevo adicional", new_additional_fee_path(additional_model: :deal), class: 'btn btn-primary' %>
+    <% end %>
+  </div>
+  <table class="table table-hover align-middle mb-0">
+    <thead class="bg-light">
+    <tr>
+      <th class="border-0 ps-4">#</th>
+      <th class="border-0"><%= AdditionalFee.human_attribute_name(:additional_fee) %></th>
+      <th class="border-0"><%= AdditionalFee.human_attribute_name(:created_at) %></th>
+      <th class="border-0"><%= AdditionalFee.human_attribute_name(:additional_type) %></th>
+      <th class="border-0"><%= AdditionalFee.human_attribute_name(:additional_model) %></th>
+      <th class="border-0"><%= AdditionalFee.human_attribute_name(:name_profile) %></th>
+      <th class="border-0"><%= AdditionalFee.human_attribute_name(:condition) %></th>
+      <th class="border-0 text-end pe-4">Acciones</th>
+    </tr>
+    </thead>
+    <tbody class="border-top-0">
+    <% @additional_fees.each do |additional_fee| %>
+      <%= render 'additional_fees/index/table_row', additional_fee: additional_fee %>
+    <% end %>
+    </tbody>
+  </table>
+</div>

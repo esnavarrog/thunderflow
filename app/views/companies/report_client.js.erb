@@ -1,0 +1,13 @@
+$('#modal-body').html('<%= j render "form_report_client" %>');
+$('.modal-title').html('Reporte por empresa.');
+$('#modal').modal('toggle');
+
+$(".datetimepicker-range").flatpickr({
+    dateFormat: "d-m-Y",
+    mode: "range",
+    locale: "es"
+});
+$('.js-basic-single').select2({
+    dropdownParent: $('#modal')
+});
+$('.loader').fadeOut('fast');

@@ -1,0 +1,103 @@
+
+    <%= form_with model: @branch, data:{remote:true} do |f| %>
+        <%= f.hidden_field :company_id, value:@company.id.to_s %>
+        <h6 class="text-primary">Nueva sucursal de <%= @company.name.titleize %></h6>
+        <% if current_user.admin? %>
+            <div class="form-group">
+                <%= f.label :default_price, 'Tarifa fija' %>
+                <%= f.text_field :default_price, class:'form-control', placeholder:'Precio fijo sucursal...' %>
+                <div class="error"></div>
+            </div>
+        <% end %>
+        <div class="form-group">
+            <%= f.label :name, 'Nombre Sucursal *' %>
+            <%= f.text_field :name, class:'form-control', placeholder:'Nombre Sucursal' %>
+            <div class="error"></div>
+        </div>
+        
+        <div class="form-group">
+            <%= f.label :email, 'Email contacto sucursal *' %>
+            <%= f.email_field :email, class:'form-control', placeholder:'Contacto Email' %>
+            <div class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :responsible_name, 'Nombre Encargado' %>
+            <%= f.text_field :responsible_name, class:'form-control', placeholder:'Encargado' %>
+            <div class="error"></div>
+        </div>
+
+        <%= f.label :phone_number, 'Nº Contacto' %>
+        <div class="input-group">
+            <span class="input-group-text" id="basic-addon1">+56</span>
+            <%= f.text_field :phone_number, class:'form-control', placeholder:'Nº Contacto' %>
+            <div class="error"></div>
+        </div>
+
+        <div class="col-sm-12 mb-3 d-none">
+            <div class="form-check form-switch d-flex align-items-end">
+                <%= f.check_box :invert, class:'form-check-input' %>
+                <%= f.label :invert, "Marca si la sucursal recibe los pedidos", class:'form-check-label ms-2' %>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :address_concat, 'Dirección *' %>
+            <%= f.text_field :address_concat, class:'form-control auto-places', placeholder:'Comienza escribiendo la dirección', data: { commune_input: '#branch_commune' } %>
+            <%= f.hidden_field :latitude %>
+            <%= f.hidden_field :longitude %>
+            <div class="error"></div>
+        </div>
+        <div class="form-group">
+            <%= f.label :commune, 'Especifica la Comuna' %>
+            <%= f.text_field :commune, class:'form-control', placeholder:'Comuna...' %>
+            <div class="error"></div>
+        </div>
+        <div class="form-group">
+            <div id="branch_map" style="width:100%; height:200px;"></div>
+        </div>
+
+        <div class="row">
+            
+            <div class="form-group col-sm-12 col-md-4">
+                <%= f.label :dpto, 'Depto/Block' %>
+                <%= f.text_field :dpto, class:'form-control', placeholder:'Depto/Block' %>
+                <div class="error"></div>
+            </div>
+        </div>
+
+        <div class="col-sm-12 mb-3">
+            <div class="form-check form-switch d-flex align-items-end">
+                <input class="form-check-input" type="checkbox" value="" id="local">
+                <label class="form-check-label ms-2" for="local">
+                    ¿La sucursal tiene un horario?
+                </label>
+            </div>
+
+        </div>
+
+        <small class="d-none time-local">Ingresa el horario de apertura y cierre de tu local</small>
+        <div class="input-group time-local d-none">
+            <span class="input-group-text">Apertura</span>
+            <%= f.text_field :time_open, value:(format_time(@branch.time_open) if @branch), class:'form-control datetimepicker-time', placeholder:'09:00' %>
+        </div>
+        <div class="input-group time-local d-none">
+            <span class="input-group-text">Cierre</span>
+            <%= f.text_field :time_close, value:(format_time(@branch.time_close) if @branch), class:'form-control datetimepicker-time', placeholder:'18:00' %>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :reference, 'Referencias' %>
+            <%= f.text_area :reference, class:'form-control', placeholder:'Cercano a...' %>
+            <div class="error"></div>
+        </div>
+        <div class="d-flex justify-content-end">
+            <div id="press-submit" data-submit="#submit-branch" class="btn btn-primary mt-3">
+                <div class="spinner-border text-light loading d-none mr-2" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+                <span class="change-loading">Guardar</span>
+            </div>
+            <%= f.submit 'Guardar', class:'btn btn-primary d-none mt-3', id:'submit-branch' %>
+        </div>
+    <% end %>

@@ -1,0 +1,7 @@
+$('#modal').modal('show');
+$('#modal-body').html("<%= j render 'welcome/form' %>");
+$('.modal-title').html("Selecciona solicitudes para excel");
+$(".datetimepicker").flatpickr({
+    dateFormat: "d-m-Y",
+    locale: "es"
+});

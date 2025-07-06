@@ -1,0 +1,17 @@
+var input = document.createElement("input");
+input.type = "hidden";
+input.name = "ids";
+input.value = "<%= @deliveries.map(&:to_i) %>";
+
+<% unless @deliveries.map(&:to_i).count.zero? %>
+  $('#modal').find('.modal-body').html('<%= j render "form_asign" %>');
+  $('.modal-title').html('Asigna un repartidor');
+  $('#modal').modal('toggle');
+  $('#delivery_id').remove();
+  $('#id-delivery').html('<%= @deliveries.map(&:to_i) %>');
+  $('#count-massive').html('<%= @deliveries.map(&:to_i).count %>');
+<% else %>
+  swal({ text: 'No tienes solicitudes pendientes para asignar', icon: 'info' })
+<% end %>
+
+$('#form-asign').prepend(input);

@@ -1,0 +1,9 @@
+$(".error").html("");
+$(".is-invalid").removeClass("is-invalid");
+<% @user_access.errors.each do |error|%>
+    <% attribute = error.attribute %>
+    <% message = error.message %>
+    $('#user_access_<%=attribute%>').siblings('.error').html('<%=message%>');
+    $('#user_access_<%=attribute%>').addClass('is-invalid');
+<%end%>
+$('.loader').fadeOut('fast');

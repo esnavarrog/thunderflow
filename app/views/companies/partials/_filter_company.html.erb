@@ -1,0 +1,3 @@
+<div class="form-group col-sm-12 col-md-3">
+    <%= select_tag :company_id, options_from_collection_for_select(@companies_search, :id, :name), {class:'form-select selected-company js-basic-single', prompt:'Búsqueda por cliente...', data:{url:companies_path}} %>
+</div>

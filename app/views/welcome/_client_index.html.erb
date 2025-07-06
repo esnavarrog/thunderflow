@@ -1,0 +1,155 @@
+<!-- inside app/views/welcome/index.html.erb -->  
+<section class="container">
+  <div class="rounded-4 shadow-sm bg-white p-3 mt-4">
+    <%= form_with(url: tracking_index_path, method: :get) do |f| %>
+    <div class="form-group">
+      <label for="tracking">¿Quieres saber dónde está tu paquete? Utiliza tu código de seguimiento</label>
+      <%= f.text_field :order_number, class:'form-control', placeholder:'Ingresa aquí...' %>
+    </div>
+    <div class="d-flex justify-content-end">
+      <%= f.submit 'Consultar', class:'btn btn-primary' %>
+    </div>
+    <% end %>
+  </div>
+</section>
+<% if current_user.client? && !current_company.shipping_without_payment %>
+  <section class="container mt-3">
+    <div class="rounded-4 bg-white py-2 px-3">
+      <div>
+        <%= render 'deals/components/deliveries_pending' %>
+      </div>
+    </div>
+  </section>
+<% end %>
+
+<%= render 'welcome/client/message_client' %>
+
+<section class="container mt-3">
+  <div class="rounded-4 bg-white py-2 px-3">
+    <div class="row">
+      <div class="border-bottom pb-1 mb-3 text-bold text-secondary title-dashboard">
+        <strong>Tus sucursales.</strong> 
+        <div class="float-right">
+          <%= link_to new_branch_path(company_id: current_company.id), class:'btn btn-link no-decoration', remote:true do %>
+            Nueva sucursal <i class="fa-solid fa-plus"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <div class="mb-4">
+      <%= render 'companies/module/companies' %>
+    </div>
+  </div>
+</section>
+
+<main class="container mt-3">
+  <section class="py-3 container rounded-4 bg-white py-2 px-3">
+    <div class="row mb-4">
+      <strong class="border-bottom pb-1 mb-3 text-bold text-secondary">
+        Métricas de todas las empresas a las que tu usuario tiene acceso.
+      </strong>
+      <div class="col-sm-12 col-md-4 col-lg-3">
+        <div class=" bg-white p-2 d-flex border justify-content-between shadow-sm border rounded">
+          <div class="text-secondary text-left">
+              <%= link_to deliveries_path(status: [:preparing]), class:'no-decoration' do %>
+              <h5>
+                  Solicitudes entregadas
+              </h5>
+              <% end %>
+              <small>Mes de <%= l(Time.zone.now, format:'%B').titleize %></small>
+          </div>
+          <div class="text-secondary">
+              <%= current_user.deliveries_access.where(status: :delivered, date_start: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).count %>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-3">
+        <div class=" bg-white p-2 d-flex justify-content-between shadow-sm border rounded">
+          <div class="text-secondary text-left">
+              <%= link_to deliveries_path(status: Delivery::FOR_DELIVER), class:'no-decoration' do %>
+              <h5>
+                  Solicitudes pendientes
+              </h5>
+              <% end %>
+              <small>Totales</small>
+          </div>
+          <div class="text-secondary">
+              <%= current_user.deliveries_access.where.not(status: :delivered).count %>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-3">
+        <div class=" bg-white p-2 d-flex justify-content-between shadow-sm border rounded">
+          <div class="text-secondary text-left">
+              <%= link_to deliveries_path(), class:'no-decoration' do %>
+              <h5>
+                  Solicitudes totales
+              </h5>
+              <% end %>
+              <small>Hasta <%= l(Time.zone.now, format:'%B').titleize %></small>
+          </div>
+          <div class="text-secondary">
+              <%= current_user.deliveries_access.count %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <section class="row mb-3">
+      <div class="col-sm-12 col-md-4 col-lg-3">
+          <div class=" bg-white p-2 d-flex justify-content-between shadow-sm border rounded">
+              <div class="text-secondary">
+                  <%= link_to deliveries_path(status_pay: :pending, date_start: format_date(Time.zone.now)), class:'no-decoration' do %>
+                  <h5>
+                    Agendados hoy
+                  </h5>
+                  <% end %>
+                  <small><%= l(Time.zone.now, format:'%A').titleize %></small>
+              </div>
+              <div class="text-secondary">
+                  <%= current_user.deliveries_access.where(status_pay: [:pending, :waiting], date_start: format_date(Time.zone.now)).count %>
+              </div>
+          </div>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-3">
+          <div class=" bg-white p-2 d-flex justify-content-between shadow-sm border rounded">
+              <div class="text-secondary">
+                  <%= link_to deliveries_path(status_pay: :pending, date_start: format_date(Time.zone.now.tomorrow)), class:'no-decoration' do %>
+                  <h5>
+                    Agendados mañana
+                  </h5>
+                  <% end %>
+                  <small><%= l(Time.zone.now.tomorrow, format:'%A').titleize %></small>
+              </div>
+              <div class="text-secondary">
+                  <%= current_user.deliveries_access.where(status_pay: [:pending, :waiting], date_start: format_date(Time.zone.now.tomorrow)).count %>
+              </div>
+          </div>
+      </div>
+      <div class="col-sm-12 col-md-4 col-lg-3">
+          <div class=" bg-white p-2 d-flex justify-content-between shadow-sm border rounded">
+              <div class="text-secondary">
+                  <%= link_to deliveries_path(status: :delivered, date_deliver_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day), class:'no-decoration' do %>
+                  <h5>
+                    Entregados hoy
+                  </h5>
+                  <% end %>
+                  <small><%= l(Time.zone.now, format:'%A').titleize %></small>
+              </div>
+              <div class="text-secondary">
+                  <%= current_user.deliveries_access.where(status: :delivered, date_deliver_at: Time.zone.now.beginning_of_day..Time.zone.now.end_of_day).count %>
+              </div>
+          </div>
+      </div>
+    </section>
+  </section>
+  <section class="container my-3 rounded-4 bg-white py-2 px-3">
+    <div id="charts-welcome" class="row">
+
+    </div>
+  </section>
+
+</main>
+
+<% if ENV['MESSAGE_FOR_CLIENT'] == 'true' %>
+  <div id="modal-message" data-message="<%= ENV['MESSAGE_FOR_CLIENT_URGENT'] %>"></div>
+<% end %>

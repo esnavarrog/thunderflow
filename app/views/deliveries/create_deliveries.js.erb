@@ -1,0 +1,4 @@
+$('#modal').modal('hide');
+swal( {title:'Genial!', text:"Se agregaron correctamente <%= @deliveries.total_count %> solicitudes.", icon:'success', button:"Aceptar"} )
+$('#table-deliveries').html("<%= j render 'deliveries/tables/table_deliveries' %>");
+$('.loader').fadeOut('fast');

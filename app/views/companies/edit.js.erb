@@ -1,0 +1,6 @@
+$('#modal-body').html('<%= j render "form" %>');
+$('.modal-title').html('Edita tu empresa.');
+$('#modal').modal('toggle');
+$('input[name="_method"]').val('put');
+launchmap(<%= @company.latitude.present? ? @company.latitude : false %>, <%= @company.longitude.present? ? @company.longitude : false %>, 'company_');
+datetimePickerTime();

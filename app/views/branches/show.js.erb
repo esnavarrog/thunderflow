@@ -1,0 +1,3 @@
+$('#deliveries-index').html("<%= j render @deliveries %>")
+$('.paginates-index').html("<%= j paginate @deliveries, remote: true %>")
+$('.loader').fadeOut('fast')

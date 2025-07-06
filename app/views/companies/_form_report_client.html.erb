@@ -1,0 +1,22 @@
+<%= form_tag report_for_client_path(format: :xlsx), method: :get, id: 'select-deliveries-date' do %>
+    <div class="d-flex">
+        <div class="form-group col-sm-12 w-100">
+            <%= label_tag :company_id, "Selecciona un Estado..." %>            
+            <%= select_tag :company_id, options_from_collection_for_select(current_user.valid_client_companies, :id, :name), {class:'form-select selected-company js-basic-single', id:'select-company-for-report'} %>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="form-group form-calendar form-calendar-label col-sm-12">
+            <%= label_tag :date_range, 'Selecciona una fecha o rango...' %>
+            <%= text_field_tag :date_range, {}, class:'form-control datetimepicker-range', placeholder:'Histórico...'  %>
+        </div>
+        
+
+    </div>
+    <div class="d-flex justify-content-end">
+        <%= button_tag name: 'commit', type: :submit, class:'btn btn-primary mt-3' do %>
+            <i class="bi bi-cloud-download"></i> Generar reporte
+        <% end %>
+    </div>
+<% end %>

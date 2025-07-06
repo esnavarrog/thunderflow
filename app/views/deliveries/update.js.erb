@@ -1,0 +1,7 @@
+$('#collapse-<%= @delivery.id %>').html('<%= j render 'deliveries/partials/data' %>');
+$('#modal').modal('hide');
+$('#status-list-<%= @delivery.id %>').replaceWith("<div id='status-list-<%= @delivery.id %>' class='status-list status-list-<%= @delivery.status %>'><span><%= enum_i18n(Delivery, :statuses, @delivery.status) %></span><div></div></div>");
+$('#status-<%= @delivery.id %>').html("<%= enum_i18n(Delivery, :statuses, @delivery.status) %>");
+$('#statuses-render').html("<%= j render @delivery.statuses.order(created_at: :desc) %>");
+swal({title:'Genial!', text:'Se actualizó correctamente la solicitud <%= @delivery.id %>', icon:'success', button:"Aceptar"})
+$('#brewers').attr('data-lat', <%= @delivery.latitude %>).attr('data-long', <%= @delivery.longitude %>)

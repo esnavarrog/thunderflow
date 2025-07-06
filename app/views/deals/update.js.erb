@@ -1,0 +1,13 @@
+
+<% if params[:only_save] == "false" %>
+    swal({title: 'Cobro enviado correctamente', icon:'success', button:"Aceptar"})
+<% end %>
+
+<% if @pay_description %>
+    swal({title: "Actualizado el cobro #<%= @deal.id %> a Pagado", text:"Descripción: <%= @deal.pay_description %>", icon:'success', button:"Aceptar"})
+    $("#deal-<%= @deal.id %>").replaceWith("<%= j render @deal %>")
+    $('#modal').modal('hide');
+<% else %>
+    swal({title: "Actualizado el cobro #<%= @deal.id %> y fué enviado al cliente.", icon:'success', button:"Aceptar"})
+    $('#modal').modal('hide');
+<% end %>

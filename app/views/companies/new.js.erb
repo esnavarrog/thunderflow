@@ -1,0 +1,13 @@
+$('#modal-body').html('<%= j render "form" %>');
+$('.modal-title').html('Inscribe una empresa.');
+$('#modal').modal('toggle');
+
+$(".datetimepicker-time").flatpickr({
+    dateFormat: "H:i",
+    noCalendar: true,
+    locale: "es",
+    time_24hr: true,
+    enableTime: true
+});
+
+launchmap(<%= @company.latitude.present? ? @company.latitude : false %>, <%= @company.longitude.present? ? @company.longitude : false %>, 'company_');

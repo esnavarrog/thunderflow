@@ -1,0 +1,3 @@
+$("#deals-index").html("<%= j render @deals %>");
+$("#paginate-index-deal").html("<%= j paginate @deals, remote: true %>");
+$(".loader").fadeOut('fast')

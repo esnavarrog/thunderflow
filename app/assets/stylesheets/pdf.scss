@@ -1,0 +1,64 @@
+@import 'variables';
+
+* {
+  font-family: 'Roboto';
+}
+
+img {
+  width: 100px;
+  height: 100px;
+}
+
+.text-left {
+  text-align: left;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.flexrow {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+}
+
+.fw-600 {
+  font-weight: 600;
+}
+
+.fw-400 {
+  font-weight: 400;
+}
+
+.border {
+  border: solid 1px black;
+}
+
+.d-none {
+  display: none;
+}
+
+.me-4 {
+  margin-right: 40px;
+}
+
+.me-3 {
+  margin-right: 30px;
+}
+
+.me-2 {
+  margin-right: 20px;
+}
+
+.me-1 {
+  margin-right: 10px;
+}

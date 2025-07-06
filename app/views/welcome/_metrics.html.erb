@@ -1,0 +1,96 @@
+<section class="row mb-3">
+  <div class="col-sm-12 col-md-3">
+      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
+          <div class="text-secondary">
+              <%= link_to deliveries_path(status: :preparing), class:'no-decoration' do %>
+              <h5>
+                  Pedidos nuevos
+              </h5>
+              <% end %>
+              <small>Mes de <%= l(@date, format:'%B de %Y').titleize %></small>
+          </div>
+          <div class="text-secondary">
+              <%= @metrics.where(status: :preparing).count %>
+          </div>
+      </div>
+  </div>
+
+  <div class="col-sm-12 col-md-3">
+      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
+          <div class="text-secondary">
+              <%= link_to deliveries_path(status: [:asigned, :to_withdraw, :retired, :in_route]), class:'no-decoration' do %>
+              <h5>
+                  Pedidos por entregar
+              </h5>
+              <% end %>
+              <small>Mes de <%= l(@date, format:'%B de %Y').titleize %></small>
+          </div>
+          <div class="text-secondary">
+              <%= @metrics.where.not(status:[ :preparing, :delivered, :returned]).count %>
+          </div>
+      </div>
+  </div>
+
+  <div class="col-sm-12 col-md-3">
+      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
+          <div class="text-secondary">
+              <%= link_to deliveries_path(status: :delivered), class:'no-decoration' do %>
+              <h5>Pedidos entregados</h5>
+              <% end %>
+              <small>Mes de <%= l(@date, format:'%B de %Y').titleize %></small>
+          </div>
+          <div class="text-secondary">
+              <%= @metrics.where(status: :delivered).count %>
+          </div>
+      </div>
+  </div>
+
+  <div class="col-sm-12 col-md-3">
+      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
+          <div class="text-secondary">
+              <%= link_to deliveries_path(status: :rejected), class:'no-decoration' do %>
+              <h5>
+                  Pedidos rechazados
+              </h5>
+              <% end %>
+              <small>Mes de <%= l(@date, format:'%B de %Y').titleize %></small>
+          </div>
+          <div class="text-secondary">
+              <%= @metrics.where(status: :returned).count %>
+          </div>
+      </div>
+  </div>
+</section>
+
+<section class="row mb-3">
+  <div class="col-sm-12 col-md-3">
+      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
+          <div class="text-secondary">
+              <%= link_to deliveries_path(date_start: format_date(Time.zone.now)), class:'no-decoration' do %>
+              <h5>
+                Agendados hoy
+              </h5>
+              <% end %>
+              <small><%= l(Time.zone.now, format:'%A').titleize %></small>
+          </div>
+          <div class="text-secondary">
+              <%= Delivery.where(date_start: format_date(Time.zone.now)).count %>
+          </div>
+      </div>
+  </div>
+  <div class="col-sm-12 col-md-3">
+      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
+          <div class="text-secondary">
+              <%= link_to deliveries_path(date_start: format_date(Time.zone.now.tomorrow)), class:'no-decoration' do %>
+              <h5>
+                Agendados mañana
+              </h5>
+              <% end %>
+              <small><%= l(Time.zone.now.tomorrow, format:'%A').titleize %></small>
+          </div>
+          <div class="text-secondary">
+              <%= Delivery.where(date_start: format_date(Time.zone.now.tomorrow)).count %>
+          </div>
+      </div>
+  </div>
+</section>

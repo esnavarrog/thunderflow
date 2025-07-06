@@ -1,0 +1,40 @@
+<% if @branch.present? %>
+	<%= form_with(model:[ @branch, @delivery ], class:'row', data:{remote:true}) do |f| %>
+		<input type="hidden" name="_method" value="post" autocomplete="off">
+		<h5 class="title-names text-success">
+			Sucursal <%= @branch.name.titleize %>
+			<div class="litle-text">Identificador: #<%= @branch.id %></div>
+		</h5>
+
+		<% unless action_name == 'edit' %>
+			<ul class="btn-group w-100 mb-3" id="button-filters">
+				<div class="btn btn-outline-primary btn-form py-4 active" id="pills-manual-tab" data-toggle="tab" data-target="#tab-manual-content">
+					<h4><i class="fa-solid fa-pen"></i></h4> Ingreso manual
+				</div>
+				<div class="btn btn-outline-primary btn-form py-4" id="pills-import-tab" data-toggle="tab" data-target="#tab-import-content">
+					<h4><i class="fa-solid fa-file-invoice"></i> </h4>Carga masiva
+				</div>
+				<% if @branch.company.integrations.any? %>
+					<div class="btn btn-outline-primary btn-form py-4" id="pills-integration-tab" data-toggle="tab" data-target="#tab-integration-content">
+						<h4><i class="bi bi-cloud-arrow-down-fill"></i> </h4>Integración
+					</div>
+				<% end %>
+			</ul>
+		<% end %>
+
+		<div id="tab-manual-content" class="tab-panel-form show">
+			<%= render partial: 'deliveries/partials/form/tab_manual_form', locals: { f: f } %>
+		</div>
+
+	<%end%>
+
+	<div id="tab-import-content" class="tab-panel-form">
+		<%= render 'deliveries/partials/form/tab_import_form' %>
+	</div>
+
+	<% if @branch.company.integrations.any? %>
+		<div id="tab-integration-content" class="tab-panel-form">
+			<%= render 'deliveries/partials/form/tab_integration_form' %>
+		</div>
+	<% end %>
+<%end%>

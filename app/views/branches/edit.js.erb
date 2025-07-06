@@ -1,0 +1,20 @@
+$('#modal-body').html('<%= j render "form" %>')
+$('.modal-title').html('Edita tu sucursal.');
+$('#modal').modal('toggle');
+$('input[name="_method"]').val('put');
+$('input[name="commit"]').val('Editar Sucursal');
+
+$(".datetimepicker").flatpickr({
+    dateFormat: "d-m-Y",
+    minDate: "today",
+    locale: "es"
+});
+$(".datetimepicker-time").flatpickr({
+    dateFormat: "H:i",
+    noCalendar: true,
+    locale: "es",
+    time_24hr: true,
+    enableTime: true
+});
+
+launchmap(<%= @branch.latitude.present? ? @branch.latitude : false %>, <%= @branch.longitude.present? ? @branch.longitude : false %>, 'branch_');

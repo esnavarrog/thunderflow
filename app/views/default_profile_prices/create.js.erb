@@ -1,0 +1,4 @@
+$('#liveToast').toast('show');
+$('#liveToast').find('strong').html('Precio por defecto');
+$('#liveToast').find('small').html('<%= j format_time @default_price.updated_at %>');
+$('#liveToast').find('.toast-body').html('Precio por defecto actualizado correctamente');

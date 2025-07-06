@@ -1,0 +1,12 @@
+<%= render partial: 'partials/title_module', locals:{sector:"Negocios"} %>
+<%= render partial: 'deals/components/filters' %>
+
+<div class="container-fluid">
+    <%= render 'deals/components/table_deals' %>
+</div>
+
+<div class="container">
+    <div class="paginate-deliveries paginates" id="paginate-index-deal">
+        <%= paginate @deals, remote: true %>
+    </div>
+</div>

@@ -1,0 +1,144 @@
+<div id="delivery-id-<%= delivery.id %>" class="card-delivery mb-2 bg-white <%= "d-none" if controller_name == 'statuses' && action_name == 'create' && delivery.delivered? %>">
+  <div class=" row pt-4 ps-3 pe-3 no-decoration">
+    <% if delivery.branch.invert %>
+    <div class="col-sm-12 col-md-6 deliver d-none">
+        <div class="title">
+          Retiro:
+        </div>
+        <div class="title">
+          Fecha de Retiro:
+        </div>
+        <div class="date">
+          <%= format_date_human delivery.date_start %>
+        </div>
+        <div class="title text-danger">
+          <%= "Horario Retiro: #{delivery.hour_retired}" if delivery.hour_retired.present? %>
+        </div>
+        <div class="content">
+          <%= inline_svg_tag('icons/icon_map.svg') %><%= delivery.address_concat.try(:titleize) %>
+        </div>
+      </div>
+      <div class="col-sm-12 deliver">
+        <div class="title">
+          Destino:
+        </div>
+        <div class="branch">
+          <%= delivery.branch.try(:name) %> <%= "- Cliente #{ delivery.company.try(:name).try(:titleize) }" %>
+        </div>
+        <div class="title text-danger">
+          <%= "Horario Entrega: #{delivery.hour_delivery}" if delivery.hour_delivery.present? %>
+        </div>
+        <div class="content">
+          <%= inline_svg_tag('icons/icon_map.svg') %><%= delivery.branch.address_concat %>
+        </div>
+        <div class="date p-2 bg-light-blue rounded-4">
+          <%= "#{ delivery.description.try(:titleize) } #{ delivery.reference.try(:titleize) }" %>
+        </div>
+      </div>
+    <% else %>
+      <div class="col-sm-12 col-md-6 deliver d-none">
+        <div class="title">
+          Retiro:
+        </div>
+        <div class="title">
+          Cliente <%= link_to delivery.branch.company.try(:name), delivery.branch.company, class:'text-decoration-none text-secondary' %>
+        </div>
+        <div class="branch">
+          Sucursal <%= link_to delivery.branch.try(:name), delivery.branch, class:'text-decoration-none text-secondary' %>
+        </div>
+        <div class="title text-danger">
+          <%= "Horario Retiro: #{delivery.hour_retired}" if delivery.hour_retired.present? %>
+        </div>
+
+        <div class="content">
+          <% if delivery.branch.latitude && delivery.branch.longitude %>
+            <a class="text-decoration-none text-info" href="https://www.google.com/maps/dir/?api=1&destination=<%= delivery.branch.latitude %>,<%= delivery.branch.longitude %>&dir_action=navigate">
+              <%= inline_svg_tag('icons/icon_navigate.svg') %> <%= inline_svg_tag('icons/icon_map.svg') %><%= delivery.branch.address_concat %>
+            </a>
+          <% else %>
+            <%= inline_svg_tag('icons/icon_map.svg') %><%= delivery.branch.address_concat %>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="col-sm-12 deliver deliver-bottom">
+        <div class="branch">
+          <%= delivery.branch.try(:name) %> <%= "- Cliente #{ delivery.company.try(:name).try(:titleize) }" %>
+        </div>
+        <div class="title">
+          Destino: <%= delivery.contact_name.try(:titleize) %>
+        </div>
+        <div class="branch">
+          Fecha de Entrega:
+        </div>
+        <div class="date">
+          <%= format_date_human delivery.date_start %>
+        </div>
+        <div class="title text-danger d-none">
+          <%= "Horario Entrega: #{delivery.hour_delivery}" if delivery.hour_delivery.present? %>
+        </div>
+        <div class="content">
+          <% if delivery.latitude && delivery.longitude %>
+            <a class="text-decoration-none text-info" href="https://www.google.com/maps/dir/?api=1&destination=<%= delivery.latitude %>,<%= delivery.longitude %>&dir_action=navigate">
+              <%= inline_svg_tag('icons/icon_navigate.svg') %> <%= inline_svg_tag('icons/icon_map.svg') %><%= delivery.address_concat.try(:titleize) %> <%= delivery.dpto if delivery.dpto.present? %>
+            </a>
+          <% else %>
+            <%= inline_svg_tag('icons/icon_map.svg') %><%= delivery.address_concat.try(:titleize) %>
+          <% end %>
+        </div>
+        <% if delivery.description.present? || delivery.reference.present? %>
+          <div class="date py-2 px-3 bg-light rounded mt-2">
+            <%= "#{ delivery.description.try(:titleize) } #{ delivery.reference.try(:titleize) }" %>
+          </div>
+        <% end %>
+        <% if current_user.admin? or current_user.client? %>
+          <div class="date py-2 mt-2 text-sm">
+            Estado de pago: <%= enum_i18n(Delivery, :status_pays, delivery.status_pay) %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+  </div>
+
+  <div class="btn-group mt-3" role="group" aria-label="Basic example">
+    <%= render partial:'deliveries/partials/buttons_delivery', locals: {delivery: delivery} %>
+  </div>
+
+  <%= link_to delivery, class:"no-decoration text-secondary status-list status-list-#{delivery.status}", id:"status-list-#{delivery.id}" do %>
+    <span><%= enum_i18n(Delivery, :statuses, delivery.status) %></span><div></div><span class="ms-2 text-bold"><%= delivery.commune.try(:titleize) || '' %></span>
+    <span class="ms-2">
+                ID #<%= delivery.id %> <% if current_user.delivery? %><i class="fa-regular fa-eye"></i><% end %>
+            </span>
+  <% end %>
+  <% unless current_user.delivery? %>
+    <a type="button" class="copy copy-button" data-clipboard-text="<%= delivery.order_number %>">
+                <span class="me-2">
+                    <span>Seguimiento:</span>
+                    <span class="text-bold">
+                        <%= delivery.order_number %></span> <i class="fa-regular fa-clipboard"></i>
+                    </span>
+      <div class="copy-content">
+        <div class="d-flex justify-content-between">
+          <div>Copiado</div>
+        </div>
+      </div>
+    </a>
+  <% end %>
+  <% unless policy(:application).client? || (current_user.delivery? && delivery.delivered?) %>
+    <div class="text-center select-massive">
+      <div class="form-check d-flex justify-content-center align-items-end">
+        <input class="form-check-input select-delivery" type="checkbox" value="" data-id="<%= delivery.id %>" id="local">
+      </div>
+    </div>
+  <% end %>
+  <% unless policy(:application).delivery? %>
+    <div class="identificator d-flex align-items-top">
+      <% if delivery.integration_type %>
+        <div class="badge rounded-square bg-primary ms-2">
+          <%= enum_i18n(Delivery, :integration_types, delivery.integration_type) %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

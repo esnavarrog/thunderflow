@@ -1,0 +1,1 @@
+swal({text:'No puedes editar tu solicitud porque está "<%= enum_i18n(Delivery, :statuses, @delivery.status).downcase %>".', icon:'warning', dangerMode:true, button:"Aceptar"})

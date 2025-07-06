@@ -1,0 +1,103 @@
+    <%= form_with(model:@company, class:'row', data:{remote:true}) do |f| %>
+        <input type="hidden" name="_method" value="post" autocomplete="off">
+        <input type="hidden" name="welcome" value="<%= params[:welcome] %>" autocomplete="off">
+
+        <% if policy(:application).backoffice? %>
+            <div class="form-group">
+                <%= f.label :status, 'Estado' %>
+                <%= f.select :status, options_for_select(Company.statuses.map { |key, value| [enum_i18n(Company, :statuses, key), key] }, @company.present? ? @company.status : 'active'), {}, {class:'form-select'} %>
+                <div class="error"></div>
+            </div>
+        <% end %>
+
+        <div class="form-group">
+            <%= f.label :name, 'Razón Social *' %>
+            <%= f.text_field :name, class:'form-control', placeholder:'Ej. Altyro Envíos' %>
+            <div class="error"></div>
+        </div>
+        <div class="form-group">
+            <%= f.label :fantasy_name, 'Nombre de Fantasía' %>
+            <%= f.text_field :fantasy_name, class:'form-control', placeholder:'Ej. Altyro Envíos' %>
+            <div class="error"></div>
+        </div>
+        <div class="form-group">
+            <%= f.label :rut, 'Rut *' %>
+            <%= f.text_field :rut, class:'form-control rut-input', placeholder:'99.555.444-1' %>
+            <div class="error"></div>
+        </div>
+        <div class="form-group">
+            <%= f.label :email, 'Email *' %>
+            <%= f.email_field :email, autocomplete: "email", class:'form-control', placeholder:'Escribe el email de la empresa' %>
+            <div class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :phone_number, 'Contacto Teléfono *', class:'form-label' %>
+            <div class="input-group col-sm-12 col-md-6 mb-0">
+                <span class="input-group-text" id="basic-addon1">+56</span>
+                <%= f.text_field :phone_number, class:'form-control', placeholder:'Ej. 912345678' %>
+            </div>
+            <div class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :responsible_name, 'Nombre Responsable' %>
+            <%= f.text_field :responsible_name, class:'form-control', placeholder:'Nombre y Apellido' %>
+            <div class="error"></div>
+        </div>
+
+
+        <div class="form-group ">
+            <%= f.label :web_address, 'Dirección Web' %>
+            <%= f.text_field :web_address, class:'form-control', placeholder:'Ej. https://altyro.cl/' %>
+            <div class="error"></div>
+        </div>
+
+
+        <div class="form-group">
+            <%= f.label :address_concat, 'Dirección *' %>
+            <%= f.text_field :address_concat, class:'form-control auto-places', placeholder:'Comienza escribiendo la dirección', data: { commune_input: '#company_commune' } %>
+            <%= f.hidden_field :latitude %>
+            <%= f.hidden_field :longitude %>
+            <div class="error"></div>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :commune, 'Especifica la comuna *' %>
+            <%= f.text_field :commune, class:'form-control', placeholder:'Comuna...' %>
+            <div class="error"></div>
+        </div>
+        <div class="form-group">
+            <div id="company_map" style="width:100%; height:200px;"></div>
+
+        </div>
+
+        <div class="col-sm-12 col-md-6 d-flex">
+            
+            <div class="form-group">
+                <%= f.label :dpto, 'Depto/Block' %>
+                <%= f.text_field :dpto, class:'form-control', placeholder:'Depto/Block' %>
+                <div class="error"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <%= f.label :reference, 'Referencia' %>
+            <%= f.text_field :reference, class:'form-control', placeholder:'Referencia de ubicación' %>
+            <div class="error"></div>
+        </div>
+        <div class="form-group">
+            <%= f.label :time_open, 'Hora apertura' %>
+            <%= f.text_field :time_open, value: (format_time(@company.time_open) if @company), class:'form-control datetimepicker-time', placeholder:'Hora apertura' %>
+            <div class="error"></div>
+        </div>
+        <div class="form-group">
+            <%= f.label :time_close, 'Hora cierre' %>
+            <%= f.text_field :time_close, value: (format_time(@company.time_close) if @company), class:'form-control datetimepicker-time', placeholder:'Hora cierre' %>
+            <div class="error"></div>
+        </div>
+
+        <%= f.submit 'Guardar', class:'btn btn-primary mt-3 loader-click' %>
+    
+    <%end%>
+            

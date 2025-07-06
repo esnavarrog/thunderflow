@@ -1,0 +1,74 @@
+<%= form_with(model:@company, data:{remote:true}) do |f| %>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <%= f.label :name, 'Razón Social *', class: 'form-label' %>
+                <%= f.text_field :name, class:'form-control', placeholder:'Ej. Altyro Envíos' %>
+                <div class="error"></div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <%= f.label :rut, 'Rut *', class: 'form-label' %>
+                <%= f.text_field :rut, class:'form-control rut-input', placeholder:'99.555.444-1' %>
+                <div class="error"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <%= f.label :email, 'Email *', class: 'form-label' %>
+                <%= f.email_field :email, autocomplete: "email", class:'form-control', placeholder:'Escribe el email de la empresa' %>
+                <div class="error"></div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <%= f.label :phone_number, 'Contacto Teléfono *', class:'form-label' %>
+                <div class="input-group col-sm-12 col-md-6 mb-0">
+                    <span class="input-group-text" id="basic-addon1">+56</span>
+                    <%= f.text_field :phone_number, class:'form-control', placeholder:'Ej. 912345678' %>
+                </div>
+                <div class="error"></div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <%= f.label :address_concat, 'Dirección *', class: 'form-label' %>
+                <%= f.text_field :address_concat, class:'form-control auto-places', placeholder:'Comienza escribiendo la dirección', data: { commune_input: '#company_commune' } %>
+                <%= f.hidden_field :latitude %>
+                <%= f.hidden_field :longitude %>
+                <div class="error"></div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="form-group">
+                <%= f.label :commune, 'Especifica la comuna *', class: 'form-label' %>
+                <%= f.text_field :commune, class:'form-control', placeholder:'Comuna...' %>
+                <div class="error"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div id="company_map" class="maps" style="width:100%; height:200px;"></div>
+    </div>
+
+    <div class="row justify-content-end">
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="d-grid">
+                <%= link_to destroy_user_session_path, method: :delete, class: 'btn btn-outline-primary' do %>
+                    <span>Salir</span>
+                <% end %>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-lg-3">
+            <div class="d-grid">
+                <%= f.submit 'Guardar', class:'btn btn-primary' %>
+            </div>
+        </div>
+    </div>
+<%end%>

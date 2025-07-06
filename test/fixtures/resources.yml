@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  company: one
+  web_address: MyString
+  is_valid: false
+  status: 1
+
+two:
+  company: two
+  web_address: MyString
+  is_valid: false
+  status: 1

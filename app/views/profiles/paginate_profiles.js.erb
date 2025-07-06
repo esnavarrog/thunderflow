@@ -1,0 +1,2 @@
+$('#profiles-index').html("<%= j render 'profiles' %>")
+$('.paginate-profiles').html("<%= j paginate @profiles, remote: true %>")

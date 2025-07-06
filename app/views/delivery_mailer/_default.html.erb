@@ -1,0 +1,21 @@
+<p>
+    Esperando te encuentres muy bien. Nos complace informarte que tu pedido ha sido procesado y se encuentra en camino hacia tu dirección.
+</p>
+<p>
+    A partir de ahora, nos gustaría compartir contigo los detalles del envío para que puedas rastrear tu pedido de manera efectiva:
+</p>
+<p>
+    Estado de pedido: <%= enum_i18n(Delivery, :statuses, @delivery.status) %>
+</p>
+<p>
+    Número de seguimiento: <%= link_to @delivery.order_number, tracking_index_url(order_number:@delivery.order_number) %>
+</p>
+<p>
+    Fecha estimada de entrega: <%= format_date @delivery.date_start %>
+</p>
+<p>
+    Recuerda que el tiempo de entrega puede variar ligeramente según la ubicación y los procesos logísticos, pero nos esforzaremos por asegurar que tu pedido llegue lo más rápido posible.
+</p>
+<p>
+    Si tienes alguna pregunta o inquietud adicional sobre tu pedido, no dudes en contactarnos. Estamos aquí para ayudarte en todo lo que necesites.
+</p>

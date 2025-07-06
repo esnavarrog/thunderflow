@@ -1,0 +1,12 @@
+<!-- PAGO CON WEBPAY -->
+<% if user_signed_in? %>
+<div class="container bg-white rounded shadow-sm p-4 text-center my-3">
+	<h2 class="text-pink">Realiza el pago de tus solicitudes</h2>
+	<p>En Flow puedes pagar con diferentes medios de pago, como WebPay, MACH, Khipu, Onepay, WebPayOneClick, Multicaja, Servipag, Chek.</p>
+    <div>
+        <%= render 'deals/show' %>
+    </div>
+</div>
+
+
+<% end %>

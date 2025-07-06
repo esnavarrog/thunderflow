@@ -1,0 +1,42 @@
+// Place all the styles related to the Companies controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+@import 'variables';
+.form-group{
+    margin-bottom:.7rem;
+}
+
+.list-group-item{
+    line-height: 19px;
+    // font-weight: 700;
+    div{
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 10px;
+    }
+}
+
+.card-header{
+    background-color: white !important;
+    .card-sub{
+        font-size: .8rem;
+        font-weight: 600;
+        line-height: .9rem;
+    }
+    h1{
+        font-size: 1.5rem;
+        color: $info;
+        margin-bottom: 0;
+    }
+}
+
+.card-footer{
+    border-top:0 !important;
+    background-color: white !important;
+}
+
+.banner{
+    background: white;
+    border-radius: 8px;
+    border: 1px solid antiquewhite;
+}

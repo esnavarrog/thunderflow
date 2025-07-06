@@ -1,0 +1,5 @@
+<% if @delivery.present? %>
+  window.location="<%= tracking_index_path(order_number: @delivery.order_number) %>"
+<% else %>
+  $('#tracking-result').html("<%= j render 'tracking/no_tracking' %>")
+<% end %>

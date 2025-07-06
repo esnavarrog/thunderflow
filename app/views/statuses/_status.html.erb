@@ -1,0 +1,80 @@
+
+    <div class="statuses-card">
+        <div class="cards px-3 py-2 bg-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <%= link_to status_path(status), class:'text-decoration-none', remote:true do %>
+                    <div class="commune-list">
+                        <%= format_date_time status.created_at %>
+                    </div>
+                    <% user = User.find(status.user_id) %>
+                    <% if user.present? %>
+                        <div class="region-list">
+                            Actualizado por: <%= user.try(:name).try(:titleize) || user.email %>
+                        </div>
+                    <% else %>
+                        <div class="region-list">
+                            El usuario que cambió el estado ya no existe.
+                        </div>
+                    <% end %>
+                    <% if status.asigned? && current_user.admin? || current_user.delivery? %>
+                        <div class="region-list">
+                            <%= status.delivery.user_asign&.name&.try(:titleize) || status.delivery.user_asign&.email %>
+                        </div>
+                    <% end %>
+                    <div class="id-list">
+                        <%= status.observation %>
+                    </div>
+                    <% if status.description.present? %>
+                        <div class="id-list">
+                            <%= status.description %>
+                        </div>
+                    <% end %>
+                <% end %>
+                    
+                <div class="d-flex justify-content-between align-items-center">
+                    <div id="status-list-<%= status.id %>" class="status-list status-list-position status-list-<%= status.status %>">
+                        <span><%= enum_i18n(Status, :statuses, status.status) %></span><div></div>
+                    </div>
+
+                    <div class="position-legend-status">
+                        
+                        <% if status.receiver_name.present? %>
+                            <div class="date-list">
+                                Recibió <%= status.receiver_name.titleize %>
+                            </div>
+                        <% end %>
+                        <% if status.receiver_rut.present? %>
+                            <div class="date-list">
+                                Rut <%= status.receiver_rut %>
+                            </div>
+                        <% end %>
+                        <% if status.receiver_phone.present? %>
+                            <div class="date-list">
+                                +56 <%= status.receiver_phone %>
+                            </div>
+                        <% end %>
+                        
+                    </div>
+                    <div class="btn-group dropstart dropdown-status">
+                        <div class="btn btn-link btn-position-status pe-0 ps-3 btn-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                            <%= inline_svg_tag('icons/icon_ellipsis.svg', class:'icon-info')%>
+                        </div>
+                        <ul class="dropdown-menu shadow">
+                            <li>
+                                <%= link_to status_path(status), class:'dropdown-item text-success d-flex justify-content-between align-items-center', remote:true do %>
+                                    <span>Ver</span> <i class="fa-solid fa-chevron-right"></i>
+                                <% end %>
+                            </li>
+                            <% if current_user.admin? %>
+                                <li>
+                                    <%= link_to status_path(status), class:'dropdown-item text-danger d-flex justify-content-between align-items-center', data: { confirm: 'Estas seguro de eliminar este estado?, ¡¡Esta acción no puede recuperarse!!' }, method: :delete, remote:true do %>
+                                        <span>Eliminar</span> <i class="fa-solid fa-trash"></i>
+                                    <% end %>
+                                </li>
+                            <% end %>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

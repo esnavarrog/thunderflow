@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <%= wicked_pdf_stylesheet_link_tag "pdf" %>
+    <%= wicked_pdf_stylesheet_link_tag "label" %>
+    <style>
+        .border {
+            border: 1px solid black;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .text-left {
+            text-align: left;
+        }
+        .fw-400 {
+            font-weight: 400;
+        }
+        .fw-600 {
+            font-weight: 600;
+        }
+        .separator-table {
+            margin-top: 20px;
+        }
+        #label-body {
+            width: 100%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        #label-developed-by {
+            margin-top: 50px;
+        }
+    </style>
+  </head>
+  <body>
+    <%= yield %>
+  </body>
+</html>

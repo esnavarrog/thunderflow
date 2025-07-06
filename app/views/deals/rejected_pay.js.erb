@@ -1,0 +1,10 @@
+<% if params[:form] == "true" %>
+    swal({ text:'Se ha enviado una notificación al encargado para revisar el cobro, recibiras una respuesta a la brevedad.', title:'Haz rechazado el cobro', icon:'success', button:'Aceptar' })
+
+    $("#box-info").html("<%= j render 'deals/components/box_info' %>")
+<% end %>
+<% if params[:deal_id] %>
+    $("#modal-body").html("<%= j render 'deals/components/form_rejected' %>")
+    $("#modal").modal("show")
+    $(".modal-title").html("Motivo de rechazo")
+<% end %>

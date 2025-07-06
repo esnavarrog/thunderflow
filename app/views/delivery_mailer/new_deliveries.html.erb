@@ -1,0 +1,60 @@
+<table>
+    <tr class="">
+      <td>
+        <table>
+          <tr>
+            <td class="text-center image-logo pb-32">
+            </td>
+          </tr>
+  
+        </table>
+  
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="pt-48 pb-32">
+            <%=@user.name %>,
+            Se han cargado <%= @deliveries.count %> nuevas solicitudes para: <%= @deliveries.last.company.name %>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <table class="table-mail table-striped">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Seguimiento</th>
+                    <th>Dirección retiro</th>
+                    <th>Dirección destino</th>
+                    <th>Detalle</th>
+                    <th>Costo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% @deliveries.each do |delivery| %>
+                <tr>
+                    <td><%= delivery.id %></td>
+                    <td><%= link_to delivery.order_number, tracking_index_url(order_number: delivery.order_number) %></td>
+                    <td><%= delivery.branch.address_concat %></td>
+                    <td><%= delivery.address_concat %></td>
+                    <td><%= delivery.description %></td>
+                    <td><%= number_to_currency delivery.price, precision:0 %></td>
+                </tr>   
+                <% end %>
+            </tbody>
+        </table>
+      </td>
+    </tr>
+  
+    <tr>
+      <td>
+        <div class="pt-48">
+          <%= link_to "Ver solicitud",  branch_url(@deliveries.last.branch), class: "btn btn-primary" %>
+        </div>
+  
+      </td>
+  
+    </tr>
+  </table>

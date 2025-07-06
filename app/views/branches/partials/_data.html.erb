@@ -1,0 +1,58 @@
+
+
+
+<div class="border-bottom py-3">
+    Empresa: <%= link_to @branch.company.name.try(:titleize), @branch.company %>
+</div>
+<div class="row">
+    <div class="border-bottom py-3 col-sm-12 col-md-6">
+        <div class="">
+            <div class="text-info">Dirección:</div>
+            <%= "#{@branch.address_concat}" %>
+        </div>
+        <div class=" <%= @branch.dpto.present? ? '' : 'd-none' %>">
+            Depto/Block: <%= @branch.dpto %>
+        </div>
+        <div class="mb-3 <%= @branch.reference.present? ? '' : 'd-none' %>">
+            <div class="text-info">Referencia:</div>
+            <%= @branch.reference %>
+        </div>
+        <div class="">
+            <%= @branch.region.try(:titleize) %>
+        </div>
+    </div>
+    <div class="border-bottom py-3 col-sm-12 col-md-6">
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <h6>Datos de sucursal</h6>
+          <div class="mb-3 <%= @branch.responsible_name.present? ? '' : 'd-none' %>">
+            <div class="text-info">Responsable</div>
+            <%= @branch.responsible_name.try(:titleize) %>
+          </div>
+
+          <% if @branch.default_price.present? %>
+            <div class="mb-3">
+              <div class="text-info">Precio por defecto sucursal</div>
+              <%= number_to_currency @branch.default_price, precision:0 %>
+            </div>
+          <% end %>
+          <div class="mb-3">
+            <%= link_to "mailto:#{@branch.email}", class:'btn btn-sm btn-primary' do %>
+              <i class="fa-sharp fa-solid fa-envelope"></i> <%= @branch.email %>
+            <% end %>
+          </div>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="mb-3 <%= @branch.time_open.present? || @branch.time_close.present? ? '' : 'd-none' %>">
+            <div class="text-info">Horarios Local</div>
+            <%= format_time @branch.time_open %> - <%= format_time @branch.time_close %>
+          </div>
+          <div class="mb-3 <%= @branch.phone_number.present? ? '' : 'd-none' %>">
+            <a class="btn btn-sm btn-primary" href="tel:+56<%= @branch.phone_number.gsub(/\s+/, " ") %>">
+              <i class="fa-solid fa-phone"></i> <%= @branch.phone_number %>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>

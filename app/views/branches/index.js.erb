@@ -1,0 +1,3 @@
+$('#branches-index').html("<%= j render @branches %>")
+$('.paginates-index').html("<%= j paginate @branches, remote: true %>")
+$('.loader').fadeOut('fast')

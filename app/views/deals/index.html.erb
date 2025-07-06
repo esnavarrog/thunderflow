@@ -1,0 +1,8 @@
+
+<% if policy(:application).backoffice? %>
+    <%= render 'deals/index_backoffice' %>
+<% end %>
+
+<% if policy(:application).client? %>
+    <%= render 'deals/index_client' %>
+<% end %>

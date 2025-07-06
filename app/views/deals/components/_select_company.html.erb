@@ -1,0 +1,19 @@
+<%= form_with(url: select_company_path, data:{remote: true}, method: :get) do |f| %>
+<div class="row">
+    <div class="col-sm-12 col-md-4 col-lg-3 d-flex align-items-center">
+        <div class="form-group">
+            <%= label_tag :company_id, 'Selecciona un cliente' %>
+            <%= select_tag :company_id, options_from_collection_for_select(@companies, :id, lambda { |company| company.name.titleize }), {class:"form-control js-basic-single select_company_deal #{action_name == "show" ? "disabled" : ""}", prompt:'Selecciona un cliente...', data:{url:select_company_path, param:"company_id"}} %>
+        </div>
+    </div>
+    
+    <div id="select-branch" class="form-group col-sm-12 col-md-4 col-lg-3"></div>
+    <div id="select-date" class="col-sm-12 col-md-4 col-lg-3 d-flex align-items-center"></div>
+    <div id="submit-button" class="col-sm-12 col-md-4 col-lg-3 d-flex align-items-center">
+        <%= button_tag name: 'commit', type: :submit, class: 'btn btn-outline-info p-3 filter-button-date' do %>
+          <i class="bi bi-filter-circle-fill me-2"></i> Filtrar
+        <% end %>
+    </div>
+
+</div>
+<% end %>

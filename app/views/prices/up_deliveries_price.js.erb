@@ -1,0 +1,5 @@
+$('#prices').html("<%= j render 'prices/index' %>")
+<% if @message.present? %>
+    swal({title: 'Genial', text: "<%= j @message %>", icon:'success', button:"Aceptar"})
+<% end %>
+$('.loader').fadeOut('fast');

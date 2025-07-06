@@ -1,0 +1,67 @@
+/**
+  * Split
+  *
+  * @author jh3y
+*/
+@import 'variables';
+
+$size: 50px;
+$color-one: var(--primary);
+$color-two: var(--secondary);
+
+@keyframes swap {
+    0%, 100% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1);
+    }
+}
+
+.swap {
+    &:after,
+    &:before {
+        border-radius: 100%;
+        content: '';
+        height: $size;
+        opacity: .5;
+        position: absolute;
+        width: $size;
+    }
+
+    &:after {
+        animation: swap 1.5s -0.75s infinite;
+        background-color: $color-one;
+    }
+
+    &:before {
+        animation: swap 1.5s infinite;
+        background-color: $color-two;
+    }
+}
+
+// Dual Ring
+.lds-dual-ring {
+    display: inline-block;
+    width: 64px;
+    height: 64px;
+}
+.lds-dual-ring:after {
+    content: " ";
+    display: block;
+    width: 46px;
+    height: 46px;
+    margin: 1px;
+    border-radius: 50%;
+    border: 5px solid $info;
+    border-color: $info transparent $info transparent;
+    animation: lds-dual-ring 1.2s linear infinite;
+}
+@keyframes lds-dual-ring {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

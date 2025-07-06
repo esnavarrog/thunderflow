@@ -1,0 +1,122 @@
+<tr id="delivery-id-<%= delivery.id %>">
+  <td>
+    <% unless delivery.finish? && current_user.delivery? %>
+      <div class="text-center select-massive">
+        <div class="form-check d-flex justify-content-center align-items-end">
+          <input class="form-check-input select-delivery" type="checkbox" value="" data-id="<%= delivery.id %>" id="local">
+        </div>
+      </div>
+    <% end %>
+  </td>
+  <td class="text-center">
+    <%= link_to delivery, class:'d-flex justify-content-between align-items-center gap-2' do %>
+      <span><%= delivery.id %></span>
+    <% end %>
+  </td>
+  <td class="text-center">
+    <% if !delivery.company.requires_additional_fee && !delivery.price.present? && delivery&.price&.zero? && !delivery.payed? %>
+      <div class="date py-2 px-3 bg-warning rounded mt-2">
+        Pendiente de revisión
+      </div>
+    <% elsif delivery.payed? %>
+      <div class="date py-2 px-3 text-success rounded mt-2">
+        Pagada
+      </div>
+    <% else %>
+      <div class="date py-2 px-3 text-warning rounded mt-2">
+        Pendiente de Pago
+      </div>
+    <% end %>
+  </td>
+  <% if policy(:application).backoffice? %>
+    <td class="text-center">
+      <%= delivery.company.shipping_without_payment ? 'Permitido' : 'No Permitido' %>
+    </td>
+  <% end %>
+  <% if policy(:application).backoffice? && current_user.admin? %>
+    <td class="text-center">
+      <%= delivery.deal_id ? 'Con cobro' : 'Sin cobro' %>
+    </td>
+  <% end %>
+
+  <td>
+    <div class="status-delivery-table bg-status-<%= delivery.status %>">
+      <span><%= enum_i18n(Delivery, :statuses, delivery.status) %></span><div></div>
+    </div>
+  </td>
+
+  <% if policy(:application).backoffice? %>
+    <td><%= delivery.company&.name&.titleize %></td>
+  <% end %>
+
+  <td><%= format_date_human delivery.date_start %></td>
+
+  <% if policy(:application).backoffice? %>
+    <td><%= delivery.contact_name.try(:titleize) %></td>
+  <% else %>
+    <td><%= delivery.branch.commune&.titleize %></td>
+    <td title="<%= delivery.branch.invert ? "#{delivery.address_concat&.titleize} #{delivery.dpto&.titleize}" : "#{delivery.branch.address_concat&.titleize} #{delivery.branch.dpto&.titleize}" %>">
+      <%= delivery.branch.invert ? "#{delivery.address_concat&.titleize&.truncate(70)} #{delivery.dpto&.titleize}" : "#{delivery.branch.address_concat&.titleize&.truncate(70)} #{delivery.branch.dpto&.titleize}" %>
+    </td>
+  <% end %>
+
+  <td><%= delivery.commune&.titleize %></td>
+  <td title="<%= delivery.branch.invert ? "#{delivery.branch.address_concat&.titleize} #{delivery.branch.dpto&.titleize}" : "#{delivery.address_concat&.titleize} #{delivery.dpto&.titleize}" %>">
+    <%= delivery.branch.invert ? "#{delivery.branch.address_concat&.titleize&.truncate(70)} #{delivery.branch.dpto&.titleize}" : "#{delivery.address_concat&.titleize&.truncate(70)} #{delivery.dpto&.titleize}" %>
+  </td>
+  <% if policy(:application).backoffice? %>
+    <td><%= delivery.user_asign&.name.try(:titleize) %></td>
+  <% end %>
+  <td class="text-center">
+    <a type="button" class="copy copy-button-table" data-clipboard-text="<%= delivery.order_number %>">
+      <span class="me-2">
+        <span class="text-bold">
+            <%= delivery.order_number %>
+        </span> <i class="fa-regular fa-clipboard"></i>
+      </span>
+      <div class="copy-content">
+        <div class="d-flex justify-content-between">
+          <div>Copiado</div>
+        </div>
+      </div>
+    </a>
+  </td>
+  <td>
+    <div class="d-flex justify-content-center">
+      <div class="btn-group dropstart">
+        <div class="btn btn-link pe-0 ps-3 btn-icon" data-bs-toggle="dropdown" aria-expanded="false">
+          <%= inline_svg_tag('icons/icon_ellipsis.svg', class:'icon-info')%>
+        </div>
+        <ul class="dropdown-menu shadow">
+          <li>
+            <%= link_to delivery_path(delivery), class:'dropdown-item text-success d-flex justify-content-between align-items-center' do %>
+              <span>Ver más</span> <i class="fa-solid fa-chevron-right"></i>
+            <% end %>
+          </li>
+          <% if policy(:application).backoffice? %>
+            <li>
+              <%= link_to asign_user_path(id:delivery), class:'dropdown-item text-success d-flex justify-content-between align-items-center', remote:true do %>
+                <span>Asignar Repartidor</span> <i class="fa-solid fa-rotate"></i>
+              <% end %>
+            </li>
+            <li>
+              <%= link_to new_status_path(delivery_id:delivery), class:'dropdown-item text-success d-flex justify-content-between align-items-center', remote:true do %>
+                <span>Cambiar estado</span> <i class="bi bi-signpost-split"></i>
+              <% end %>
+            </li>
+          <% end %>
+          <% if delivery.preparing? || policy(:application).backoffice? %>
+            <li>
+              <%= link_to delivery_path(delivery), class:'dropdown-item text-danger d-flex justify-content-between align-items-center', data:{confirm:'Estas seguro de eliminar esta solicitud?'}, method: :delete, remote:true do %>
+                <span>Eliminar</span> <i class="fa-solid fa-trash"></i>
+              <% end %>
+            </li>
+          <% end %>
+
+
+
+        </ul>
+      </div>
+    </div>
+  </td>
+</tr>

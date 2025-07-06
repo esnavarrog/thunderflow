@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  access_type: 1
+  invitation_email: MyString
+  company: one
+  user: one
+  is_valid: false
+
+two:
+  access_type: 1
+  invitation_email: MyString
+  company: two
+  user: two
+  is_valid: false

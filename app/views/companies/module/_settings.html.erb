@@ -1,0 +1,45 @@
+<div class="tab-pane fade" id="pills-settings" role="tabpanel" aria-labelledby="pills-settings-tab" tabindex="0">
+  <div class="container bg-light border border-light rounded p-3 mb-3 shadow-sm">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h5 class="text-secondary m-0">Configuraciones</h5>
+    </div>
+    <div id="settings">
+      <div class="row">
+        <div class="col-12 col-md-8">
+          <div class="form-group">
+            <%= label_tag :shipping_without_payment, 'Tipo de cobro' %>
+            <%= select_tag :shipping_without_payment, options_for_select([['Automático', 'false'], ['Diferido', 'true']], @company.shipping_without_payment), { class: 'form-control save-setting', data: { url: update_settings_company_path(@company), key: 'shipping_without_payment' } } %>
+          </div>
+        </div>
+      </div>
+      <% if AdditionalFee.scope_deals.present? %>
+        <div class="row">
+          <div class="col-12 col-md-8">
+            <div class="form-group">
+              <%= label_tag :requires_additional_fee, "Se cobra adicional retiro menor o igual a #{AdditionalFee.scope_deals&.last&.condition}" %>
+              <%= select_tag :requires_additional_fee, options_for_select([['Con adicional', 'true'], ['Sin adicional', 'false']], @company.requires_additional_fee), { class: 'form-control save-setting', data: { url: update_settings_company_path(@company), key: 'requires_additional_fee' } } %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <div class="row">
+        <div class="col-12 col-md-8">
+          <div class="form-group">
+            <%= label_tag :name_profile, 'Perfil de tarifas' %>
+            <%= select_tag :name_profile,
+                           options_for_select(Company.name_profiles.map { |k, _| [k.titleize, k] }, @company.name_profile),
+                           {
+                             class: 'form-control save-setting',
+                             data: {
+                               url: update_settings_company_path(@company),
+                               key: 'name_profile'
+                             }
+                           }
+            %>
+            <small class="form-text text-muted">Este perfil determinará las tarifas que se aplicarán a los despachos</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

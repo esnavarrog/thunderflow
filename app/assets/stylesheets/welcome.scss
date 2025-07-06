@@ -1,0 +1,44 @@
+// Place all the styles related to the Welcome controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+@import 'variables';
+body{
+    // background-image: asset-data-url("tvb-white-pattern.jpeg");
+    background-color: $backgroundDefault;
+}
+
+.bg-light{
+    background-color: $backgroundDefault !important;
+}
+
+.mxh-300{
+    max-height: 300px;
+    overflow: auto;
+}
+
+.box-charts{
+    min-height: 360px;
+    select{
+        height: 33px !important;
+        padding: 4px !important;
+    }
+}
+
+.title-dashboard{
+    position: relative;
+    .float-right{
+        position: absolute;
+        right: 0;
+        top: -5px;
+    }
+}
+
+.header-count-deliveries{
+    line-height: 1.3rem;
+    font-size: 20px;
+    min-height: 80px;
+    small{
+        line-height: 1rem;
+        font-size: 12px;
+    }
+}

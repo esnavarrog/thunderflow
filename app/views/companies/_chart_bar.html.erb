@@ -1,0 +1,48 @@
+<div class="col-sm-12 col-md-6 mb-2">
+    <div class="bg-white rounded-4 p-2 shadow-sm box-charts">
+        <div class="title text-primary p-2 d-flex justify-content-between">
+            <span>Solicitudes por mes</span>
+            <div class="form-group">
+                <select name="" class="form-control change-chart-deliveries" data-url="<%= charts_company_path %>">
+                    <option value="anual" <%= params[:chart_date] == 'anual' ? 'selected' : nil %>>Anual</option>
+                    <option value="mensual" <%= params[:chart_date] == 'mensual' ? 'selected' : nil %>>Mensual</option>
+                    <option value="semanal" <%= params[:chart_date] == 'semanal' ? 'selected' : nil %>>Semanal</option>
+                </select>
+            </div>
+        </div>
+        <%= column_chart @deliveries_chart, datasets:[], loading: "Cargando...", height:'280px', colors: ["#00C8DC", "#3e8d63"],
+            thousands: ".",
+            legend:false,
+            library:{
+                maintainAspectRatio: false,
+                responsive:true,
+                borderRadius:8,
+                animation: { easing:'easeInSine' },
+            } %>
+    </div>
+</div>
+<% if current_user.admin? %>
+<div class="col-sm-12 col-md-6 mb-2">
+    <div class="bg-white rounded-4 p-2 shadow-sm box-charts">
+        <div class="title text-primary p-2 d-flex justify-content-between">
+            <span>Costos por mes</span>
+            <div class="form-group">
+                <select name="" class="form-control change-chart-deliveries" data-url="<%= charts_company_path %>">
+                    <option value="anual" <%= params[:chart_date] == 'anual' ? 'selected' : nil %>>Anual</option>
+                    <option value="mensual" <%= params[:chart_date] == 'mensual' ? 'selected' : nil %>>Mensual</option>
+                    <option value="semanal" <%= params[:chart_date] == 'semanal' ? 'selected' : nil %>>Semanal</option>
+                </select>
+            </div>
+        </div>
+        <%= column_chart @deliveries_price, datasets:[], loading: "Cargando...", height:'280px', colors: ["#00C8DC", "#3e8d63"],
+            thousands: ".",
+            legend:false,
+            library:{
+                maintainAspectRatio: false,
+                responsive:true,
+                borderRadius:8,
+                animation: { easing:'easeInSine' },
+            } %>
+    </div>
+</div>
+<% end %>

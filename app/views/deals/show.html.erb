@@ -1,0 +1,11 @@
+<%= render partial: 'partials/title_module', locals:{sector:"Cobro #{@deal.id}"} %>
+<div id="content-show">
+    <%= render 'show' %>
+</div>
+
+<% if @deal.payments.present? and current_user.admin? %>
+    <div class="container bg-white rounded shadow-sm py-3 my-3">
+        <h5><%= @deal.payments.last.status_message %></h5>
+        <%= render 'payments/show' %>
+    </div>
+<% end %>

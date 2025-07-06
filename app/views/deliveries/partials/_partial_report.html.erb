@@ -1,0 +1,32 @@
+<div class="dropdown-item">
+  <h6 class="text-info">Entregados</h6>
+  <% deliveries_day.group_by(&:company)&.each do |company, deliveries| %>
+    <% deliveries_count = Delivery.where(id: deliveries.map(&:id)).where(status: :delivered).count %>
+    <% if deliveries_count > 0 %>
+      <div class="name-client">
+        <span><%= link_to company.try(:name).try(:titleize), company, class:'no-decoration' %></span>
+        <span>
+          <%= deliveries_count %>
+        </span>
+      </div>
+    <% else %>
+      <div class="text-center">Nada entregado</div>
+    <% end %>
+  <% end %>
+</div>
+<div class="dropdown-item">
+  <h6 class="text-info">Pendientes</h6>
+  <% deliveries_day.group_by(&:company)&.each do |company, deliveries| %>
+    <% deliveries_count = Delivery.where(id: deliveries.map(&:id)).where.not(status: [:delivered, :rejected, :nothing]).count %>
+    <% if deliveries_count > 0 %>
+      <div class="name-client">
+        <span><%= link_to company.try(:name).try(:titleize), company, class:'no-decoration' %></span>
+        <span>
+          <%= deliveries_count %>
+        </span>
+      </div>
+    <% else %>
+      <div class="text-center">Sin pendientes</div>
+    <% end %>
+  <% end %>
+</div>

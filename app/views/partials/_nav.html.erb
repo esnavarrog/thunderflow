@@ -1,0 +1,30 @@
+
+<nav class="navbar navbar-dark bg-info shadow-sm">
+    <div class="container-fluid">
+        <div class="menu-sidebar active" id="toggle-sidebar">
+            <%= inline_svg_tag('icons/icon_arrow_right_short.svg', class:'icon-menu-ham') %>
+            <%= inline_svg_tag('icons/icon_arrow_left_short.svg', class:'icon-close-sidebar') %>
+        </div>
+        <% if current_user.client? %>
+            <%= render partial: 'companies/current_company', locals: { company: current_company } %>
+        <% end %>
+        <% if Rails.env.development? || ENV['DEV_ENV'] == 'staging' %>
+            <%= render 'layouts/switch_user' %>
+        <% end %>
+        <div class="d-flex align-items-center">
+            <%= link_to profile_path(current_user), class:'link-profile-user d-flex align-items-center' do %>
+            <% if current_user.avatar.present? %>
+                <%= image_tag current_user.avatar_url(:thumb), class:'avatar-nav me-2'  %>
+            <% else %>
+                <img herf="#" class="avatar-nav me-2 d-none" />
+            <% end %>
+                <div class="name-user text-truncate">
+                    <div>
+                        <%= current_user.name.present? ? "#{current_user.try(:name)}" : current_user.try(:email) %>
+                    </div>
+                    <small><%= enum_i18n(User, :roles, current_user.role)%></small>
+                </div>
+            <% end %>
+        </div>
+    </div>
+</nav>

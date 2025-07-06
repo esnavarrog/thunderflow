@@ -1,0 +1,17 @@
+
+<div class="col-sm-12 col-md-6 mb-2">
+  <div class="bg-white rounded-4 p-2 shadow-sm box-charts">
+      <div class="title text-primary p-2 d-flex justify-content-between">
+          <span>Utilidades <%= params[:chart_date] || 'anual' %></span>
+      </div>
+      <%= column_chart @financial_report, datasets:[], loading: "Cargando...", height:'280px', colors: ["#00C8DC", "#3e8d63"],
+          thousands: ".",
+          legend:false,
+          library:{
+              maintainAspectRatio: false,
+              responsive:true,
+              borderRadius:8,
+              animation: { easing:'easeInSine' },
+          } %>
+  </div>
+</div>

@@ -1,0 +1,107 @@
+<%= form_with url: create_deliveries_path(branch_id: @branch.id, integration_id: @integration.id), id: 'integration-orders-form', class: 'd-none', data: { remote: true } do |f| %>
+  <%= f.submit '', class: 'd-none' %>
+<% end %>
+<div id="integration-orders-table" class="table-responsive">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>
+          <input id="select-all-order-checkbox" type="checkbox" class="form-check-input">
+        </th>
+        <th>Pedido</th>
+        <th>Fecha</th>
+        <th></th>
+        <th class="text-center">+ Info</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @orders.each_with_index do |order, index| %>
+        <tr id="order-row-<%= order[:integration_order_id] %>" class="order-row">
+          <% if order[:delivery_id] %>
+            <td>
+              <%= link_to delivery_path(id: order[:delivery_id]), target: '_blank' do %>
+                <%= inline_svg_tag("icons/icon_eye.svg") %>
+              <% end %>
+            </td>
+          <% else %>
+            <td class="order-selected">
+              <input type="checkbox" class="form-check-input select-order-checkbox" data-integration-order-id="<%= order[:integration_order_id] %>">
+            </td>
+          <% end %>
+          <td>
+            <span data-info="name"><%= order[:name] %></span>
+          </td>
+          <td>
+            <span data-info="date"><%= format_date(order[:date]) %></span>
+          </td>
+          <td>
+          </td>
+          <td class="text-center">
+            <button type="button" class="btn btn-primary collapsed toggle-order-info" data-bs-toggle="collapse" data-bs-target="#order-info-<%= order[:integration_order_id] %>">
+              <%= inline_svg_tag("icons/icon_chevron_down.svg") %>
+            </button>
+          </td>
+        </tr>
+        <tr id="order-info-<%= order[:integration_order_id] %>" class="collapse collapse-order-info">
+          <td colspan="5">
+            <table class="w-100">
+              <tbody>
+                <tr>
+                  <th>Productos</th>
+                  <td class="text-end" data-info="description"><%= order[:description] %></td>
+                </tr>
+                <tr>
+                  <th>Cliente</th>
+                  <td class="text-end">
+                    <span data-info="contact_name"><%= order[:contact_name] %></span>
+                    <span data-info="contact_lastname"><%= order[:contact_lastname] %></span>
+                  </td>
+                </tr>
+                <tr>
+                  <th>Email</th>
+                  <td class="text-end" data-info="email"><%= order[:email] %></td>
+                </tr>
+                <tr>
+                  <th>Télefono</th>
+                  <td class="text-end" data-info="phone_number"><%= order[:phone_number] %></td>
+                </tr>
+                <tr>
+                  <th class="align-top">Dirección</th>
+                </tr>
+                <% unless order[:delivery_id] %>
+                  <tr>
+                    <td colspan="2" class="text-end">
+                      <div class="form-group">
+                        <label for="address_concat_<%= order[:integration_order_id] %>">Dirección</label>
+                        <input
+                          type="text"
+                          name="address_concat"
+                          id="address_concat_<%= order[:integration_order_id] %>"
+                          placeholder="Dirección para la entrega..."
+                          class="form-control autoplaces"
+                          data-info="address_concat"
+                          data-target="<%= order[:integration_order_id] %>"
+                          value="<%= order[:address_concat]%>"
+                          <%= 'disabled' if order[:latitude] && order[:longitude] %>
+                        >
+                        <input type="hidden" name="longitude" id="longitude_<%= order[:integration_order_id] %>" value="<%= order[:longitude] %>" data-info="longitude">
+                        <input type="hidden" name="latitude" id="latitude_<%= order[:integration_order_id] %>" value="<%= order[:latitude] %>" data-info="latitude">
+                      </div>
+                      <div class="form-group">
+                        <label for="commune_<%= order[:integration_order_id] %>" class=" <%= 'd-none' if order[:latitude] && order[:longitude] %>">Comuna</label>
+                        <input type="text" name="commune" id="commune_<%= order[:integration_order_id] %>" placeholder="Comuna..." value="<%= order[:commune] %>"class="form-control <%= 'd-none' if order[:latitude] && order[:longitude] %>" data-info="commune" disabled>
+                      </div>
+                    </td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+<div class="d-grid">
+  <button id="proccess-orders-from" type="button" class="btn btn-primary mt-4" disabled>Guardar</button>
+</div>

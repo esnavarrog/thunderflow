@@ -1,0 +1,3 @@
+<% if current_user.role == 'admin' %>
+    $('#deliveries').html("<%= j render 'deliveries/module/table_deliveries' %>")
+<% end %>

@@ -1,0 +1,16 @@
+<%= render partial: 'partials/title_module', locals:{sector:'Sucursales'} %>
+
+<div class="container mt-3">
+    <%= render 'branches/partials/filter_company' %>
+</div>
+<div id="branches-index" class="container mt-3">
+    <%= render @branches %>
+</div>
+
+<div class="container">
+    <div class="paginate-deliveries paginates paginates-index">
+        <%= paginate @branches, remote: true %>
+    </div>
+</div>
+
+

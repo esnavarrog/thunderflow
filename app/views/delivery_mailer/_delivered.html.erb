@@ -1,0 +1,30 @@
+<p>
+    Esperando te encuentres muy bien. Nos complace informarte que tu pedido ha sido entregado satisfactoriamente.
+</p>
+
+<p>
+    Puedes obtener más detalles en el siguiente link: <%= link_to @delivery.order_number, tracking_index_url(order_number:@delivery.order_number) %>
+</p>
+
+<% if @status.description.present? %>
+    <p>
+        El repartidor nos ha dejado esta observación.
+        - <%= @status.description %>
+    </p>
+<% end %>
+
+<p>
+    Fecha de entrega: <%= format_date @delivery.date_deliver_at %>
+</p>
+
+<p>
+    Gracias por elegirnos como tu proveedor de confianza.
+</p>
+
+<p>
+    Si tienes alguna pregunta o necesitas asistencia adicional, no dudes en contactarnos. Estaremos encantados de ayudarte en todo lo que necesites.
+</p>
+
+<p>
+    ¡Que tengas un excelente día!
+</p>

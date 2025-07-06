@@ -1,0 +1,7 @@
+<div id="last-status-delivery" class="last-status-delivery last-status-delivery-<%= delivery.klass_statuses %>">
+    <p class="text-07">Último estado de la solicitud:</p>
+
+    <div id="status-<%= delivery.id %>" class="badge rounded-pill bg-<%= delivery.klass_statuses %>">
+        <%= enum_i18n(Delivery, :statuses, delivery.status) %>
+    </div>
+</div>

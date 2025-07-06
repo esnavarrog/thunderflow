@@ -1,0 +1,5 @@
+.table-responsive {
+  &:has(.dropdown-menu.show) {
+    overflow: inherit !important;
+  }
+}

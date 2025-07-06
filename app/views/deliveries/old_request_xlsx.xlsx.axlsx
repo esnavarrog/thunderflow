@@ -1,0 +1,48 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Pedidos") do |sheet|
+    # Create the header row
+    sheet.add_row ["Nº Solicitud", "Nombre Empresa", "Rut", "Id Empresa", "Nombre Sucursal", "Id Sucursal","Dirección número sucursal", "Comuna", "Calle Retiro", "Contacto sucursal", "Email Contacto sucursal","Nº contacto sucursal", "Referencia sucursal", 
+        "Comuna Despacho", "Dirección número despacho", 
+        "Calle Despacho", "Region Despacho", 
+        "Ciudad", "Referencia Despacho",
+        "Receptor Nombre", "Receptor Apellido", "Receptor Rut",
+        "Receptor contacto", "Receptor email",
+        "Peso paquete kg", "Altura cm", "Ancho cm", "Largo cm",
+        "Fecha Retiro", "Fecha entrega" ]
+    # Create entries for each item
+    @deliveries.each do |delivery|
+        sheet.add_row [ 
+            delivery.id, 
+            delivery.branch.company.name, 
+            delivery.branch.company.rut,
+            delivery.branch.company.id,
+            delivery.branch.name,
+            delivery.branch.id, 
+            delivery.branch.address_number,
+            delivery.branch.commune, 
+            delivery.branch.street, 
+            delivery.branch.responsible_name, 
+            delivery.branch.email, 
+            delivery.branch.phone_number, 
+            delivery.branch.reference, 
+            delivery.commune,
+            delivery.address_number,
+            delivery.address_street,
+            delivery.region,
+            delivery.city,
+            delivery.reference,
+            delivery.contact_name,
+            delivery.contact_lastname,
+            delivery.rut,
+            delivery.phone_number,
+            delivery.email,
+            delivery.weight,
+            delivery.height,
+            delivery.width,
+            delivery.depth,
+            format_date_time(delivery.date_start),
+            format_date_time(delivery.date_end)
+        ]
+    end
+end

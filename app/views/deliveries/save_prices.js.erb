@@ -1,0 +1,4 @@
+$("#price-<%= @delivery.id %>, #price-deliver-<%= @delivery.id %>").addClass("disabled");
+message = "Hemos guardado correctamente los datos de la solicitud #<%= @delivery.id %>, presiona Calcular si ya tienes todos los campos rellenados"
+swal({title: "Guardado", text:message, icon:"success", button:"Aceptar"})
+$('.miles').mask("000.000.000.000", {reverse: true});

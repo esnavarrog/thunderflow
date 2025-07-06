@@ -1,0 +1,34 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Pedidos") do |sheet|
+    # Create the header row
+    sheet.add_row ["ID Solicitud", "Fecha de Retiro", "Fecha de entrega", "Horario retiro", "Horario entrega", "Nombre de Empresa", "Comuna Retiro", "Dirección entrega",
+                    "Depto/Casa", "Comuna", "Costo Despachador", "Valor Delivery", "Producto/Características", "Obsr.", "Despachador", "Estado", "Peso", "Ancho", "Alto", "Profundidad", "Estado de pago", "Id cobro asociado" ]
+    # Create entries for each item
+    @deliveries.each do |delivery|
+        sheet.add_row [ 
+            delivery.id, 
+            delivery.date_start,
+            delivery.date_deliver_at,
+            delivery.hour_retired,
+            delivery.hour_delivery,
+            delivery.branch.company.name,
+            delivery.branch.commune,
+            delivery.address_concat,
+            delivery.dpto,
+            delivery.commune,
+            delivery.price_deliver,
+            delivery.price,
+            delivery.reference,
+            delivery.description,
+            delivery.name_user_asign,
+            delivery.status,
+            delivery.weight,
+            delivery.width,
+            delivery.height,
+            delivery.depth,
+            delivery.status_pay,
+            delivery.deal_id
+        ]
+    end
+end

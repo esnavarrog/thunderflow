@@ -1,0 +1,3 @@
+<%= render partial: 'partials/title_module', locals:{sector:"Nuevo cobro"} %>
+<%= render 'deals/new_backoffice' if current_user.admin? %>
+<%= render 'deals/new_client' if current_user.client? %>

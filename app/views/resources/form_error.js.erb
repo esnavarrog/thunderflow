@@ -1,0 +1,8 @@
+$(".error").html("");
+$(".is-invalid").removeClass("is-invalid");
+<% @resource.errors.each do |key,error|%>
+    $('#resource_<%=key%>').siblings('.error').html('<%=error%>');
+    $('#resource_<%=key%>').addClass('is-invalid');
+<% end %>
+
+$('.loader').fadeOut('fast');

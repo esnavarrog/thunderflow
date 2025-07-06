@@ -1,0 +1,98 @@
+
+
+<div id="label-body">
+
+  <table class="border separaor-table">
+    <tbody>
+    <tr>
+      <td class="text-center">
+        <h2>Solicitud #<%= @delivery.id %></h2>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <table class="border">
+    <tbody>
+    <tr>
+      <td class="text-center">
+        <h2 class="fw-400">Fecha:</h2>
+      </td>
+      <td class="text-center">
+        <h2><%= format_date(@delivery.date_start)%></h2>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <table class="border separaor-table">
+    <tbody>
+    <tr>
+      <td colspan="2" class="text-center">
+        <h2>Destinatario</h2>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <table class="border">
+    <tbody>
+    <tr>
+      <td class="text-left fw-600">
+        Direccion:
+      </td>
+      <td class="text-right">
+        <%= @delivery.address_concat %>
+      </td>
+    </tr>
+    <tr>
+      <td class="text-left fw-600">
+        Comuna:
+      </td>
+      <td class="text-right">
+        <%= @delivery.commune %>
+      </td>
+    </tr>
+    <tr>
+      <td class="text-left fw-600">
+        Nombre:
+      </td>
+      <td class="text-right">
+        <%= @delivery.contact_name %>
+      </td>
+    </tr>
+    <tr>
+      <td class="text-left fw-600">
+        Teléfono:
+      </td>
+      <td class="text-right">
+        <%= @delivery.phone_number %>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <table id="label-developed-by" class="border">
+    <tbody>
+    <tr>
+      <td class="text-center">
+        DEVELOPED BY
+      </td>
+      <td class="text-center">
+        https://www.birdti.cl/
+      </td>
+    </tr>
+    <tr>
+
+    </tr>
+    <tr>
+      <td class="text-center">
+        FOR
+      </td>
+      <td class="text-center">
+        https://sociosaltyro.cl/
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>

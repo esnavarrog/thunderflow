@@ -1,0 +1,21 @@
+
+<div class="m-2">
+  <%= form_with(model: @deal, url: update_archives_path(@deal), data: { remote: true }, method: :put) do |f| %>
+    <div class="row rounded border p-2">
+      <div>
+        <%= f.label :archives, 'Archivos del cobro' %>
+        <div id="archives" class="form-group">
+          <%= f.fields_for :archives do |archive_fields| %>
+            <%= render 'deals/archive_fields', f: archive_fields %>
+          <% end %>
+        </div>
+        <%= link_to_add_association 'Agregar archivo', f, :archives %>
+      </div>
+    </div>
+
+    <div class="d-flex justify-content-end mt-3">
+      <%= f.submit 'Guardar', class:'btn btn-primary' %>
+    </div>
+  <% end %>
+
+</div>

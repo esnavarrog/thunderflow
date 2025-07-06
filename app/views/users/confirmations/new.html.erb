@@ -1,0 +1,22 @@
+<%= render partial: 'partials/title_module', locals:{sector:'Confirmar correo'} %>
+<div class="container">
+  <div class="bg-white shadow rounded p-3 box-registred">
+    <h5 class="text-info">Reenvía las instrucciones para confirmar el correo</h5>
+    
+    <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+      <%= render "users/shared/error_messages", resource: resource %>
+    
+      <div class="form-group">
+        <%= f.label :email, 'Ingresa tu correo registrado' %><br />
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class:'form-control', value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+      </div>
+    
+      <div class="d-flex my-3">
+        <%= f.submit "Reenvía las instrucciones", class:'btn btn-primary w-100' %>
+      </div>
+    <% end %>
+    
+    <%= render "users/shared/links" %>
+  </div>
+</div>
+

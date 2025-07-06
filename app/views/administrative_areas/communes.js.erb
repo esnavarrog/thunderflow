@@ -1,0 +1,12 @@
+<% if @commune_price %>
+  var communeSelect = $('.commune-input');
+  communeSelect.empty();
+  communeSelect.append('<option value="">Seleccione una comuna</option>');
+  <% @options.each do |commune| %>
+    communeSelect.append('<option value="<%= commune %>"><%= commune %></option>');
+  <% end %>
+  $('.js-basic-single').select2();
+<% else %>
+  $('#administrative-areas-commune-input').replaceWith("<%= j render partial: 'administrative_areas/commune_input', locals: { options: @options, input_id: 'zone-communes-select' }%>")
+  $('#administrative-areas-commune-input').val('')
+<% end %>

@@ -1,0 +1,85 @@
+<%= form_with url:profile_url(@profile), data:{remote:true}, method: :put do |f| %>
+    <div class="row border rounded overflow-auto">
+        <div class="col-sm-12 col-md-4 bg-white p-3 d-flex justify-content-center align-items-center">
+            <!-- avatar -->
+            <div class="img-container">
+                <%= f.label :avatar do %>
+                    <%= image_tag @profile.avatar_url, class:'img-profile' %>
+                <% end %>
+            </div>
+
+        </div>
+        <div class="box-profile-form col-sm-12 col-md-8 d-flex bg-white rounded p-3">
+            <!-- información -->
+            <div class="d-flex flex-column">
+                <%= f.file_field :avatar, class: 'd-none'%>
+                <h3><%= f.text_field :name, class:' name', data:{attribute:'name'}, value:@profile.name %></h3>
+                <h5><%= f.text_field :email, class:" email #{!current_user.admin? ? 'disabled' : nil}", data:{attribute:'email'}, value:@profile.email %></h5>
+                <% if policy(:application).backoffice? %>
+                <h6 class="ps-2">
+                    Tu rol es: 
+                    <% if policy(:application).backoffice? %>
+                        <%= f.select :role, options_for_select(User.roles.map {|k, v| [enum_i18n(User, :roles, k), k]}, selected: (@profile.role if @profile)) %>
+                    <% else %>
+                        <%= enum_i18n(User, :roles, @profile.role ) %>
+                    <% end %>
+                </h6>
+                <% end %>
+                <% if policy(:application).backoffice? %>
+                    <h6 class="ps-2">
+                        <small>Estado del cliente</small>
+                        <%= f.select :status, options_for_select(User.statuses.map {|k, v| [enum_i18n(User, :statuses, k), k]}, selected: (@profile.status if @profile)) %>
+                    </h6>
+                <% end %>
+                <h6 class="ps-2 d-flex align-items-center"><span>+56</span><%= f.text_field :phone_number, class:'', data:{attribute:'phone_number'}, value:@profile.phone_number, placeholder:'Agrega un número de teléfono...' %></h6>
+                <%= f.submit 'Guardar', class:'d-none' %>
+            </div>
+        </div>
+    </div>
+<% end %>
+
+<% if @companies.present? %>
+<div class="row my-3">
+    <div class="col-sm-12 col-md-6">
+        <h5 class="text-secondary">Empresas asociadas a tu usuario.</h5>
+        <%= render @companies %>
+    </div>
+</div>
+<% end %>
+
+<% if @profile.delivery? && !current_user.client? && @profile.deliveries_asigned.present? %>
+    <section class="row my-3">
+        <div class="col-sm-12 col-md-6">
+            <div class="box-deliveries rounded-3 pb-2 bg-white shadow-sm">
+                <div class="header border-bottom">
+                    <div>
+                        <div><strong><%= @profile.deliveries_asigned.count %></strong> Asignadas</div>
+                        <div><%= @profile.deliveries_asigned.group_by { |obj| obj[:company_id] }.count %> diferentes clientes</div>
+                        <div><%= @profile.deliveries_asigned.group_by { |obj| obj[:branch_id] }.count %> diferentes sucursales</div>
+                    </div>
+                    <%= link_to download_deliver_asigned_path(user_id: @profile, format: :xlsx), class:'btn btn-outline-primary py-1' do %>
+                        <i class="bi bi-file-spreadsheet"></i> Descargar
+                    <% end %>
+                </div>
+                <div class="content">
+                    <% @profile.deliveries_asigned.each do |delivery| %>
+                        <div class="p-2 border-bottom">
+                            <div class="d-flex justify-content-between">
+                                <%= link_to delivery.id, delivery_path(delivery), class:'link-profile-user me-2 text-info' %> 
+                                <%= link_to delivery.company.try(:name).try(:titleize), company_path(delivery.company), class:'link-profile-user' %> 
+                            </div>
+                            <div>
+                                <div>Sucursal: <%= link_to delivery.branch.name, delivery.branch %></div>
+                                <div class="text-secondary text-small"><%= delivery.address_concat %></div>
+                            </div>
+                            <div class="date-start d-flex justify-content-between">
+                                <span>Retiro: <%= format_date delivery.date_start %></span>
+                                <span class="text-info"><%= delivery.commune.upcase %></span>
+                            </div>
+                        </div>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    </section>
+<% end %>

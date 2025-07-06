@@ -1,0 +1,49 @@
+
+<table>
+    <tr class="">
+        <td>
+            <table>
+                <tr>
+                    <td class="text-center image-logo">
+                        <%= email_image_tag("logo_altyro.png") %>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div class="bottom-text">
+                <p>
+                    Estimado Cliente,
+                </p>
+                <p>
+                    Lo invitamos a ingresar a nuestro nuevo sistema online de Altyro Envíos, donde podrá agendar y solicitar
+                    entregas de manera ágil y transparente.
+                </p>
+                <p>
+                    Para ingresar puede visitar nuestra página <%= link_to ENV["SITE_DOMAIN"], ENV["SITE_DOMAIN"], style:'color:#00C8DC;' %>
+                </p>
+                
+                <p>
+                    Su cuenta ha sido creada con el siguiente correo: <%= @user_access.invitation_email %>
+                </p>
+                <p>
+                    Una vez ingrese deberá crear su contraseña y completar su información de contacto.
+                    Cualquier pregunta no dude en contactarnos.
+                </p>
+    
+            </div>
+        </td>
+    </tr>
+
+    <tr class="gradient-bg">
+        <td class="bottom-text">
+            <h4>Empieza hoy mismo a solicitar entregas de tus productos desde tu puerta a la puerta de tu cliente.</h4>
+            <%= link_to "Ingresa aquí", root_url, class: "btn btn-primary", style:'color:#fff;' %>
+        </td>
+        
+    </tr>
+  </table>
+  
+  

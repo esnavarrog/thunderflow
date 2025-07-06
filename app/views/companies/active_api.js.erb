@@ -1,0 +1,14 @@
+$('#company-data').html("<%= j render 'companies/partials/company_data' %>")
+
+$('#liveToast').toast('show');
+$('#liveToast').find('strong').html('Activación');
+$('#liveToast').find('small').html('<%= j format_time @company.updated_at %>');
+<% if @company.accepted_api %>
+    $('#liveToast').find('.toast-body').html('API activada correctamente');
+    $('#button-enable-api').html("<%= j link_to 'Desactivar API', active_api_path(company_id:@company, accepted:false), class:'btn btn-outline-danger', title:'Activa/Desactiva la API del cliente', remote:true %>");
+<% else %>
+    $('#liveToast').find('.toast-body').html('API desactivada correctamente');
+    $('#button-enable-api').html("<%= j link_to 'Activar API', active_api_path(company_id:@company, accepted:true), class:'btn btn-outline-primary', title:'Activa/Desactiva la API del cliente', remote:true %>");
+<% end  %>
+
+$('#resources').html("<%= j render @resources if @company.accepted_api %>")

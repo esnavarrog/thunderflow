@@ -1,0 +1,2 @@
+    $('#delivery-id-<%= @delivery.id %>').fadeOut('slow');
+    $('#paginates-index').html("<%= j paginate @statuses, remote: true %>")

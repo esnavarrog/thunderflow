@@ -1,0 +1,58 @@
+<div id="withdrawal-receipt-<%= withdrawal_receipt.id %>">
+  <div class="px-3 py-2 mb-1 bg-white shadow-sm rounded">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <%= link_to "ID Comprobante ##{withdrawal_receipt.id}", withdrawal_receipt, class:'mb-4' %>
+        <%= link_to company_path(withdrawal_receipt.company), class: 'no-decoration mt-3' do %>
+          <div class="commune-list">
+            Empresa: <%= withdrawal_receipt.company.name.present? ? withdrawal_receipt.company.name.try(:titleize) : withdrawal_receipt.company.fantasy_name.try(:titleize) %>
+          </div>
+          <div class="region-list">
+            Comuna: <%= withdrawal_receipt.company.commune %>
+          </div>
+          <% if policy(:application).staff? %>
+            <div class="region-list">
+              Usuario: <%= withdrawal_receipt.user.name or withdrawal_receipt.user.email %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+
+      <div class="d-flex justify-content-between align-items-center">
+
+        <div class="">
+          <div class="date-list"><%= enum_i18n(WithdrawalReceipt, :withdrawal_receipt_types, withdrawal_receipt.withdrawal_receipt_type) %></div>
+          <% if withdrawal_receipt.retired? %>
+            <div class="date-list">
+              Cant. Planilla <%= withdrawal_receipt.sender_local_plain || 0 %>
+            </div>
+          <% else %>
+            <div class="date-list">
+              Cliente <%= withdrawal_receipt.name_client %>
+            </div>
+          <% end %>
+          <div class="date-list">
+            Cant. Recibida <%= withdrawal_receipt.sender_local_check || 0 %>
+          </div>
+
+          <div class="date-list">
+            <%= format_date withdrawal_receipt.issued_at %>
+          </div>
+        </div>
+        <div class="btn-group dropstart">
+          <div class="btn btn-link pe-0 ps-3 btn-icon" data-bs-toggle="dropdown" aria-expanded="false">
+            <%= inline_svg_tag('icons/icon_ellipsis.svg', class: 'icon-info') %>
+          </div>
+          <ul class="dropdown-menu shadow">
+            <li>
+              <%= link_to withdrawal_receipt_path(withdrawal_receipt), class: 'dropdown-item text-success d-flex justify-content-between align-items-center' do %>
+                <span>Ver</span> <i class="fa-solid fa-chevron-right"></i>
+              <% end %>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

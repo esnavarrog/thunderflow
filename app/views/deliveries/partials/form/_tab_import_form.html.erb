@@ -1,0 +1,23 @@
+<% unless action_name == 'edit' %>
+	<div class="text-center p-2 bg-light shadow-sm border rounded">
+		Descarga la plantilla en el siguiente link, rellénala con tus solicitudes de despacho y cárgalas automáticamente.
+		No olvides que los campos deben ser rellenados correctamente para evitar errores.
+	</div>
+	<small>
+		<%= link_to 'Plantilla para descargar', asset_path('plantilla_solicitud.xlsx', skip_pipeline:true) %>
+	</small>
+
+	<%= form_with url: create_deliveries_path(branch_id: @branch.id), data:{remote:true}, method: :post do |f| %>
+
+		<div class="form-group text-center mt-3">
+			<label for="upload-excel" id="button-upload-avatar" class=" text-center">
+				<h4><i class="fa-solid fa-upload"></i></h4><div>Sube aquí la plantilla con tus solicitudes.</div>
+			</label>
+			<%= f.file_field :file, class: 'd-none', id: 'upload-excel', data: { branch: @branch.id } %>
+		</div>
+		<%= f.submit 'Enviar', class: 'd-none', id: 'upload-excel-submit' %>
+	<% end %>
+	<div class="d-flex justify-content-between">
+		<small>Formato xlsx <i class="fa-regular fa-file-excel"></i></small>
+	</div>
+<% end %>

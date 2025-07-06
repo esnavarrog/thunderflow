@@ -1,0 +1,29 @@
+<%= render partial: 'partials/title_module', locals:{sector:'Cambio de contraseña'} %>
+<div class="container">
+  <div class="bg-white shadow rounded p-3 box-registred">
+    <h5 class="text-info">Cambia tu contraseña</h5>
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :put }) do |f| %>
+      <%= render "users/shared/error_messages", resource: resource %>
+      <%= f.hidden_field :reset_password_token %>
+    
+      <div class="form-group">
+        <%= f.label :password, "Nueva contraseña" %><br />
+        <% if @minimum_password_length %>
+          <em>(<%= @minimum_password_length %> mínimo de caracteres)</em><br />
+        <% end %>
+        <%= f.password_field :password, autofocus: true, autocomplete: "new-password", class:'form-control' %>
+      </div>
+    
+      <div class="form-group">
+        <%= f.label :password_confirmation, "Confirma el nuevo contraseña" %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class:'form-control' %>
+      </div>
+    
+      <div class="d-flex">
+        <%= f.submit "Cambia tu contraseña", class:'btn btn-primary w-100' %>
+      </div>
+    <% end %>
+    
+      <%= render "users/shared/links" %>
+  </div>
+</div>

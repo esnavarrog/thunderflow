@@ -1,0 +1,7 @@
+$('.modal-body').html('<%= j render "form_download_deliveries" %>');
+$('.modal-title').html('Descarga un excel con tus solicitudes');
+$('#modal').modal('show');
+$(".datetimepicker").flatpickr({
+    dateFormat: "d-m-Y",
+    locale: "es"
+});

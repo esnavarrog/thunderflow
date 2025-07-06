@@ -1,0 +1,9 @@
+$(".error").html("");
+$(".is-invalid").removeClass("is-invalid");
+<% @branch.errors.each do |key,error|%>
+    $('#branch_<%=key%>').siblings('.error').html('<%=error%>');
+    $('#branch_<%=key%>').addClass('is-invalid');
+<%end%>
+$('.loader').fadeOut('fast');
+$('#press-submit').find('.loading').addClass('d-none')
+swal({text:'El formulario contiene errores, por favor revisa tus datos he intenta nuevamente.', icon:'warning', button:'Aceptar'});

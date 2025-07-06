@@ -1,0 +1,3 @@
+$('.modal-body').html('<%= j render "statuses/partials/data" %>');
+$('.modal-title').html('Historia <%= enum_i18n(Status, :statuses, @status.status) %>');
+$('#modal').modal('toggle');

@@ -1,0 +1,31 @@
+<%= form_with(model:[@company, @resource], class:'', id:'form-resource', data:{remote:true}) do |f| %>
+    <div class="form-floating mb-2">
+        <%= f.text_field :name, class:'form-control' %>
+        <%= f.label :name, 'Agrega un nombre para identificar tu conexión' %>
+        <div class="error"></div>
+    </div>
+    <div class="form-floating mb-2">
+        <%= f.text_field :web_address, class:'form-control' %>
+        <%= f.label :web_address, 'Dirección web de origen' %>
+        <div class="error"></div>
+    </div>
+    <div class="form-floating">
+        <%= f.select :branch_id, options_from_collection_for_select(@company.branches, :id, :name, selected: @branch.present? ? @branch.id : nil), {prompt:'Selecciona sucursal...'}, {class:'form-select selected-branch-resource js-basic-single'} %>
+        <%= f.label :branch_id, 'Selecciona sucursal para retiros' %>
+        <div class="error"></div>
+    </div>
+    
+    <div id="address-branch-selected"></div>
+    <% if current_user.admin? %>
+        <div class="form-floating my-2">
+            <%= f.select :status, options_for_select(enum_options_for_select(Resource, :statuses), f.object.status), {}, {class:'form-select'} %>
+            <%= f.label :status, 'Cambia el estado' %>
+            <div class="error"></div>
+        </div>
+    <% end %>
+
+
+    <div class="d-flex justify-content-end">
+        <%= f.submit 'Guardar', class:'btn btn-primary' %>
+    </div>
+<% end %>

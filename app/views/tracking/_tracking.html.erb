@@ -1,0 +1,83 @@
+<div class="border border-info p-3 rounded bg-white shadow-sm mb-4">
+    <div class="mb-3 text-center">
+        <div class="m-3 fs-3 <%= @delivery.delivered? ? "text-success" : '' %>"><%= enum_i18n(Delivery, :statuses, @delivery.status) %></div>
+        <div class="p-2 bg-light rounded"><span>Pedido: </span><strong>#<%= @delivery.id %></strong></div>
+        <div class="p-2"><span>Remitente: </span><strong><%= @delivery.company.name %></strong></div>
+        <div class="p-2 bg-light rounded"><span></span><strong><%= @delivery.branch.name&.titleize || 'Centro de Distribución' %></strong></div>
+        <div class="p-2"><span>Cod. de Seguimiento: </span><strong>#<%= @delivery.order_number %></strong></div>
+    </div>
+    <div class="d-flex justify-content-between align-items-center content-icons-following">
+        <div class="following <%= @delivery.status_preparing? || @delivery.status_rute? || @delivery.delivered? ? 'active' : '' %>">
+            <div class="icon-circle">
+                <i class="bi bi-box-seam"></i>
+            </div>
+            <div class="icon-legend">
+                preparación
+            </div>
+        </div>
+        <div class="middle-line"></div>
+        <div class="following <%= @delivery.status_rute? || @delivery.delivered? ? 'active' : '' %>">
+            <div class="icon-circle">
+                <i class="bi bi-truck"></i>
+            </div>
+            <div class="icon-legend">
+                En Camino
+            </div>
+        </div>
+        <div class="middle-line"></div>
+
+        <div class="following <%= @delivery.delivered? ? 'active' : '' %>">
+            <div class="icon-circle">
+                <i class="bi bi-bag-check"></i>
+            </div>
+            <div class="icon-legend">
+                Entregado
+            </div>
+        </div>
+    </div>
+    <hr>
+
+    <div class="container my-3">
+        <div class="title-following">Dirección entrega</div>
+        <strong>
+            <%= @delivery.address_concat %>
+        </strong>
+        <div class="title-following">Nombre quien recibe</div>
+        <strong>
+            <%= @delivery.complete_name %>
+        </strong>
+        <% if @delivery.delivered? %>
+            <div class="title-following">Recepcionado</div>
+            <strong>
+                <%= @statuses.where(status: :delivered).where.not(receiver_name:nil).last.try(:receiver_name) %>
+            </strong>
+        <% end %>
+        
+    </div>
+    <% @statuses.order(created_at: :desc).each do |status| %>
+        <div class="bg-light mt-2 p-3 rounded shadow-sm">
+            <i class="fa-solid fa-arrow-right"></i>
+            <span class="text-success"><%= format_date_human status.created_at %></span>
+            <div><%= enum_i18n(Delivery, :statuses, status.status) %></div>
+            <% if status.receiver_name.present? %>
+                <div>Recepcionado por: <%= status.receiver_name %></div>
+            <% end %>
+            <% if status.receiver_rut.present? %>
+                <div><%= status.receiver_rut %></div>
+            <% end %>
+            <% if status.receiver_phone.present? %>
+                <div><%= status.receiver_phone %></div>
+            <% end %>
+            <% if status.description.present? %>
+                <div><%= status.description %></div>
+            <% end %>
+            <%= image_tag status.image.url, class:'rounded mw-100 image-tracking' if status.image.present? %>
+        </div>
+    <% end %>
+
+    <div class="container text-center my-3 d-none">
+        <div>En caso de tener un inconveniente contacta con nosotros:</div>  
+        <a href="#">#</a>
+    </div>
+
+</div>

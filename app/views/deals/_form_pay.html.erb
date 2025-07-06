@@ -1,0 +1,12 @@
+<%= form_with(model:@deal, data:{remote:true}, method: :put) do |f| %>
+    <%= f.hidden_field :status_deal, value: :payed.to_s %>
+    
+    <div class="form-group">
+        <%= f.label :pay_description, 'Describe el pago' %>
+        <%= f.text_field :pay_description, class:'form-control' %>
+    </div>
+    
+    <div class="d-flex justify-content-end mt-3">
+        <%= f.submit 'Guardar', class:'btn btn-primary' %>
+    </div>
+<% end %>

@@ -1,0 +1,40 @@
+<tr id="deal-<%= deal.id %>">
+    <td>
+        <%= link_to deal.id, deal %>
+    </td>
+    <td>
+        <%= link_to deal.company.try(:name), deal.company %>
+    </td>
+    <td class="text-center">
+        <%= format_date deal.created_at %>
+    </td>
+    <td class="text-center">
+      <%= deal.deliveries.count %>
+    </td>
+    <td>
+        <%= number_to_currency deal.total_amount, precision:0 %>
+    </td>
+    <td>
+        <%= enum_i18n(Deal, :status_deals, deal.status_deal) %>
+    </td>
+    <% if current_user.admin? %>
+        <td>
+            <%= number_to_currency deal.utility, precision:0 %>
+        </td>
+    <% end %>
+    <% if current_user.admin? %>
+        <% if deal.only_save %>
+            <td>
+                <span class="badge rounded-pill bg-info">Guardado</span>
+            </td>
+        <% else %>
+            <td>
+                <span class="badge rounded-pill bg-success">Enviado</span>
+            </td>
+        <% end %>
+    <% end %>
+    
+    <td>
+        <%= render partial:'deals/components/menu_dropdown', locals:{deal:deal} %>
+    </td>
+</tr>

@@ -1,0 +1,171 @@
+<div class="row">
+  <div class="col-sm-12 col-md-6">
+    <div class="row">
+      <div class="col-sm-6">
+        <%= f.label :weight, 'Peso', class:'form-label' %>
+        <div class="input-group">
+          <%= f.text_field :weight, class:'form-control', placeholder:'Peso en Kilos', aria:{describedby:'kg'} %>
+          <span class="input-group-text" id="kg">kg</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <%= f.label :height, 'Altura', class:'form-label' %>
+        <div class="input-group">
+          <%= f.text_field :height, class:'form-control', placeholder:'Agrega la altura', aria:{describedby:'cm-height'} %>
+          <span class="input-group-text" id="cm-height">cm</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <%= f.label :width, 'Ancho', class:'form-label' %>
+        <div class="input-group">
+          <%= f.text_field :width, class:'form-control', placeholder:'Agrega el ancho', aria:{describedby:'cm-width'} %>
+          <span class="input-group-text" id="cm-width">cm</span>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <%= f.label :depth, 'Largo', class:'form-label' %>
+        <div class="input-group">
+          <%= f.text_field :depth, class:'form-control', placeholder:'Agrega la profundidad', aria:{describedby:'cm-depth'} %>
+          <span class="input-group-text" id="cm-depth">cm</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-6">
+    <div class="row">
+      <div class="col-sm-12">
+        <%= f.label :description, 'Descripción de paquete', class:'form-label' %>
+        <div class="input-group">
+          <%= f.text_area :description, class:'form-control', placeholder:'Descripción del producto' %>
+        </div>
+      </div>
+      <div class="form-group form-calendar form-calendar-label">
+        <%= f.label :date_start, 'Fecha de Retiro' %>
+        <%= f.text_field :date_start, value:"#{@delivery.date_start.present? ? format_date(@delivery.date_start) : format_date(Time.zone.now.next_day)}", class:'form-control datetimepicker', placeholder:'12-09-2022' %>
+        <div class="error"></div>
+      </div>
+      <div class="col-sm-12 mb-3">
+        <div class="form-check form-switch d-flex align-items-end">
+          <input class="form-check-input" type="checkbox" value="" id="local">
+          <label class="form-check-label ms-2" for="local">
+            <%= @branch.invert ? 'Retiro' : 'Entrega' %> en local
+          </label>
+        </div>
+      </div>
+      <small class="d-none time-local">Sujeto a disponibilidad de <%= @branch.invert ? 'retiro' : 'entrega' %></small>
+      <div class="col-sm-12 col-md-4">
+        <div class="form-group mb-3 time-local form-calendar form-calendar-label d-none">
+          <%= f.label :date_end, "Fecha de #{@branch.invert ? 'Retiro' : 'Entrega'}" %>
+          <%= f.text_field :date_end, value:@delivery.date_end.present? ? format_date(@delivery.date_end) : nil, class:'form-control datetimepicker', placeholder:'12-09-2022' %>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4 d-flex align-items-bottom">
+        <div class="input-group time-local d-none">
+          <span class="input-group-text">Apertura</span>
+          <%= f.text_field :time_open, value:(format_time(@delivery.time_open) if @delivery), class:'form-control datetimepicker-time', placeholder:'09:00' %>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-4 d-flex align-items-bottom">
+        <div class="input-group time-local d-none">
+          <span class="input-group-text">Cierre</span>
+          <%= f.text_field :time_close, value:(format_time(@delivery.time_close) if @delivery), class:'form-control datetimepicker-time', placeholder:'18:00' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="mt-3">
+
+  <div class="col-sm-12 col-md-6">
+    <div class="row">
+
+      <h4>Dirección <%= @branch.invert ? 'Retiro' : 'Entrega' %></h4>
+
+      <div class="form-group col-sm-12">
+        <%= f.label :address_concat, 'Dirección' %>
+        <%= f.text_field :address_concat, class:'form-control auto-places', placeholder:"Dirección para la #{@branch.invert ? 'Retiro' : 'Entrega'}", data: { commune_input: '#delivery_commune', company_id: @branch.company_id } %>
+        <%= f.hidden_field :latitude %>
+        <%= f.hidden_field :longitude %>
+        <%= f.hidden_field :distance_meters %>
+
+        <div id="branch_latlng" data-latitude="<%= @branch.latitude %>" data-longitude="<%= @branch.longitude %>"></div>
+        <div class="error"></div>
+      </div>
+      <div class="form-group col-sm-12">
+        <%= f.text_field :commune, class:'form-control disabled', placeholder:'Comuna' %>
+        <small id="price-commune-form"></small>
+        <div class="error"></div>
+      </div>
+      <div class="form-group col-sm-12">
+        <%= f.label :dpto, 'Depto/Block' %>
+        <%= f.text_field :dpto, class:'form-control', placeholder:'Depto/Block' %>
+        <div class="error"></div>
+      </div>
+      <div class="form-group col-12">
+        <%= f.label :reference, 'Referencias' %>
+        <%= f.text_area :reference, class:'form-control', placeholder:'Cercano a...' %>
+        <div class="error"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-sm-12 col-md-6">
+    <div class="row">
+      <div class="form-group">
+        <div id="data-distance-delivery" class="<%= @delivery.present? && @delivery.distance_meters.present? ? '' : 'd-none' %> py-1 px-2 bg-light">
+          <span><%= @delivery.present? && @delivery.distance_meters.present? ? @delivery.distance_meters/1000 : '' %></span> km. de distancia
+          <% if @branch.default_price.nil? %>
+            <div id="price-distance-delivery" class="text-info"></div>
+          <% else %>
+            <div class="text-info">
+              Tienes un precio predefinido: <%= number_to_currency(@branch.default_price, precision:0) %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="form-group">
+        <div id="delivery_map" class="rounded" style="width:100%; height:200px;"></div>
+      </div>
+    </div>
+  </div>
+  <div class="col-sm-12">
+    <div class="row">
+      <hr class="mt-3">
+
+      <h4>Datos de contacto <%= @branch.invert ? 'retiro' : 'entrega' %></h4>
+      <div class="col-sm-12 col-md-6">
+        <div class="input-group">
+          <span class="input-group-text">Nombre</span>
+          <%= f.text_field :contact_name, class:'form-control' %>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="input-group">
+          <span class="input-group-text">Rut</span>
+          <%= f.text_field :rut, class:'form-control rut-input' %>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="input-group">
+          <span class="input-group-text">+56</span>
+          <%= f.text_field :phone_number, class:'form-control phone-number-validate', placeholder:'N° Contacto' %>
+        </div>
+      </div>
+      <div class="col-sm-12 col-md-6">
+        <div class="input-group">
+          <span class="input-group-text">email</span>
+          <%= f.email_field :email, autocomplete: "email", class:'form-control' %>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+  <%= f.submit 'Guardar', class:'btn btn-primary mt-3' %>
+</div>

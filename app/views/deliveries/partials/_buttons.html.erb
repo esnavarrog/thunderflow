@@ -1,0 +1,48 @@
+
+<div class="btn-group w-100" id="button-filters" role="group" aria-label="Basic example">
+    <%= link_to deliveries_path(status: ''), class:'btn btn-outline-info btn-filter active', id:"btn-all", remote:true do %>
+        <div class="title-button">Todos</div><div><i class="fa-solid fa-table-list"></i></div>
+    <% end %>
+
+    <% if !current_user.delivery? %>
+        <%= link_to deliveries_path(status: :preparing), class:'btn btn-outline-info btn-filter', id:"btn-#{:preparing}", remote:true do %>
+            <div class="title-button">Nuevas</div><div><i class="fa-solid fa-clock"></i></div>
+        <% end %>
+        <%= link_to deliveries_path(status: :asigned), class:'btn btn-outline-info btn-filter', id:"btn-#{:asigned}", remote:true do %>
+            <div class="title-button">Asignado</div><div><i class="fa-solid fa-gift"></i></div>
+        <% end %>
+    <% end %>
+
+    <% if current_user.delivery? %>
+        <%= link_to deliveries_path(status: :asigned), class:'btn btn-outline-info btn-filter', id:"btn-#{:asigned}", remote:true do %>
+            <div class="title-button">Asignado</div><div><i class="fa-solid fa-gift"></i></div>
+        <% end %>
+    <% end %>
+
+    <%= link_to deliveries_path(status: :to_withdraw), class:'btn btn-outline-info btn-filter', id:"btn-#{:to_withdraw}", remote:true do %>
+        <div class="title-button">Retiro</div><div><i class="fa-solid fa-person-walking"></i></div>
+    <% end %>
+    <%= link_to deliveries_path(status: :retired), class:'btn btn-outline-info btn-filter', id:"btn-#{:retired}", remote:true do %>
+        <div class="title-button">Retirado</div><div><i class="fa-solid fa-person-walking-luggage"></i></div>
+    <% end %>
+    <%= link_to deliveries_path(status: :in_route), class:'btn btn-outline-info btn-filter', id:"btn-#{:in_route}", remote:true do %>
+        <div class="title-button">Ruta</div><div><i class="fa-solid fa-route"></i></div>
+    <% end %>
+    
+</div>
+
+<div class="btn-group w-100 mt-1" id="button-filters-two" role="group" aria-label="Basic example">
+
+    <%= link_to deliveries_path(status: :delivered), class:'btn btn-outline-primary btn-filter', id:"btn-#{:delivered}", remote:true do %>
+        <div class="title-button">Entregado</div><div><i class="fa-solid fa-check-to-slot"></i></div>
+    <% end %>
+
+    <%= link_to deliveries_path(status: :returned), class:'btn btn-outline-primary btn-filter', id:"btn-#{:returned}", remote:true do %>
+        <div class="title-button">Devuelto</div><div><i class="fa-solid fa-backward"></i></div>
+    <% end %>
+    
+    <%= link_to deliveries_path(status: :rejected), class:'btn btn-outline-primary btn-filter', id:"btn-#{:rejected}", remote:true do %>
+        <div class="title-button">Rechazado</div><div><i class="fa-solid fa-ban"></i></div>
+    <% end %>
+    
+</div>

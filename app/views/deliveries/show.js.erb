@@ -1,0 +1,2 @@
+$('#statuses-render').html("<%= j render @statuses %>")
+$('#paginates-index').html("<%= j paginate @statuses, remote: true %>")

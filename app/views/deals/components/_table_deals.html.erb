@@ -1,0 +1,28 @@
+<% if @deals.present? %>
+    <div class="table-deals table-responsive bg-white shadow-sm">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Cliente</th>
+                    <th class="text-center">Fecha</th>
+                    <th class="text-center">Solicitudes</th>
+                    <th>Precio Total</th>
+                    <th>Estado</th>
+                    <% if current_user.admin? %>
+                        <th>Utilidad</th>
+                        <th>Guardado</th>
+                    <% end %>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="deals-index">
+                <%= render @deals %>
+            </tbody>
+        </table>
+    </div>
+<% else %>
+    <div class="d-flex align-items-center justify-content-center p-3 my-3 bg-white rounded shadow-sm">
+        Aún no tenemos pagos solicitados
+    </div>
+<% end %>

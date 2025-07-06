@@ -1,0 +1,12 @@
+<%= form_tag asign_user_to_delivery_path, method: :get, class:'row', id:'form-asign', remote:true do |f| %>
+    <h5 class="title-names text-success"><span id="count-massive" class="text-secondary"></span> Seleccionados: <span id="id-delivery"><%= @delivery.id if @delivery %></span></h5>
+    <%= hidden_field_tag :delivery_id, @delivery.present? ? @delivery.id : '' %>
+    <div class="form-group">
+        <%= label_tag :user_id, 'Cambiar Estado' %>
+        <%= select_tag :user_id, options_for_select(User.where(role: :delivery).map {|k, v| ["#{k.try(:name)} (#{k.email})", k.id]}, selected: (@delivery.user_asign_id if @delivery)), class:'form-control js-basic-single-modal' %>
+        <div class="error"></div>
+    </div>
+
+    <%= submit_tag 'Asignar', class:'btn btn-primary mt-3' %>
+
+<%end%>

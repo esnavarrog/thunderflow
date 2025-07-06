@@ -1,0 +1,84 @@
+<div class="tab-pane fade" id="pills-metrics" role="tabpanel" aria-labelledby="pills-metrics-tab" tabindex="0">
+    
+    <section class="container my-3">
+        <p>
+            Métricas por empresa.
+        </p>
+        <% if @company.deliveries.present? && @company.deliveries.count < 10 %>
+            <div class="text-secondary">
+                Datos insuficientes para generar un gráfico de reporte.
+            </div>
+        <% else %>
+            <div id="charts-company" class="row" data-company="<%= @company.id %>">
+
+            </div>
+        <% end %>
+    </section>
+    <section class="mt-5 py-3 rounded-4 shadow-sm bg-white container">
+        <div class="row mb-4">
+            <div class="col-sm-12 col-md-4">
+                <div class=" bg-white p-2 d-flex border justify-content-between shadow-sm border rounded">
+                    <div class="text-secondary text-left">
+                        <%= link_to deliveries_path(status: [:preparing]), class:'no-decoration' do %>
+                        <h5>
+                            Solicitudes mensuales
+                        </h5>
+                        <% end %>
+                        <small>Mes de <%= l(Time.zone.now, format:'%B').titleize %></small>
+                    </div>
+                    <div class="text-secondary">
+                        <%= @company.deliveries.where(date_start: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).count %>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class=" bg-white p-2 d-flex justify-content-between shadow-sm border rounded">
+                    <div class="text-secondary text-left">
+                        <%= link_to deliveries_path(status: Delivery::FOR_DELIVER), class:'no-decoration' do %>
+                        <h5>
+                            Solicitudes por entregar
+                        </h5>
+                        <% end %>
+                        <small>Hasta hoy <%= l(Time.zone.now, format:'%d de %B').titleize %></small>
+                    </div>
+                    <div class="text-secondary">
+                        <%= @company.deliveries.where.not(status: :delivered).count %>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-12 col-md-4">
+                <div class=" bg-white p-2 d-flex justify-content-between shadow-sm border rounded">
+                    <div class="text-secondary text-left">
+                        <%= link_to deliveries_path(), class:'no-decoration' do %>
+                        <h5>
+                            Solicitudes totales
+                        </h5>
+                        <% end %>
+                        <small>Hasta <%= l(Time.zone.now, format:'%B').titleize %></small>
+                    </div>
+                    <div class="text-secondary">
+                        <%= @company.deliveries.count %>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12 col-md-4">
+                <div class=" bg-white p-2 d-flex justify-content-between shadow-sm border rounded">
+                    <div class="text-secondary text-left">
+                        <%= link_to deliveries_path(), class:'no-decoration' do %>
+                        <h5>
+                            Costo mensual
+                        </h5>
+                        <% end %>
+                        <small>Mes de <%= l(Time.zone.now, format:'%B').titleize %></small>
+                    </div>
+                    <div class="text-secondary">
+                        <%= number_to_currency(@company.deliveries.where(date_start: Time.zone.now.beginning_of_month..Time.zone.now.end_of_month).where.not(price: '').map{|a| a.price.to_i}.sum, precision:0) %>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>

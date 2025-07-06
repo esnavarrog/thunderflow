@@ -1,0 +1,11 @@
+$('#liveToast').toast('show');
+$('#liveToast').find('strong').html('Actualizado');
+$('#liveToast').find('small').html('<%= j format_time @profile.updated_at %>');
+$('#liveToast').find('.toast-body').html('Actualizaste correctamente el perfil de usuario');
+$('.icon-profile').replaceWith("<%= j inline_svg_tag('icons/icon_profiles.svg', class:'icon-profile me-3') %>");
+<% if @profile == current_user %>
+  $('.name-user').find('div').html('<%= @profile.name %>');
+  $('.name-user').find('small').html('<%= enum_i18n(User, :roles, @profile.role) %>');
+  $('.avatar-nav').replaceWith("<%= j image_tag @profile.avatar_url, class:'avatar-nav me-2' %>")
+<% end %>
+$('.img-profile').replaceWith("<%= j image_tag @profile.avatar_url, class:'img-profile'  %>")

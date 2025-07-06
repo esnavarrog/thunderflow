@@ -1,0 +1,52 @@
+// Place all the styles related to the Tracking controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+@import 'variables';
+.content-icons-following{
+    max-width: 80%;
+    margin: auto;
+}
+.following{
+    .icon-circle{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid $default;
+        height: 60px;
+        width: 60px;
+        border-radius: 50%;
+        margin: auto;
+        font-size: 2rem;
+    }
+    .icon-legend{
+        font-size: .6rem;
+        font-style: normal;
+        margin: 5px auto;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    .middle-line:before{
+        width: 90%;
+        height: 3px;
+        background-color: $default;
+    }
+    &.active{
+        color: $primary;
+        .icon-circle{
+            border: 2px solid $primary;
+        }
+    }
+    .title-following{
+        color:$greyFont;
+        font-size: .9rem;
+    }
+}
+.logo-short{
+    height: 6.25rem;
+    border-radius: 5px;
+}
+
+.image-tracking{
+    max-width: 200px;
+    max-height: 400px;
+}

@@ -1,0 +1,8 @@
+$(".error").html("");
+$(".is-invalid").removeClass("is-invalid");
+<% @integration.errors.each do |key,error|%>
+    $('#integration_<%=key%>').siblings('.error').html('<%=error%>');
+    $('#integration_<%=key%>').addClass('is-invalid');
+<% end %>
+
+$('.loader').fadeOut('fast');

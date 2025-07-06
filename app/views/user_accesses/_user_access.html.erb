@@ -1,0 +1,57 @@
+<div id="profile-<%= user_access.id %>">
+    <div class="px-3 py-2 mb-1 bg-white shadow-sm rounded">
+        <div class="d-flex justify-content-between align-items-center">
+            <div>
+                <% if user_access.user.present? %>
+                    <%= link_to profile_path(user_access.user), class:'no-decoration' do %>
+                        <div class="commune-list">
+                            <%= user_access.user.try(:name).try(:titleize) %>
+                        </div>
+                    <% end %>
+                <% end %>
+                <div class="region-list">
+                    <%= user_access.invitation_email %>
+                </div>
+            </div>
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <div class="date-list">
+                        <span><%= format_date_human user_access.created_at %></span>
+                    </div>
+                    <div class="date-list">
+                        <span><%= enum_i18n(UserAccess, :access_types, user_access.access_type )%></span>
+                    </div>
+
+                </div>
+                <% if user_access.user.present? || policy(user_access).destroy? %>
+                    <div class="btn-group dropstart">
+                        <div class="btn btn-link pe-0 ps-3 btn-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                            <%= inline_svg_tag('icons/icon_ellipsis.svg', class:'icon-info')%>
+                        </div>
+                        <ul class="dropdown-menu shadow">
+                            <% if user_access.user.present? %>
+                                <li>
+                                    <%= link_to profile_path(user_access.user), class:'dropdown-item text-success d-flex justify-content-between align-items-center' do %>
+                                        <span>Ver</span> <i class="fa-solid fa-chevron-right"></i>
+                                    <% end %>
+                                </li>
+                            <% end %>
+                            <% if policy(user_access).destroy? %>
+                                <li>
+                                    <%= link_to user_access_path(user_access), 
+                                            class:'dropdown-item text-danger d-flex justify-content-between align-items-center', 
+                                            data:{confirm:'Estas seguro de eliminar al administrador, le quitarás el acceso a este usuario permanentemente.'}, 
+                                            remote:true, 
+                                            method: :delete do %>
+                                        <span>Eliminar</span> <i class="fa-solid fa-trash"></i>
+                                    <% end %>
+                                </li>
+                            <% end %>
+                        </ul>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>

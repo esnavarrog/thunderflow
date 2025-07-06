@@ -1,0 +1,8 @@
+$('#modal-body').html('<%= j render "deliveries/tools/select_date" %>');
+$('.modal-title').html('Selecciona un Rango');
+$('#modal').modal('show');
+
+$(".datetimepicker").flatpickr({
+    dateFormat: "d-m-Y",
+    locale: "es"
+});

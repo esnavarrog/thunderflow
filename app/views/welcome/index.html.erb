@@ -1,0 +1,11 @@
+<% if policy(:company).backoffice? %>
+    <%=render "backoffice_index" %>
+<% end %>
+
+<% if policy(:company).delivery? %>
+    <%=render "delivery_index" %>
+<% end %>
+
+<% if policy(:company).client? %>
+    <%=render "client_index" %>
+<% end %>

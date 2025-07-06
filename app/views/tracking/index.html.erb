@@ -1,0 +1,28 @@
+<div class="container mt-3">
+    <div class="d-flex justify-content-center mb-3">
+        <%= link_to image_tag('logo_altyro.png', class:'logo-short'), root_path %>
+    </div>
+    <div class="border-info border rounded shadow-sm bg-white p-3">
+        <div class="form-group">
+            <label for="tracking">Ingresa Código de Seguimiento</label>
+            <input type="text" name="" value="<%= @delivery.present? ? @delivery.order_number : '' %>" id="tracking" class="form-control">
+        </div>
+        <div class="d-flex justify-content-end">
+            <div class="btn btn-primary" id="send-tracking" data-datatype="script" data-url="<%= tracking_status_url %>">
+                Consultar
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-3 <% @delivery.present? ? '' : 'd-none' %>" id="tracking-result">
+    <% if @delivery.present? %>
+        <%= render 'tracking/tracking' %>
+    <% else %>
+        <div class="d-flex justify-content-center loader-tracking d-none p-3">
+            <div class="spinner-border spinner-border-primary loading" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    <% end %>
+</div>

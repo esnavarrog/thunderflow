@@ -1,0 +1,8 @@
+$(".error").html("");
+$(".is-invalid").removeClass("is-invalid");
+<% @company.errors.each do |key,error|%>
+    $('#company_<%=key%>').parents('.form-group').find('.error').html('<%=error%>');
+    $('#company_<%=key%>').addClass('is-invalid');
+<%end%>
+$('.loader').fadeOut('fast');
+swal({text:'El formulario contiene errores, por favor revisa tus datos he intenta nuevamente.', icon:'warning', button:'Aceptar'})

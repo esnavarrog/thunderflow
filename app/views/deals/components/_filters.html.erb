@@ -1,0 +1,45 @@
+<%= form_tag deals_path, method: :get, remote: true, class: 'mt-3 form-submit-on-change' do %>
+  <div class="row rounded shadow-sm my-3 p-3 bg-white">
+    <div class="form-group col-sm-12 col-md-4">
+      <%= label_tag :company_id, 'Filtro cliente' %>
+      <% if current_user.client? %>
+        <%= select_tag :company_id, options_from_collection_for_select(current_user.companies, :id, :name), {class:'form-control js-basic-single select_company_deal', prompt:'Filtrar por cliente', data:{url:deals_path, param:"company_id"}} %>
+      <% else %>
+        <%= select_tag :company_id, options_from_collection_for_select(Company.all, :id, :name), {class:'form-control js-basic-single select_company_deal', prompt:'Filtrar por cliente', data:{url:deals_path, param:"company_id"}} %>
+      <% end %>
+    </div>
+    <div class="col-sm-12 col-md-4">
+      <%= label_tag :date_range, 'Selecciona un rango o fecha', class:'form-label m-0' %>
+      <div class="input-group form-calendar ">
+        <%= text_field_tag(
+              :date_range,
+              params[:date_range],
+              options = {
+                placeholder: 'Selecciona rango de fechas',
+                class:'form-control datetimepicker-range select-range',
+                data:{url:deals_path}
+              } ) %>
+        <span class="input-group-text search">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </span>
+      </div>
+    </div>
+
+    <% if current_user.admin? %>
+      <div class="form-group col-sm-12 col-md-4">
+        <%= label_tag :status_deal, 'Filtrar por estado' %>
+        <%= select_tag :status_deal, options_for_select(Deal.status_deals.keys.map { |k| [enum_i18n(Deal, :status_deals, k), k] }, params[:status_deal]), { class: 'form-control js-basic-single', prompt: 'Filtrar por estado', data: { url: deals_path, param: "status_deal" } } %>
+      </div>
+    <% end %>
+
+    <div class="form-group col-sm-6 col-md-6 col-lg-3 col-xl-2">
+      <div class="container-buttons-delivery filters">
+        <%= link_to 'Limpiar', deals_path, class: 'btn btn-outline-info p-3' %>
+        <%= button_tag name: 'commit', type: :submit, class: 'btn btn-info p-3 filter-button-date' do %>
+          <i class="bi bi-filter-circle-fill me-2"></i> Filtrar
+        <% end %>
+      </div>
+    </div>
+
+  </div>
+<% end %>

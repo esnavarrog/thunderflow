@@ -1,0 +1,33 @@
+
+<table>
+  <tr>
+    <td>
+      <table>
+        <tr>
+          <td class="text-center image-logo">
+            <%= email_image_tag("logo_altyro.png") %>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="bottom-text">
+        <p>
+          Estimado Cliente,
+        </p>
+        <p>
+          Su solicitud de vinculación ha sido aprobada.
+        </p>
+        <p>
+          Recuerde que para ingresar puede visitar nuestra página <%= link_to ENV["SITE_DOMAIN"], ENV["SITE_DOMAIN"], style:'color:#00C8DC;' %>.
+        </p>
+
+      </div>
+    </td>
+  </tr>
+
+</table>

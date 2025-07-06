@@ -1,0 +1,52 @@
+.css-chart {
+    /* The chart borders */
+    border-bottom: 1px solid;
+    border-left: 1px solid;
+    border-color: grey;
+    /* The height, which is initially defined in the HTML */
+    height: var(--widget-height);
+    /* A little breathing room should there be others items around the chart */
+    margin: 1em;
+    /* Remove any padding so we have as much space to work with inside the element */
+    padding: 0;
+    position: relative;
+    /* The chart width, as defined in the HTML */
+    width: var(--widget-width);
+  }
+  
+    /* The unordered list holding the data points, no list styling and no spacing */
+  .line-chart {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+    /* Each point on the chart, each a 12px circle with a light border */
+  .data-point {
+    background-color: #2196F3;
+    border-radius: 50%;
+    height: 10px;
+    position: absolute;
+    width: 10px;
+    bottom: calc(var(--y) - 4px);
+    left: calc(var(--x) - 5px);
+  }
+  
+  .line-segment {
+    background-color: #2196F3;
+    bottom: var(--y);
+    height: 2px;
+    left: var(--x);
+    position: absolute;
+    width: calc(var(--hypotenuse) * 1px);
+    transform: rotate(calc(var(--angle) * 1deg));
+    transform-origin: left bottom;
+  }
+  
+  .chart-divider{
+    border-bottom: 1px solid grey;
+    width: calc(var(--widget-width) + 5px);
+    left: -5px;
+    position: absolute;
+    height: 1px;
+  }

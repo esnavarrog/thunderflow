@@ -1,0 +1,50 @@
+<%= render partial: 'partials/title_module', locals:{sector:"Empresa ##{@company.id}"} %>
+
+<div class="container">
+    <div class="row">
+        <div id="company-data" class="col-sm-12 col-md-4">
+            <%= render 'companies/partials/company_data' %>
+        </div>
+        <div class="col-sm-12 col-md-8 bg-white my-3 rounded border">
+            <ul class="nav nav-pills my-3 bg-light rounded d-flex justify-content-center" id="pills-tab" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="pills-branches-tab" data-bs-toggle="pill" data-bs-target="#pills-branches" type="button" role="tab" aria-controls="pills-branches" aria-selected="true">Sucursales</button>
+                </li>
+                <% unless current_user.delivery? %>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-metrics-tab" data-bs-toggle="pill" data-bs-target="#pills-metrics" type="button" role="tab" aria-controls="pills-metrics" aria-selected="true">Métricas</button>
+                    </li>
+                <% end %>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-admins-tab" data-bs-toggle="pill" data-bs-target="#pills-admins" type="button" role="tab" aria-controls="pills-admins" aria-selected="false">Administradores</button>
+                </li>
+                <% if @company.accepted_api || current_user.admin? %>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-resources-tab" data-bs-toggle="pill" data-bs-target="#pills-resources" type="button" role="tab" aria-controls="pills-resources" aria-selected="false">Recursos</button>
+                    </li>
+                <% end %>
+                <% if current_user.admin? %>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-integrations-tab" data-bs-toggle="pill" data-bs-target="#pills-integrations" type="button" role="tab" aria-controls="pills-integrations" aria-selected="false">Integraciones</button>
+                    </li>
+                <% end %>
+                <% if current_user.admin? %>
+                  <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="pills-settings-tab" data-bs-toggle="pill" data-bs-target="#pills-settings" type="button" role="tab" aria-controls="pills-settings" aria-selected="false">Configuraciones</button>
+                  </li>
+                <% end %>
+            </ul>
+            <div class="tab-content" id="pills-tabContent">
+                <%= render 'companies/module/administrations' %>
+                <%= render 'companies/module/metrics' unless current_user.delivery? %>
+                <%= render 'companies/module/table_branches' %>
+                <%= render 'companies/module/resources' if @company.accepted_api || current_user.admin? %>
+                <%= render 'companies/module/integrations' if current_user.admin? %>
+                <%= render 'companies/module/settings' if current_user.admin? %>
+
+            </div>
+        </div>
+    </div>
+    
+</div>
+

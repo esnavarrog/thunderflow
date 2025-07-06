@@ -1,0 +1,470 @@
+openapi: 3.0.3
+info:
+  title: API Despachos Pymes
+  description: >-
+    La API de despachos de puerta a puerta es una interfaz que te permite
+    gestionar las solicitudes de entrega de manera eficiente. A través de esta
+    API, puedes realizar operaciones de creación, consulta, actualización y
+    eliminación de solicitudes de entrega, también conocidas como
+    \"deliveries\".
+
+
+    Para pruebas de integración, debes utilizar nuestro sandbox: `https://despachos-staging.herokuapp.com/api/v1/deliveries/`.
+
+
+    Para producción, debes utilizar: `https://despachospymes.cl/api/v1/deliveries/`
+
+
+    Utiliza el token proporcionado por Despachos Pymes, si tienes dudas, por
+    favor contacta con soporte y te ayudaremos.
+  contact:
+    email: esteban.navarro@despachospymes.cl
+  version: 1.0.0
+servers:
+  - url: https://despachos-staging.herokuapp.com/api/v1/deliveries/
+  - url: https://despachospymes.cl/api/v1/deliveries/
+tags:
+  - name: deliveries
+    description: Crear solicitudes
+paths:
+  /:
+    post:
+      tags:
+        - deliveries
+      summary: Crea una nueva solicitud
+      parameters:
+        - in: header
+          name: token
+          description: Token de autenticación
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: |
+            - Asegúrate de tener el token de acceso proporcionado antes de realizar el request. Este token será necesario para autenticar tu solicitud.
+
+            - Configura el método de solicitud como POST para enviar los datos al servidor.
+
+            - Incluye el token de acceso en la cabecera de la solicitud para la autenticación. Agrega un encabezado de autorización con el valor "token". Reemplaza su valor con el token de acceso proporcionado.
+
+            - Construye los datos que deseas enviar en el cuerpo de la solicitud como un objeto JSON con la key "delivery".
+
+            - Asegúrate de establecer el encabezado "Content-Type" en "application/json" para indicar que el cuerpo de la solicitud contiene datos en formato JSON.
+
+            - Envía el request al endpoint correspondiente de tu API REST.
+
+            A continuación, se muestra un ejemplo de cómo se vería el request utilizando el comando cURL en la línea de comandos:
+            ```
+
+              curl -X POST \
+                -H "Authorization: token[TOKEN]" \
+                -H "Content-Type: application/json" \
+                -d 'delivery[DATA_JSON]' \
+                [URL_DE_LA_API]
+
+            ```
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyDeliveriesPost'
+        required: true
+      responses:
+        200:
+          description: (OK) la solicitud se guardó exitosamente.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  respuesta:
+                    type: integer
+                    enum:
+                      - 1
+                    description: >-
+                      Bandera que nos indica que la llamada al servicio fué
+                      exitosa
+                  idDelivery:
+                    type: integer
+                    enum:
+                      - 233
+                    description: Id que le corresponde a la solicitud.
+                  message:
+                    type: string
+                    description: Mensaje de correcto guardado.
+                  order_number:
+                    type: string
+                    description: Código de seguimiento.
+        400:
+          description: (Unauthorized) no tienes autorización para crear el servicio.
+        401:
+          description: (NotFound) no se encontró la información.
+        422:
+          description: >-
+            (BadRequest) los datos enviados no son correctos o hay datos
+            obligatorios no enviados
+        500:
+          description: (ServerError) Error en el servidor.
+  /{idDelivery}:
+    get:
+      tags:
+        - deliveries
+      summary: Obtiene información de la solicitud
+      parameters:
+        - in: header
+          name: token
+          description: Token de autenticación
+          required: true
+          schema:
+            type: string
+        - name: idDelivery
+          in: path
+          description: Identificador de la solicitud requerida.
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: (OK) Información obtenida correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDeliveryGet'
+        400:
+          description: (Unauthorized) no tienes autorización para crear el servicio.
+        401:
+          description: (NotFound) no se encontró la información.
+        422:
+          description: >-
+            (BadRequest) los datos enviados no son correctos o hay datos
+            obligatorios no enviados
+        500:
+          description: (ServerError) Error en el servidor.
+    put:
+      tags:
+        - deliveries
+      summary: Actualiza la información de la solicitud.
+      parameters:
+        - in: header
+          name: token
+          description: Token de autenticación
+          required: true
+          schema:
+            type: string
+        - name: idDelivery
+          in: path
+          description: Identificador de la solicitud requerida.
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Los parametros deben venir en formato json, encriptados con la secret_key proporcionada.
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BodyDeliveriesPut'
+      responses:
+        200:
+          description: (OK) Información actualizada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BodyDeliveriesPut'
+        400:
+          description: (Unauthorized) no tienes autorización para actualizar el servicio.
+        401:
+          description: (NotFound) no se encontró la información.
+        422:
+          description: >-
+            (BadRequest) los datos enviados no son correctos o hay datos
+            obligatorios no enviados
+        500:
+          description: (ServerError) Error en el servidor.
+    delete:
+      tags:
+        - deliveries
+      summary: Elimina una solicitud
+      parameters:
+        - in: header
+          name: token
+          description: Token de autenticación
+          required: true
+          schema:
+            type: string
+        - name: idDelivery
+          in: path
+          description: Identificador de la solicitud requerida.
+          required: true
+          schema:
+            type: string
+      description: Elimina la solicitud ingresada, solo se podrá realizar si el status es igual a preparing.
+      responses:
+        200:
+          description: (OK) Solicitud eliminada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SuccessDeliveryDelete'
+        400:
+          description: (Unauthorized) no tienes autorización para eliminar la solicitud.
+        401:
+          description: (NotFound) no se encontró la solicitud.
+        422:
+          description: >-
+            (BadRequest) los datos enviados no son correctos o hay datos
+            obligatorios no enviados
+        500:
+          description: (ServerError) Error en el servidor.
+components:
+  responses:
+    Unauthorized:
+      description: (Unauthorized) no tienes autorización para crear el servicio.
+    NotFound:
+      description: (NotFound) no se encontró la información.
+    BadRequest:
+      description: >-
+        (BadRequest) los datos enviados no son correctos o hay datos
+        obligatorios no enviados
+    ServerError:
+      description: (ServerError) Error en el servidor.
+  parameters:
+    token:
+      in: header
+      name: token
+      description: Token de autenticación
+      required: true
+      schema:
+        type: string
+  schemas:
+    BodyDeliveriesPost:
+      type: object
+      required:
+       - width
+       - height
+       - depth
+       - commune
+       - phone_number
+       - contact_name
+       - address_street
+       - address_number
+       - type_deliver
+      properties:
+        width:
+          type: string
+          description: Describe el ancho del paquete, en kilos.
+          example: 20
+        height:
+          type: string
+          description: Describe la altura del paquete, en cm.
+          example: 20
+        depth:
+          type: string
+          description: Describe la profundidad del paquete, en cm.
+          example: 10
+        commune:
+          type: string
+          description: Especifica la comuna de entrega.
+        phone_number:
+          type: string
+          description: El teléfono de contacto del receptor.
+          example: '912341234'
+        contact_name:
+          type: string
+          description: Nombre del receptor.
+        address_street:
+          type: string
+          description: Avenida o Calle de entrega.
+          example: Avenida Matta
+        address_number:
+          type: string
+          description: Ingresa el número del domicilio.
+        type_deliver:
+          type: string
+          description: Tipo de articulo del paquete
+        date_start:
+          type: string
+          description: Fecha estimada para el retiro, por defecto es el día hábil siguiente.
+          example: 01-01-2023
+        reference:
+          type: string
+          description: Describe una referencia de entrega, ejemplo = Banco xx cerca...
+        contact_lastname:
+          type: string
+          description: Apellido del receptor
+        email:
+          type: string
+          description: Email del receptor, se enviará notificación de entrega.
+        rut:
+          type: string
+          description: 12.123.123-5
+        time_open:
+          type: string
+          description: Hora de apertura del destino formato de 24hrs
+          example: '16:00'
+        time_close:
+          type: string
+          description: Hora de cierre del destino formato de 24hrs
+          example: '19:00'
+        latitude:
+          type: string
+          description: Si posees la coordenadas de latitude.
+        longitude:
+          type: string
+          description: Si posees la coordenadas de Longitud.
+
+    BodyDeliveriesPut:
+      type: object
+      properties:
+        width:
+          type: string
+          description: Describe el ancho del paquete, en kilos.
+          example: 20
+        height:
+          type: string
+          description: Describe la altura del paquete, en cm.
+          example: 20
+        depth:
+          type: string
+          description: Describe la profundidad del paquete, en cm.
+          example: 10
+        commune:
+          type: string
+          description: Especifica la comuna de entrega.
+        phone_number:
+          type: string
+          description: El teléfono de contacto del receptor.
+          example: '912341234'
+        contact_name:
+          type: string
+          description: Nombre del receptor.
+        address_street:
+          type: string
+          description: Avenida o Calle de entrega.
+          example: Avenida Matta
+        address_number:
+          type: string
+          description: Ingresa el número del domicilio.
+        type_deliver:
+          type: string
+          description: Tipo de articulo del paquete
+        date_start:
+          type: string
+          description: Fecha estimada para el retiro, por defecto es el día hábil siguiente.
+          example: 01-01-2023
+        reference:
+          type: string
+          description: Describe una referencia de entrega, ejemplo = Banco xx cerca...
+        contact_lastname:
+          type: string
+          description: Apellido del receptor
+        email:
+          type: string
+          description: Email del receptor, se enviará notificación de entrega.
+        rut:
+          type: string
+          description: 12.123.123-5
+        time_open:
+          type: string
+          description: Hora de apertura del destino formato de 24hrs
+          example: '16:00'
+        time_close:
+          type: string
+          description: Hora de cierre del destino formato de 24hrs
+          example: '19:00'
+        latitude:
+          type: string
+          description: Si posees la coordenadas de latitude.
+        longitude:
+          type: string
+          description: Si posees la coordenadas de longitud.
+    SuccessDeliveryPost:
+      type: object
+      properties:
+        respuesta:
+          type: integer
+          enum:
+            - 1
+          description: Bandera que nos indica que la llamada al servicio fué exitosa
+        idDelivery:
+          type: integer
+          enum:
+            - 233
+          description: Id que le corresponde a la solicitud.
+    SuccessDeliveryDelete:
+      type: object
+      properties:
+        respuesta:
+          type: integer
+          enum:
+            - 1
+          description: Bandera que nos indica que la llamada al servicio fué exitosa
+        message:
+          type: string
+          description: Mensaje de operación
+        idDelivery:
+          type: integer
+          enum:
+            - 233
+          description: Id que le corresponde a la solicitud.
+
+    SuccessDeliveryGet:
+      type: object
+      properties:
+        order_number:
+          type: string
+          description: Código de seguimiento
+        address_concat:
+          type: string
+          description: Dirección completa concatenada
+        width:
+          type: string
+          description: Describe el ancho del paquete, en kilos.
+        height:
+          type: string
+          description: Describe la altura del paquete, en cm.
+        depth:
+          type: string
+          description: Describe la profundidad del paquete, en cm.
+        status_pay:
+          type: string
+          description: Estado del pago de la solicitud
+        distance_meters:
+          type: string
+          description: Distancia de ruta en metros
+        type_deliver:
+          type: string
+          description: Tipo de articulos en el paquete
+        commune:
+          type: string
+          description: Especifica la comuna de entrega.
+        phone_number:
+          type: string
+          description: Teléfono de contacto del receptor.
+        contact_name:
+          type: string
+          description: Nombre del receptor.
+        date_start:
+          type: string
+          description: Fecha estimada para el retiro, por defecto es el día hábil siguiente.
+          example: 01-01-2023
+        reference:
+          type: string
+          description: Describe una referencia de entrega, ejemplo = Banco xx cerca...
+        contact_lastname:
+          type: string
+          description: Apellido del receptor
+        email:
+          type: string
+          description: Email del receptor, se enviará notificación de entrega.
+        rut:
+          type: string
+          description: 12.123.123-5
+        latitude:
+          type: string
+          description: Latitude.
+        longitude:
+          type: string
+          description: Longitud.
+        status:
+          type: string
+          description: Estado de la solicitud
+          example: ["preparing", "asigned", "to_withdraw", "retired", "in_route", "delivered", "returned", "rejected"]

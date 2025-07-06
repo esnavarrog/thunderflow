@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Altyro Envíos</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+    <script src='https://www.google.com/recaptcha/api.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/screw-filereader@1.4.3/index.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCuItxM2-8FoJEKkbuWXEnzhicWUAPHXN4&libraries=places&callback=initMap"></script>
+
+  </head>
+
+  <body class="hidden-loader">
+    <div class="loader">
+      <div class="lds-dual-ring"></div>
+    </div>
+    <div class="wrapper <%= controller_name == 'sessions' ? 'bg-session' : 'bd-default' %>">
+
+      <% if user_signed_in? && policy(:welcome).valid_user? %>
+        <%= render partial: "layouts/sidebar" %>
+      <% end %>
+      <div id="flash-messages">
+        <% if notice %>
+          <div class="alert alert-success alert-dismissible fade show rounded-0 alert-floating" signed-in="<%= user_signed_in? %>">
+            <%= notice %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% end %>
+        <% unless alert.blank? %>
+          <div class="alert alert-danger alert-dismissible fade show rounded-0 alert-floating" signed-in="<%= user_signed_in? %>">
+            <%= alert %>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        <% end %>
+      </div>
+
+      <div id="content" class="container-fluid no-gutters">
+        <div id="<%= 'content-wrapper' if controller_name != 'sessions' %>">
+          <% if user_signed_in? && policy(:welcome).valid_user? %>
+            <%= render 'partials/nav' %>
+          <% end %>
+          <%= yield %>
+        </div>
+        <% if user_signed_in? %>
+          <%= render 'partials/nav_bottom' unless controller_name.include?('sessions') %>
+        <% end %>
+      </div>
+    </div>
+    <!-- modals -->
+    <%= render 'partials/modal_template' %>
+    <%= render 'partials/modal_deliveries' if current_company %>
+    <%= render 'partials/modal_show_archive' %>
+    <%= render 'partials/toast' %>
+
+  </body>
+</html>

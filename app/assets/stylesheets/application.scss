@@ -1,0 +1,73 @@
+@import 'variables';
+
+.btn-primary{
+  color:white !important;
+  &:hover{
+    color:white !important;
+  }
+}
+
+.btn-outline-primary{
+  &:hover{
+    color:white !important;
+  }
+}
+@import 'font-awesome';
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700&display=swap');
+@import 'animate.css/animate.css';
+// @import 'bootstrap/scss/bootstrap';
+@import 'bootstrap';
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+@import "flatpickr/dist/flatpickr";
+
+@import 'tables';
+@import 'sidebar';
+@import 'loader';
+@import 'swal';
+@import 'base';
+@import 'deliveries';
+@import 'welcome';
+@import 'companies';
+@import 'statuses';
+@import 'background';
+@import 'branches';
+@import 'deals';
+@import 'tracking';
+@import 'profiles';
+@import 'select2';
+@import 'resources';
+@import 'financials';
+@import 'chart';
+@import 'withdrawal_receipts';
+@import 'commune_prices';
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered {
+  display: flex !important;
+  flex-wrap: wrap;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-selection__choice {
+  display: inline-flex !important;
+  align-items: center;
+}
+
+.select2-container--default .select2-selection--multiple .select2-selection__rendered .select2-selection__choice__remove {
+  border: 0;
+  background: transparent;
+}
+
+.woocommerce, .token-view{
+  display: none;
+}
+
+.alert-floating {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  min-width: 300px;
+  max-width: 80%;
+}

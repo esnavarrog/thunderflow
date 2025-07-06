@@ -1,0 +1,36 @@
+
+<%= form_with(model: @status, data:{remote:true} ) do |f| %>
+  <input type="hidden" name="delivery_id" value="<%= @delivery.id %>">
+  <%= f.hidden_field :status, value: (params[:success] == 'true' ? @delivery.next_status_destiny : @delivery.next_status_preparing) %>
+  <% if params[:success] == 'true' && [:delivered].include?(@delivery.next_status_destiny) %>
+    <div class="form-group receive-form">
+      <%= f.label :receiver_name, "Nombre quien #{ @delivery.asigned? ? 'entrega' : 'recibe *' }" %>
+      <%= f.text_field :receiver_name, class:'form-control', required: true  %>
+    </div>
+    <div class="form-group receive-form d-none">
+      <%= f.label :receiver_phone, "Teléfono quien #{ @delivery.asigned? ? 'entrega' : 'recibe' }" %>
+      <%= f.text_field :receiver_phone, class:'form-control', placeholder:'Teléfono...' %>
+    </div>
+    <div class="form-group receive-form">
+      <%= f.label :receiver_rut, "Rut quien #{ @delivery.asigned? ? 'entrega' : 'recibe (opcional)' }" %>
+      <%= f.text_field :receiver_rut, class:'form-control rut-input', placeholder:'Rut...' %>
+    </div>
+  <% end %>
+  <div class="form-group receive-form">
+    <%= f.label :image, 'Agrega una fotografía *' %>
+    <%= f.file_field :image, class:'form-control', required: true %>
+  </div>
+  <div class="form-group receive-form">
+    <%= f.label :description, 'Observaciones (opcional)' %>
+    <%= f.text_area :description, class:'form-control'  %>
+  </div>
+  <div class="d-flex justify-content-end">
+    <div id="press-submit" data-submit="#submit-status" class="btn btn-primary mt-3">
+        <div class="spinner-border text-light loading d-none mr-2" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <span class="change-loading">Guardar</span>
+    </div>
+    <%= f.submit 'Cambiar Estado', class:'btn btn-primary d-none mt-3', id:'submit-status' %>
+  </div>
+<% end %>

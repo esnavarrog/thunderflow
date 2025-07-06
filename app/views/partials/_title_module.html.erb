@@ -1,0 +1,407 @@
+
+<div id="content-row" class="d-flex justify-content-between sticky-top align-items-center py-2 px-3 bg-white shadow-sm">
+    <% if action_name.include?('index') %>
+        <div id="logo-topnav"></div>
+    <% end %>
+    <div class="text-semibold">
+        <% if user_signed_in? && action_name != 'index' %>
+            <%= link_to :back, class:'btn btn-link text-secondary' do %>
+                <i class="fa-solid fa-chevron-left"></i>
+            <% end %>
+        <% end %>
+
+        <%= sector %>
+    </div>
+
+    <% if user_signed_in? && action_name == 'index' && controller_name == 'companies' %>
+        <div class="buttons-navbar">
+            <%= link_to new_company_path(companies:true), class:'btn btn-outline-secondary', remote:true do %>
+                Nueva Empresa
+            <% end %>
+        </div>
+
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <%= link_to 'Nueva empresa', new_company_path, class:'btn btn-outline-secondary', remote:true %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+    
+    <% if user_signed_in? && action_name == 'index' && controller_name == 'deliveries' %>
+        <div class="container-massive-select">
+            <div class="d-flex">
+                <% unless policy(:application).delivery? || policy(:application).client? %>
+                    <div class="btn btn-outline-secondary me-2" id="button-asign-massive" data-url="<%= asign_massive_url %>">
+                        <i class="fa-solid fa-rotate"></i> Asignación masiva
+                    </div>
+                <% end %>
+                <div class="btn btn-outline-secondary" id="button-send-status" data-url="<%= change_massive_status_url %>">
+                    <i class="bi bi-signpost-split"></i> Cambiar Estados
+                </div>
+            </div>
+        </div>
+
+      <div class="dropdown-navbar">
+        <div class="dropdown">
+          <a type="button" class="btn btn-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <%=inline_svg_tag("icons/icon_dropdown.svg", class:'icon-dropdown-plus')%>
+          </a>
+          <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+            <% if user_signed_in? && policy(:application).client? %>
+              <%= link_to new_deal_path, class:'btn btn-outline-primary' do %>
+                Pagar Pendientes
+              <% end %>
+              <%= link_to get_deliver_path(company_id: current_company), class:'btn btn-outline-primary', remote: true do %>
+                <i class="fa-solid fa-plus"></i> Agenda solicitud
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <div class="buttons-navbar">
+        <% if user_signed_in? && policy(:application).client? %>
+          <%= link_to new_deal_path, class:'btn btn-outline-primary' do %>
+            Pagar Pendientes
+          <% end %>
+          <%= link_to get_deliver_path(company_id: current_company), class:'btn btn-outline-primary', remote: true do %>
+            <i class="fa-solid fa-plus"></i> Agenda solicitud
+          <% end %>
+        <% end %>
+      </div>
+        
+    <% end %>
+
+    <% if user_signed_in? && action_name == 'show' && controller_name == 'branches' %>
+        <div class="container-massive-select">
+            <div class="d-flex">
+                <% unless policy(:application).delivery? || policy(:application).client? %>
+                    <div class="btn btn-outline-secondary me-2" id="button-asign-massive" data-url="<%= asign_massive_url %>">
+                        <i class="fa-solid fa-rotate"></i> Asignación masiva
+                    </div>
+                <% end %>
+                <div class="btn btn-outline-secondary" id="button-send-status" data-url="<%= change_massive_status_url %>">
+                    <i class="bi bi-signpost-split"></i> Cambiar Estados
+                </div>
+            </div>
+        </div>
+        
+    <% end %>
+
+    <% if user_signed_in? && action_name == 'show' && controller_name == 'deliveries' %>
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <% if user_signed_in? && !current_user.delivery? %>
+                        <%= link_to edit_delivery_path(@delivery), class:'btn btn-outline-secondary', remote:true do %>
+                            <i class="bi bi-pencil-square me-2"></i> Editar
+                        <% end %>
+                        <%= link_to delivery_path(id: @delivery.id, format: :pdf), class:'btn btn-outline-secondary', target: '_blank' do %>
+                          <i class="fa-solid fa-tag"></i> Etiqueta
+                        <% end %>
+                    <% end %>
+                    <% if !current_user.client? %>
+                        <%= link_to new_status_path(delivery_id:@delivery), class:'btn btn-outline-secondary', remote:true do %>
+                            <i class="bi bi-signpost-split"></i> Cambiar estado
+                        <% end %>
+                        <% if current_user.admin? %>
+                            <%= link_to asign_user_path(id:@delivery), class:'btn btn-outline-secondary', remote:true do %>
+                                <i class="fa-solid fa-rotate"></i> Asignar Repartidor
+                            <% end %>
+                        <% end %>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+
+        <div class="buttons-navbar">
+            <% if user_signed_in? && !current_user.delivery? %>
+                <%= link_to edit_delivery_path(@delivery), class:'btn btn-outline-secondary', remote:true do %>
+                <i class="bi bi-pencil-square me-2"></i>Editar
+                <% end %>
+            <% end %>
+            
+            <% if user_signed_in? && !current_user.delivery? %>
+              <%= link_to delivery_path(id: @delivery.id, format: :pdf), class:'btn btn-outline-secondary', target: '_blank' do %>
+                <i class="fa-solid fa-tag"></i> Etiqueta
+              <% end %>
+            <% end %>
+            <% if user_signed_in? && !current_user.client? %>
+                <%= link_to new_status_path(delivery_id:@delivery), class:'btn btn-outline-secondary', remote:true do %>
+                    <i class="bi bi-signpost-split"></i> Cambiar estado 
+                <% end %>
+                
+                <% if current_user.admin? %>
+                    <%= link_to asign_user_path(id:@delivery), class:'btn btn-outline-secondary', remote:true do %>
+                        <i class="fa-solid fa-rotate"></i> Asignar Repartidor 
+                    <% end %>
+                <% end %>
+
+            <% end %>
+        </div>
+    <% end %>
+
+    <% if user_signed_in? && current_user.delivery? && action_name== 'index' && controller_name == 'deliveries' %>
+        <div class="buttons-navbar">
+            <%= link_to open_modal_download_path, class:'btn btn-outline-secondary', remote:true do %>
+                <%= inline_svg_tag('icons/icon_download.svg', class:'me-1') %> Descargar XLSX
+            <% end %>
+        </div>
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <%= link_to open_modal_download_path, class:'btn btn-outline-secondary', remote:true do %>
+                        <%= inline_svg_tag('icons/icon_download.svg', class:'me-1') %> Descargar XLSX
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+    <% if user_signed_in? && current_user.admin? && action_name== 'index' && controller_name == 'deals' %>
+        <div class="buttons-navbar">
+            <%= link_to new_deal_path, class:'btn btn-outline-secondary d-flex justify-content-between align-items-center' do %>
+                <span class="me-2">Nuevo Cobro</span><i class="fa-solid fa-plus"></i>
+            <% end %>
+        </div>
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <%= link_to new_deal_path, class:'btn btn-outline-secondary' do %>
+                        <span class="me-2">Nuevo Cobro</span><i class="fa-solid fa-plus"></i>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+    <% if user_signed_in? && current_user.admin? && action_name== 'new' && controller_name == 'deals' %>
+        <div class="buttons-navbar">
+            <span class="button-upload">
+                <label for="upload-excel" class="btn btn-outline-secondary">
+                    Subir Archivo <i class="bi bi-arrow-bar-up"></i>
+                </label>
+                <input type="file" name="" id="upload-excel" class="btn btn-outline-secondary d-none" data-url="<%= up_deliveries_deal_path %>">
+            </span>
+        </div>
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <span class="button-upload">
+                        <label for="upload-excel" class="btn btn-outline-secondary">
+                            Subir Archivo <i class="bi bi-arrow-bar-up"></i>
+                        </label>
+                        <input type="file" name="" id="upload-excel" class="btn btn-outline-secondary d-none" data-url="<%= up_deliveries_deal_path %>">
+                    </span>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+    <% if user_signed_in? && current_user.admin? && controller_name == 'prices' %>
+        <div class="buttons-navbar">
+            <span class="button-upload">
+                <label for="upload-excel" class="btn btn-outline-secondary">
+                    Subir Archivo <i class="bi bi-arrow-bar-up"></i>
+                </label>
+            </span>
+        </div>
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <span class="button-upload">
+                        <label for="upload-excel" class="btn btn-outline-secondary">
+                            Subir Archivo <i class="bi bi-arrow-bar-up"></i>
+                        </label>
+                        <input type="file" name="" id="upload-excel" class="btn btn-outline-secondary d-none upload-excel" data-url="<%= up_deliveries_price_path %>">
+                    </span>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+    <% if user_signed_in? && current_user.admin? && action_name== 'show' && controller_name == 'deals' && @deal %>
+        <div class="buttons-navbar">
+            <%= link_to export_deliveries_path(id:@deal, format: :xlsx), class:'btn btn-outline-secondary' do %>
+                <i class="bi bi-file-earmark-excel-fill"></i><span>Exportar solicitudes</span>
+            <% end %>
+            <%= link_to edit_deal_path(@deal), class:'btn btn-outline-secondary' do %>
+                <i class="bi bi-pencil-square me-2"></i><span>Editar cobro</span>
+            <% end %>
+        </div>
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <%= link_to edit_deal_path(@deal), class:'btn btn-outline-secondary' do %>
+                        <i class="bi bi-pencil-square me-2"></i><span>Editar cobro</span>
+                    <% end %>
+                    <%= link_to export_deliveries_path(id:@deal, format: :xlsx), class:'btn btn-outline-secondary' do %>
+                        <i class="bi bi-file-earmark-excel-fill me-2"></i><span>Exportar solicitudes</span>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+    <% if user_signed_in? && current_user.client? && action_name == 'show' && controller_name == 'branches' %>
+      <%= link_to new_branch_delivery_path(@branch), class:'btn btn-outline-secondary', remote:true do %>
+        <span class="me-2">Nueva Solicitud</span> <i class="fa-solid fa-plus"></i>
+      <% end %>
+    <% end  %>
+
+    <% if user_signed_in? && current_user.admin? && action_name== 'show' && controller_name == 'branches' %>
+        <div class="buttons-navbar d-flex flex-line gap-1">
+            <%= link_to asign_massive_url(branch_id: @branch, status: :preparing), class:'btn btn-outline-primary d-flex justify-content-between align-items-center', remote:true do %>
+                <span class="me-2">Asignar Nuevas</span> <i class="fa-solid fa-signs-post"></i>
+            <% end %>
+            
+            <%= link_to asign_massive_url(branch_id: @branch, status: :to_withdraw), class:'btn btn-outline-primary d-flex justify-content-between align-items-center', remote:true do %>
+                <span class="me-2">Asignar en Preparación</span> <i class="fa-regular fa-clock"></i>
+            <% end %>
+            <%= link_to new_branch_delivery_path(@branch), class:'btn btn-outline-secondary d-flex justify-content-between align-items-center', remote:true do %>
+                <span class="me-2">Nueva Solicitud</span> <i class="fa-solid fa-plus"></i>
+            <% end %>
+            <%= link_to branch_path(@branch, status: :delivered, format: :xlsx), class:'btn btn-outline-secondary d-flex justify-content-between align-items-center' do %>
+                <span class="me-2">Exportar entregados</span> <i class="fa-solid fa-file-excel"></i>
+            <% end %>
+        </div>
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <%= link_to asign_massive_url(branch_id: @branch, status: :preparing), class:'btn btn-primary', remote:true do %>
+                        <span class="me-2">Asignar Nuevas</span> <i class="fa-solid fa-signs-post"></i>
+                    <% end %>
+                    <%= link_to asign_massive_url(branch_id: @branch, status: :to_withdraw), class:'btn btn-primary', remote:true do %>
+                        <span class="me-2">Asignar en Preparación</span> <i class="fa-regular fa-clock"></i>
+                    <% end %>
+                    <%= link_to new_branch_delivery_path(@branch), class:'btn btn-outline-secondary', remote:true do %>
+                        <span class="me-2">Nueva Solicitud</span> <i class="fa-solid fa-plus"></i>
+                    <% end %>
+                    <%= link_to branch_path(@branch, status: :delivered, format: :xlsx), class:'btn btn-outline-secondary' do %>
+                        <span class="me-2">Exportar entregados</span> <i class="fa-solid fa-file-excel"></i>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+    <% if user_signed_in? && current_user.admin? && action_name== 'show' && controller_name == 'companies' %>
+        <div class="d-flex gap-2 buttons-navbar">
+            <%= link_to xlsx_of_branches_path(company_id:@company, status: :preparing, format: :xlsx), class:'btn btn-outline-secondary d-flex justify-content-between align-items-center' do %>
+                <span class="me-2">Exportar nuevos <%= @company.deliveries.where(status: :preparing).count %></span> <i class="fa-solid fa-file-excel"></i>
+            <% end %>
+            <%= link_to xlsx_of_branches_path(company_id:@company, status: :delivered, format: :xlsx), class:'btn btn-outline-secondary d-flex justify-content-between align-items-center' do %>
+                <span class="me-2">Exportar entregados <%= @company.deliveries.where(status: :delivered).count %></span> <i class="fa-solid fa-file-excel"></i>
+            <% end %>
+        </div>
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <%= link_to xlsx_of_branches_path(company_id:@company, status: :preparing, format: :xlsx), class:'btn btn-outline-secondary' do %>
+                        <span class="me-2">Exportar nuevos <%= @company.deliveries.where(status: :preparing).count %></span> <i class="fa-solid fa-file-excel"></i>
+                    <% end %>
+                    <%= link_to xlsx_of_branches_path(company_id:@company, status: :delivered, format: :xlsx), class:'btn btn-outline-secondary' do %>
+                        <span class="me-2">Exportar entregados <%= @company.deliveries.where(status: :delivered).count %></span> <i class="fa-solid fa-file-excel"></i>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+    <% if user_signed_in? && current_user.admin? && action_name == 'index' && controller_name == 'deliveries' %>
+        <div class="buttons-navbar">
+            <%= link_to request_xlsx_path(format: :xlsx), class:'btn btn-outline-secondary', id:'export-select' do %>
+                <%= inline_svg_tag('icons/icon_download.svg', class:'me-1') %> Pendientes
+            <% end %>
+            <%= link_to select_date_path(status: :preparing), class:'btn btn-outline-secondary button-select-date', remote:true do %>
+                <%= inline_svg_tag('icons/icon_download.svg', class:'me-1') %> Por Fecha
+            <% end %>
+        </div>
+
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <%= link_to request_xlsx_path(format: :xlsx), class:'btn btn-outline-secondary', id:'export-select' do %>
+                        <%= inline_svg_tag('icons/icon_download.svg', class:'me-1') %> Pendientes
+                    <% end %>
+                    <%= link_to select_date_path(status: :preparing), class:'btn btn-outline-secondary button-select-date', remote:true do %>
+                        <%= inline_svg_tag('icons/icon_download.svg', class:'me-1') %> Por Fecha
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+    <% if user_signed_in? && current_user.client? && action_name == 'show' && controller_name == 'companies' %>
+        <div class="buttons-navbar">
+            <%= link_to report_client_path(), class:'btn btn-outline-secondary', remote:true do %>
+                <i class="fa-solid fa-file-excel"></i> Generar reporte
+            <% end %>
+        </div>
+
+        <div class="dropdown-navbar">
+            <div class="dropdown">
+                <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+                </a>
+                <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                    <%= link_to report_client_path(), class:'btn btn-outline-secondary', remote:true do %>
+                        <i class="fa-solid fa-file-excel"></i> Generar reporte
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+
+  <% if user_signed_in? && policy(:withdrawal_receipt).new? && action_name== 'index' && controller_name == 'withdrawal_receipts' %>
+    <div class="buttons-navbar">
+      <%= link_to new_withdrawal_receipt_path, class:'btn btn-outline-secondary' do %>
+        <i class="bi bi-pencil-square me-2"></i><span>Nuevo Comprobante</span>
+      <% end %>
+    </div>
+    <div class="dropdown-navbar">
+      <div class="dropdown">
+        <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+        </a>
+        <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+          <%= link_to new_withdrawal_receipt_path, class:'btn btn-outline-secondary' do %>
+            <i class="bi bi-file-earmark-excel-fill me-2"></i><span>Nuevo Comprobante</span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,161 @@
+
+<div class="m-2">
+    <%= form_with(model:@deal, data:{remote:true}, method: action_name == "edit" || @action_name == "edit" ? :put : :post) do |f| %>
+        <%= f.hidden_field :company_id, value:@company.present? ? @company.id : @deal.company.id %>
+        <%= hidden_field_tag :ids, "#{@ids.present? ? @ids : ids.present? ? ids : @deal.deliveries.ids}" %>
+
+        <% if current_user.admin? %>
+          <div class="row border rounded mb-2">
+              <div class="form-group col-sm-10 col-md-10 d-flex align-items-center p-2">
+                  <%= f.label :total_cost, 'Precio total pago repartidor' %>
+              </div>
+              <div class="col-sm-2 col-md-2 d-flex align-items-center">
+                  <div class="d-flex rounded w-100">
+                      <div class="d-flex justify-content-end w-100 text-primary">
+                          <%= number_to_currency((@data.present? ? @data.total_cost : @deal.total_cost), precision:0) %>
+                      </div>
+                      <div class="btn btn-outline-primary d-none" data-toggle="disabled">
+                          <i class="fa-solid fa-pen-to-square"></i>
+                      </div>
+                  </div>
+              </div>
+          </div>
+          <div class="row border rounded mb-2">
+            <div class="form-group col-sm-10 col-md-10 d-flex align-items-center p-2">
+              <label for="">Total Solicitudes</label>
+            </div>
+            <div class="col-sm-2 col-md-2 d-flex align-items-center">
+              <div class="d-flex rounded w-100">
+                <div class="d-flex justify-content-end w-100 text-primary">
+                  <%= number_to_currency @data.present? ? @data.total_deliveries : @deal.deliveries.map{|a| a.price.to_i}.sum, precision:0 %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row border rounded mb-2">
+            <div class="form-group col-sm-10 col-md-10 d-flex align-items-center p-2">
+              <label for="">Adicionales</label>
+            </div>
+            <div class="col-sm-2 col-md-2 d-flex align-items-center">
+              <div class="d-flex rounded w-100">
+                <div class="d-flex justify-content-end w-100 text-primary">
+                  <%= number_to_currency @data.present? ? @data.additional_amount : @deal.additional_amount, precision:0 %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+    <hr>
+
+        <% if @data.present? %>
+          <div class="row border rounded mb-2">
+            <div class="form-group col-sm-10 col-md-10 d-flex align-items-center p-2">
+              <label for="">Total solicitudes neto</label>
+            </div>
+            <div class="col-sm-2 col-md-2 d-flex align-items-center">
+              <div class="d-flex rounded w-100">
+                <div class="d-flex justify-content-end w-100 text-primary">
+                  <%= number_to_currency(@data.total_deliveries_amount.to_f / 1.19, precision:0) %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="row border rounded mb-2">
+          <div class="form-group col-sm-10 col-md-10 d-flex align-items-center p-2">
+            <label for="">Adicionales</label>
+          </div>
+          <div class="col-sm-2 col-md-2 d-flex align-items-center">
+            <div class="d-flex rounded w-100">
+              <div class="d-flex justify-content-end w-100 text-primary">
+                <%= number_to_currency((@data&.additional_amount || @deal.additional_amount) / 1.19, precision:0) %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row border rounded mb-2">
+          <div class="form-group col-sm-10 col-md-10 d-flex align-items-center p-2">
+            <label for="">Monto Neto</label>
+          </div>
+          <div class="col-sm-2 col-md-2 d-flex align-items-center">
+            <div class="d-flex rounded w-100">
+              <div class="d-flex justify-content-end w-100 text-primary">
+                <%= number_to_currency @data.present? ? @data.neto_amount : @deal.neto_amount, precision:0 %>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row border rounded mb-2">
+            <div class="form-group col-sm-10 col-md-10 d-flex align-items-center p-2">
+                <%= f.label :iva, 'IVA' %>
+            </div>
+            <div class="col-sm-2 col-md-2 d-flex align-items-center">
+                <div class="d-flex rounded w-100">
+                    <div class="d-flex justify-content-end w-100 text-primary">
+                        <%= number_to_currency @data.present? ? @data.iva : @deal.iva, precision:0 %>
+                    </div>
+                    <div class="btn btn-outline-primary d-none" data-toggle="disabled">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row border rounded mb-2">
+          <div class="form-group col-sm-10 col-md-10 d-flex align-items-center p-2">
+            <%= f.label :total_amount, 'Total a Pagar' %>
+          </div>
+          <div class="col-sm-2 col-md-2 d-flex align-items-center">
+            <div class="d-flex rounded w-100">
+              <div class="d-flex justify-content-end w-100 text-primary">
+                <%= number_to_currency @data.present? ? @data.total_amount : @deal.total_amount, precision: 0 %>
+              </div>
+              <div class="btn btn-outline-primary d-none" data-toggle="disabled">
+                <i class="fa-solid fa-pen-to-square"></i>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      <% if current_user.admin? %>
+        <div class="row rounded border mb-2">
+            <div class="form-group col-sm-10 col-md-10 d-flex align-items-center p-2">
+                <h4 class="text-primary">Utilidad</h4>
+
+            </div>
+            <div class="col-sm-2 col-md-2 d-flex align-items-center">
+                <div class="d-flex rounded w-100 justify-content-end text-secondary">
+
+                    <%= number_to_currency (@data.present? ? @data.utility : @deal.utility), precision:0 %>
+                </div>
+            </div>
+        </div>
+      <% end %>
+        <div class="row rounded border p-2">
+          <div>
+            <%= f.label :archives, 'Adjunta documentos' %>
+            <div id="archives" class="form-group">
+              <%= f.fields_for :archives do |archive_fields| %>
+                <%= render 'deals/archive_fields', f: archive_fields %>
+              <% end %>
+            </div>
+            <%= link_to_add_association 'Agregar archivo', f, :archives %>
+          </div>
+
+        </div>
+        <% if current_user.admin? %>
+          <div class="d-flex justify-content-end mt-3">
+              <div id="only-save" class="btn btn-outline-primary me-2">Solo Guardar</div>
+              <%= f.submit 'Guardar y cobrar', class:'btn btn-primary' %>
+          </div>
+        <% else %>
+          <div class="d-flex justify-content-end mt-3">
+            <%= f.submit 'Guardar y Pagar', class:'btn btn-primary' %>
+          </div>
+        <% end %>
+    <% end %>
+
+</div>

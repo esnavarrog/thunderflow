@@ -1,0 +1,45 @@
+<div class="hero">
+  <div class="cube"></div>
+  <div class="cube"></div>
+  <div class="cube"></div>
+  <div class="cube"></div>
+  <div class="cube"></div>
+  <div class="cube"></div>
+</div>
+<div class="py-3 container pt-5 hero__title">
+  <div class="row d-flex flex-wrap align-items-center mt-3">
+    
+    <div id="box-log-in" class="m-auto mt-3 bg-white shadow">
+      
+      <%= render "users/shared/links_top" %>
+      
+      <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+        
+        <div class="form-group mb-2">
+          <%= f.label :email, 'Email *' %><br />
+          <%= f.email_field :email, autocomplete: "email", class:'form-control' %>
+        </div>
+    
+        <div class="form-group mb-2">
+          <%= f.label :password %><br />
+          <%= f.password_field :password, autocomplete: "current-password", class:'form-control' %>
+        </div>
+    
+        <% if devise_mapping.rememberable? %>
+          <div class="form-group mb-2">
+            <%= f.check_box :remember_me %>
+            <%= f.label :remember_me %>
+          </div>
+        <% end %>
+          <div class="d-flex">
+            <%= f.submit "Ingresa", class:'btn btn-primary w-100' %>
+          </div>
+          <hr>
+          <p>Revisa nuestros <a href="https://sociosaltyro.cl/terminos_condiciones_altyro_envios.pdf">Términos y condiciones</a> del servicio</p>
+      <% end %>
+      <%= render "users/shared/links" %>
+    
+    </div>
+
+  </div>
+</div>

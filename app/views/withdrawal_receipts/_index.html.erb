@@ -1,0 +1,20 @@
+
+<% if @withdrawal_receipts.present? %>
+  <div class="container mt-3">
+    <div id="table-withdrawal-receipts" class="row">
+      <%= render @withdrawal_receipts %>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="paginate-deliveries paginates paginates-index">
+      <%= paginate @withdrawal_receipts, remote: true %>
+    </div>
+  </div>
+<% else %>
+  <div class="container">
+    <div class="d-flex justify-content-center align-items-center rounded shadow-sm bg-white p-3 mt-3 text-primary">
+      <span>Agrega un comprobante de retiro para comenzar a operar.</span>
+    </div>
+  </div>
+<% end %>

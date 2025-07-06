@@ -1,0 +1,5 @@
+$('.commune-field').replaceWith("<%= j render 'deliveries/partials/commune' %>")
+$('.commune-input').html('<option value= "">Seleccionar Comuna</option>');
+<% @communes.each do | commune| %>
+    $('.commune-input').append('<option value= "<%= commune %>"> <%= commune %></option>');
+<%end %>

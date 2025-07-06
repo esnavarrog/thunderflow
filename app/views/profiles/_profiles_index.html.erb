@@ -1,0 +1,15 @@
+<%= render partial: 'partials/title_module', locals:{sector:'Usuarios'} %>
+
+<div id="profiles-filters" class="container mt-3">
+    <%= render "profiles/index/filters" %>
+</div>
+
+<div id="profiles-index" class="container mt-3">
+    <%= render "profiles" %>
+</div>
+
+<div class="container">
+    <div class="paginate-profiles paginates paginates-index">
+        <%= paginate @profiles, remote: true %>
+    </div>
+</div>

@@ -1,0 +1,30 @@
+
+<div class="modal-body">
+    <div class="d-flex justify-content-center align-items-center p-2 mb-3 rounded border">
+        <small class="text-center text-muted">Para realizar una solicitud de servicio primero debes seleccionar una sucursal.</small>
+    </div>
+    <div class="d-flex flex-wrap justify-content-between text-names">
+        <h6 class="text-primary">Empresa: <%= @company&.name&.titleize %></h6>
+        <small class="text-secondary">Id empresa: <%= @company.id %></small>
+    </div>
+    <% if @company.branches.present? %>
+        <div class="form-group">
+            <%= label_tag :branches, 'Selecciona una sucursal' %>
+            <%= select_tag :branches, options_from_collection_for_select(@branches, :id, :name),{class:'form-control', prompt:'Selecciona una Sucursal...', data:{url:new_deliver_path}}%>
+        </div>
+        <div class="tp-splitter-wrapper">
+            <div class="splitter"></div>
+            <div class="splitter-label">o</div>
+            <div class="splitter"></div>
+        </div>
+    <% else %>
+        <div class="p-2 bg-light">
+            Esta empresa no tiene sucursales inscritas, agrega una nueva y podrás acceder al formulario de solicitud
+        </div>
+    <% end %>
+
+    <%= link_to new_branch_path(company_id:@company.id), class:'btn btn-link w-100', remote:true do %>
+        <i class="fa-solid fa-plus"></i> Agrega Nueva Sucursal
+    <% end %>
+    <div id="data-branch"></div>
+</div>

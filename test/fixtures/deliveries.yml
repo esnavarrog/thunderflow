@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  weight: MyString
+  height: MyString
+  width: MyString
+  depth: MyString
+  date_start: 2022-09-11 19:23:12
+  date_end: 2022-09-11 19:23:12
+  status: 1
+
+two:
+  weight: MyString
+  height: MyString
+  width: MyString
+  depth: MyString
+  date_start: 2022-09-11 19:23:12
+  date_end: 2022-09-11 19:23:12
+  status: 1

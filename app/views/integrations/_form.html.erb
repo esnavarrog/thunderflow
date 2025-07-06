@@ -1,0 +1,42 @@
+<%= form_with model:[@company, @integration], class:'', id:'form-integration', data:{ remote:true } do |f| %>
+  <div class="form-floating mb-2">
+    <%=
+      f.select :app_type, [
+        ['Shopify', :shopify],
+        ['Woocommerce', :woocommerce]
+      ],
+      { prompt: 'Selecciona un tipo' },
+      { class:'form-select js-basic-single'}
+    %>
+    <%= f.label :app_type, 'Tipo de integración' %>
+    <div class="error"></div>
+  </div>
+  <div class="form-floating mb-2">
+    <%= f.text_field :name, class:'form-control' %>
+    <%= f.label :name, 'Nombre' %>
+    <div class="error"></div>
+  </div>
+  <div class="form-floating mb-2">
+    <%= f.text_field :url, class:'form-control' %>
+    <%= f.label :url, 'Url' %>
+    <div class="error"></div>
+  </div>
+  <div class="form-floating mb-2 <%= 'woocommerce' unless @integration.woocommerce? %>">
+    <%= f.text_field :consumer_key, class:'form-control' %>
+    <%= f.label :consumer_key, 'Clave del cliente' %>
+    <div class="error"></div>
+  </div>
+  <div class="form-floating mb-2 <%= 'woocommerce' unless @integration.woocommerce? %>">
+    <%= f.text_field :consumer_secret, class:'form-control' %>
+    <%= f.label :consumer_secret, 'Clave secreta de cliente' %>
+    <div class="error"></div>
+  </div>
+  <div class="form-floating mb-2 <%= 'token-view' unless @integration.shopify? %>">
+    <%= f.password_field :token, class:'form-control', value: @integration.id ? 'https://youtu.be/dQw4w9WgXcQ' : nil, disabled: @integration.id %>
+    <%= f.label :token, 'Token / Api Key' %>
+    <div class="error"></div>
+  </div>
+  <div class="d-flex justify-content-end">
+    <%= f.submit 'Guardar', class:'btn btn-primary' %>
+  </div>
+<% end %>

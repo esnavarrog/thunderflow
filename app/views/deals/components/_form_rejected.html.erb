@@ -1,0 +1,15 @@
+<%= form_with(url: rejected_pay_path, data:{remote:true}, method: :get) do |f| %>
+    <%= hidden_field_tag :deal_id, @deal.id %>
+    <%= hidden_field_tag :form, true %>
+    <div class="rounded bg-light border p-2 mt-2 mb-4">
+        Por favor, agrega el motivo por el que rechazas este cobro.
+    </div>
+
+    <div class="form-group">
+        <%= label_tag :reason, 'Motivo de rechazo' %>
+        <%= text_area_tag :reason, nil, class:'form-control', placeholder:'Escribe el motivo por el que rechazas el cobro, por favor sea específico...' %>
+    </div>
+    <div class="d-flex justify-content-end">
+        <%= f.submit "Enviar", class:'btn btn-primary' %>
+    </div>
+<% end %>

@@ -1,0 +1,36 @@
+
+<table>
+  <tr class="">
+    <td>
+      <table>
+        <tr>
+          <td class="text-center image-logo">
+            <%= email_image_tag("logo_altyro.png") %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="bottom-text">
+        <p>
+          Un nuevo usuario intenta ponerse en contacto,
+        </p>
+        <p>
+          Responde a <%= link_to @email, "mailto:#{@email}" %> quiere ponerse en contacto con nosotros.
+        </p>
+        <% if @message %>
+          <p>
+            Nos dejó el siguiente mensaje:
+          </p>
+          <p>
+            <%= @message %>
+          </p>
+        <% end %>
+
+      </div>
+    </td>
+  </tr>
+</table>
+

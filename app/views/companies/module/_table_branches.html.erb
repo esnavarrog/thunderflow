@@ -1,0 +1,22 @@
+<div class="tab-pane fade show active" id="pills-branches" role="tabpanel" aria-labelledby="pills-branches-tab" tabindex="0">
+    <div>
+        <% if @branches.present? %>
+        <div class="container bg-light border border-light rounded p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="text-secondary m-0">Sucursales</h5>
+                <%= link_to new_company_branch_path(@company), class:'btn btn-secondary', remote:true do %>
+                    <i class="fa-solid fa-plus"></i>
+                <% end %>
+            </div>
+            <div id="branches">
+                <%= render @branches %>
+            </div>
+        </div>
+        <% else %>
+            <div class="d-flex justify-content-center align-items-center p-3-1 my-3 rounded border border-primary bg-white">
+                <h4 class="m-0">Aún no tienes sucursales, agrega <span><%= link_to 'aquí', new_company_branch_path(@company), remote:true %></span></h4>
+            </div>
+        <% end %>
+    </div>
+</div>
+

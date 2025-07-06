@@ -1,0 +1,6 @@
+$('#integration-orders-table').find('tbody').html('')
+
+$('#integration-orders-form-container').html("<%= j render 'deliveries/partials/form/integration_orders_form' %>")
+
+$('#integration-orders-form').removeClass('d-none')
+$('#integration-orders-loader').removeClass('d-flex').addClass('d-none')

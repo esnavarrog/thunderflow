@@ -1,0 +1,7 @@
+$('#profile-<%= @user_access.id %>').fadeOut('slow');
+
+$('#liveToast').toast('show');
+$('#liveToast').find('strong').html('Eliminado');
+$('#liveToast').find('small').html('<%= j format_time @user_access.updated_at %>');
+$('#liveToast').find('.toast-body').html('Eliminado correctamente');
+$('.icon-profile').replaceWith("<%= j inline_svg_tag('icons/icon_profiles.svg', class:'icon-profile me-3') %>");

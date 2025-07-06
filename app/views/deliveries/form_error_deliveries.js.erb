@@ -1,0 +1,8 @@
+
+<% unless @errors.blank? %>
+  $('#modal').find('.modal-body').html("<%= j render 'render_errors' %>")
+<% end %>
+
+$('#modal').modal('show');
+$('.loader').fadeOut('fast');
+$('#upload-excel').val('')

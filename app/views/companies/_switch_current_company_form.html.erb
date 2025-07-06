@@ -1,0 +1,8 @@
+<%= form_with url: switch_current_company_companies_path, class: 'submit-on-change', remote: :true do |f| %>
+  <%= f.label :company_id, 'Selecciona tu empresa', class: 'text-white' %>
+  <%= f.collection_select :company_id,
+  current_user.companies.order(:name), :id, :name,
+  { selected: current_company.try(:id) },
+  { id:"switch-current-company", class:'form-control js-basic-single', onchange: 'this.form.submit()'} %>
+  <%= f.submit '', class: 'd-none' %>
+<% end %>

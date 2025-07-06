@@ -1,0 +1,12 @@
+
+$('.btn-filter').removeClass('active');
+
+$('#table-deliveries').html("<%= j render 'deliveries/tables/table_deliveries' %>")
+
+<% if (policy(:application).delivery? && [:asigned, :in_route, :retired, :to_withdraw].include?(params[:status])) || !policy(:application).delivery? %>
+    $('.paginates-index').html("<%= j paginate @deliveries, remote: true, params:{ status: params[:status] } %>")
+<% else %>
+    $('.paginates-index').html('')
+<% end %>
+
+$('.loader').fadeOut('fast')

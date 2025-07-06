@@ -1,0 +1,21 @@
+$(".error").html("");
+$(".is-invalid").removeClass("is-invalid");
+<% @delivery.errors.each do |error|%>
+    <% attribute = error.attribute %>
+    <% message = error.message %>
+    $('#delivery_<%=attribute%>').siblings('.error').html('<%=message%>');
+    $('#delivery_<%=attribute%>').addClass('is-invalid');
+        swal({text: "<%= message %>", icon:'warning', button:'Aceptar'})
+    <% if ['company'].include?(attribute) %>
+    <% end %>
+<%end%>
+$('.loader').fadeOut('fast');
+
+<% if [:payed].include?(@delivery.errors.keys[0]) %>
+    <% text = @delivery.errors.values[0] %>
+    $('.modal').modal('hide');
+<% else %>
+    <% text = 'El formulario contiene errores, por favor revisa tus datos he intenta nuevamente.' %>
+<% end %>
+
+swal({text:'<%= text %>', icon:'warning', button:'Aceptar'});

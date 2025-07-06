@@ -1,0 +1,38 @@
+$primary:           #9904D9;
+$primaryTwo:        #007e80;
+$placeholder:       #0c617082;
+$secondary:         #9904D9;
+$success: limegreen;
+$info:              rgb(242, 19, 164);
+$warning:           #EB66E4;
+$warningTwo:        #BDBF2E;
+$danger:            #EB1761;
+$dangerTwo:         #fb6900;
+$red:               #dc1200;
+$backdrop: rgba(153, 4, 217, .45);
+$purple:            #854BBF;
+$whitePearl:        #F3E5AB;
+
+$successLight:      #94e1ce;
+$warningLight:      #fed268;
+$primaryLight:      #97dce0;
+
+$to_withdraw:       #c98724;
+$retired:           #005cdc;
+$returned:          #4791f9;
+$in_route:          #dc00ca;
+$delivered:         #00dc80;
+$background:        #f4f4f4;
+$default:           #474747;
+$greyFont:          #6c757d;
+$borderGrey:        #dee2e6;
+$backgroundDefault: #F4F5F7;
+
+:root {
+  --primary: #{$primary};
+  --primaryTwo: #{$primaryTwo};
+  --placeholder: #{$placeholder};
+  --secondary: #{$secondary};
+  --success: #{$success};
+  // Continúa con el resto de tus variables
+}

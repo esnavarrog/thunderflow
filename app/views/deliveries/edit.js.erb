@@ -1,0 +1,19 @@
+$('.modal-body').html('<%= j render "form" %>');
+$('.modal-title').html('Edita tu solicitud');
+$('input[name="_method"]').val('put');
+$('#modal').modal('toggle');
+
+$(".datetimepicker").flatpickr({
+    dateFormat: "d-m-Y",
+    minDate: "today",
+    locale: "es"
+});
+$(".datetimepicker-time").flatpickr({
+    dateFormat: "H:i",
+    noCalendar: true,
+    locale: "es",
+    time_24hr: true,
+    enableTime: true
+});
+
+launchmap(<%= @delivery.latitude.present? ? @delivery.latitude : false %>, <%= @delivery.longitude.present? ? @delivery.longitude : false %>, 'delivery_');

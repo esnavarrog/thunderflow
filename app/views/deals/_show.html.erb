@@ -1,0 +1,102 @@
+<div class="container-fluid">
+    <div class="rounded border border-primary p-4 my-3 bg-white">
+        <div id="box-info">
+            <%= render 'deals/components/box_info' %>
+        </div>
+
+        <div class="shadow-sm">
+            <div class="title-deal">
+                La información expresada es el cálculo de las siguientes solicitudes.
+            </div>
+    
+            <div class="table-responsive text-center title-deal-table">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th class="th-date">Fecha</th>
+                            <th>Direc. Retiro</th>
+                            <th>Entrega</th>
+                            <% if user_signed_in? && current_user.admin? %>
+                                <th>Repartidor</th>
+                            <% end %>
+                            <th>Estado</th>
+                            <th>Precio</th>
+                            <% if user_signed_in? && current_user.admin? %>
+                                <th>Pago repartidor</th>
+                            <% end %>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% @deliveries.each do |delivery| %>
+                            <tr>
+                                <td>
+                                    <%= link_to delivery.id, delivery %>
+                                </td>
+                                <td>
+                                    <%= format_date delivery.date_start %>
+                                </td>
+                                <td>
+                                    <div class="top">
+                                        <%= delivery.branch.commune %>
+                                    </div>
+                                    <div class="bottom">
+                                        <%= delivery.branch.address_concat %>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="top">
+                                        <%= delivery.commune %>
+                                    </div>
+                                    <div class="bottom">
+                                        <%= delivery.address_concat %>
+                                    </div>
+                                </td>
+                                <% if user_signed_in? && current_user.admin? %>
+                                    <td>
+                                        <%= delivery.user_asign.try(:name) %>
+                                    </td>
+                                <% end %>
+                                <td>
+                                    <%= enum_i18n(Delivery, :statuses, delivery.status) %>
+                                </td>
+                                <td>
+                                    <%= number_to_currency((delivery.price.to_f / 1.19), precision:0) %>
+                                </td>
+                                <% if user_signed_in? && current_user.admin? %>
+                                    <td>
+                                        <%= number_to_currency delivery.price_deliver.to_i, precision:0 %>
+                                    </td>
+                                <% end %>
+                            </tr>
+                        <% end %>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="d-flex flex-wrap justify-content-end mt-3">
+            <%= link_to upload_files_path(@deal), class:'btn btn-outline-primary me-3 mb-2', remote: true do %>
+              <span>Subir Archivos</span><i class="bi bi-file-earmark-arrow-up"></i>
+            <% end %>
+            <% if user_signed_in? && current_user.admin? %>
+                <%= link_to export_deliveries_path(id:@deal, format: :xlsx), class:'btn btn-outline-success me-3 mb-2' do %>
+                    <span>Exportar solicitudes</span><i class="bi bi-file-earmark-excel-fill"></i>
+                <% end %>
+                <%= link_to send_notification_path(@deal, only_save:false), class:'btn btn-outline-info me-3 mb-2', remote:true, method: :put do %>
+                    Enviar cobro <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <% end %>
+            <% end %>
+            <% unless @deal.payed? || @deal.pending? %>
+                <%= link_to rejected_pay_path(deal_id:@deal), class:'btn btn-outline-primary me-3 mb-2', remote:true do %>
+                    Rechazar cobro <i class="fa-solid fa-xmark"></i>
+                <% end %>
+            <% end %>
+            <% unless @deal.payed? %>
+                <%= link_to deal_payments_path(@deal), method: :post, class:'btn btn-primary me-3 mb-2' do %>
+                    Realizar el pago
+                    <%= image_tag('logo-flow.png', class:'icon-button') %>
+                <% end %>
+            <% end %>
+        </div>
+    </div>
+</div>

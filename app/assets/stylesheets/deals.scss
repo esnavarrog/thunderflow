@@ -1,0 +1,178 @@
+// Place all the styles related to the Deals controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+@import "variables";
+@import "bootstrap/functions";
+@import "bootstrap/variables";
+@import "bootstrap/mixins";
+.max-scroll{
+    max-height: 600px;
+    overflow: auto;
+}
+
+.table-deal-deliveries{
+    .disabled{
+        border:0;
+        opacity: 1;
+    }
+}
+
+.table-deals{
+    border-radius: 10px;
+    overflow: auto;
+    th{
+        border-bottom-color: $borderGrey !important;
+    }
+    td{
+        padding: .1rem .5rem;
+    }
+}
+
+.data-deal{
+    margin-bottom: 2rem;
+    border: 1px solid $greyFont;
+    padding: 1.5rem;
+    border-radius: 0.3rem;
+    text-align: center;
+    div{
+        color:$success;
+    }
+    span{
+        font-weight: bold;
+        color: $secondary;
+    }
+    .small-text{
+        font-size: .7rem;
+        padding: 10px 0;
+        margin: .8rem 0 0 0;
+        background-color: $background;
+        border-radius: 0.3rem 0.3rem 0 0;
+    }
+    .small-text-box{
+        border: 1px solid $background;
+        border-top:0;
+        padding: .7rem;
+        border-radius: 0 0 0.3rem 0.3rem;
+    }
+}
+
+thead, tbody, tfoot, tr, td, th {
+    vertical-align: middle;
+}
+
+.title-deal{
+    background-color: $background;
+    padding: 1rem;
+    border-radius: .3rem .3rem 0 0;
+    font-size: 1.2rem;
+    color: $info;
+    line-height: 1.5rem;
+    border: 1px solid $primary;
+    border-bottom:0;
+}
+
+.title-deal-table{
+    border: 1px solid $primary;
+    border-top:0;
+    border-radius: 0 0 .3rem .3rem;
+    overflow: auto;
+    input{
+        max-width: 110px;
+    }
+    .table > :not(:last-child) > :last-child > * {
+        border-bottom-color: $primary;
+    }
+    tr:last-child td{
+        border-bottom: 0;
+    }
+}
+th.th-date{
+    min-width: 127px;
+}
+
+.form-control::-webkit-input-placeholder{
+    color: $placeholder !important;
+}
+.form-control::-moz-placeholder{
+    color: $placeholder !important;
+}
+.form-control::-ms-input-placeholder{
+    color: $placeholder !important;
+}
+.form-control::placeholder{
+    color: $placeholder !important;
+}
+
+.form-calendar{
+    .form-control{
+        height: 48px;
+        color: $info;
+        border: 1px solid $info !important; 
+        padding: 4px 24px 4px 8px;
+    }
+    .form-control::-webkit-input-placeholder{
+        color: $placeholder !important;
+    }
+    .form-control::-moz-placeholder{
+        color: $placeholder !important;
+    }
+    .form-control::-ms-input-placeholder{
+        color: $placeholder !important;
+    }
+    .form-control::placeholder{
+        color: $placeholder !important;
+    }
+    @include media-breakpoint-down('sm'){
+        .form-control::-webkit-input-placeholder{
+            color: white !important;
+        }
+        .form-control::-moz-placeholder{
+            color: white !important;
+        }
+        .form-control::-ms-input-placeholder{
+            color: white !important;
+        }
+        .form-control::placeholder{
+            color: white !important;
+        }
+    }
+    .input-group-text{
+        z-index: 300;
+        border: 1px solid $info !important;
+    }
+}
+
+.form-group{
+    .form-control{
+        height: 48px;
+        color: $info;
+        border: 1px solid $primary;
+        padding: 4px 24px 4px 8px;
+    }
+    .form-control::-webkit-input-placeholder{
+        color: $placeholder;
+    }
+    .form-control::-moz-placeholder{
+        color: $placeholder;
+    }
+    .form-control::-ms-input-placeholder{
+        color: $placeholder;
+    }
+    .form-control::placeholder{
+        color: $placeholder;
+    }
+    .input-group-text{
+        border: 1px solid $primary !important;
+    }
+}
+.dates-deal{
+    font-size: .8rem;
+    div{
+        font-size: .7rem;
+        color: $info;
+    }
+}
+
+.icon-button{
+    height: 20px;
+}

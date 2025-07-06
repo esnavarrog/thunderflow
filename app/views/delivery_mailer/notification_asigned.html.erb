@@ -1,0 +1,59 @@
+<table>
+  <tr class="">
+    <td>
+      <table>
+        <tr>
+          <td class="text-center image-logo pb-32">
+            <%= email_image_tag("logo_altyro.png") %>
+          </td>
+        </tr>
+
+      </table>
+
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <div class="pt-48 pb-32">
+          <%=@user.name %>,
+          Se han asignado <%= @deliveries.count %> nuevas solicitudes.
+      </div>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <table class="table-mail table-striped">
+          <thead>
+              <tr>
+                  <th>id</th>
+                  <th>Seguimiento</th>
+                  <th>Dirección retiro</th>
+                  <th>Dirección destino</th>
+                  <th>Detalle</th>
+              </tr>
+          </thead>
+          <tbody>
+              <% @deliveries.each do |delivery| %>
+                <tr>
+                    <td><%= delivery.id %></td>
+                    <td><%= link_to delivery.order_number, tracking_index_url(order_number: delivery.order_number) %></td>
+                    <td><%= delivery.branch.address_concat %></td>
+                    <td><%= delivery.address_concat %></td>
+                    <td><%= delivery.description %></td>
+                </tr>
+              <% end %>
+          </tbody>
+      </table>
+    </td>
+  </tr>
+
+  <tr>
+    <td>
+      <div class="pt-48">
+        <%= link_to "Ver detalle",  branch_url(@deliveries.last.branch), class: "btn btn-primary" %>
+      </div>
+
+    </td>
+
+  </tr>
+</table>

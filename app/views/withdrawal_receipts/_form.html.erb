@@ -1,0 +1,87 @@
+<%= form_with(model: @withdrawal_receipt, class:'row border rounded-4 bg-light p-3', data: { remote:true }) do |f| %>
+
+  <div class="d-flex align-items-center flex-wrap border rounded-top-4">
+    <h4 class="col-sm-12 col-md-8 text-center text-bold">Comprobante de recepción  y devolución de mercadería</h4>
+    <div class="col-sm-12 col-md-4"><%= image_tag('logo_altyro', class:'w-100') %></div>
+  </div>
+
+  <table class="border w-100">
+    <tr class="border">
+      <td class="ps-2">
+        Empresa / Tienda
+      </td>
+    </tr>
+    <tr class="border">
+      <td style="height: 60px">
+        <%= f.select :company_id, options_from_collection_for_select(Company.all, :id, :name), {}, class:'js-basic-single border-0 w-100 h-100' %>
+      </td>
+    </tr>
+  </table>
+
+  <table class="border w-100">
+    <tr class="border">
+      <td class="ps-2">
+        Fecha
+      </td>
+    </tr>
+    <tr class="border">
+      <td style="height: 60px">
+        <%= f.text_field :issued_at, value: format_date(Date.today), class:'datetimepicker w-100 h-100 border-0' %>
+      </td>
+    </tr>
+  </table>
+
+  <nav class="px-0">
+    <div class="nav nav-tabs d-flex justify-content-center py-2 border" id="nav-tab" role=tablist>
+      <div class="nav-link change-withdrawal-receipt-type active" data-type="retired" data-target="#withdrawal_receipt_withdrawal_receipts_type" id="retired-tab" data-bs-toggle="tab" data-bs-target="#retired-content" type="button" role="tab" aria-controls="retired" aria-selected="true">Retiro de paquetes</div>
+      <div class="nav-link change-withdrawal-receipt-type" data-type="returned" data-target="#withdrawal_receipt_withdrawal_receipt_type" id="returned-tab" data-bs-toggle="tab" data-bs-target="#returned-content" type="button" role="tab" aria-controls="returned" aria-selected="true">Devolución de paquetes</div>
+    </div>
+    <%= f.hidden_field :withdrawal_receipt_type, value: :retired %>
+  </nav>
+
+
+<div class="tab-content px-0" id="myTabContent">
+  <div class="tab-pane fade show active" id="retired-content" role="tabpanel" aria-labelledby="retired-tab" tabindex="0">
+    <table class="border w-100">
+      <tr class="border">
+        <td style="height: 60px; max-width: 55px" class="ps-2">
+          Cantidad Planilla
+        </td>
+        <td style="height: 60px;" >
+          <%= f.number_field :sender_local_plain, class:'border w-100 h-100' %>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="tab-pane fade" id="returned-content" role="tabpanel" aria-labelledby="returned-tab" tabindex="0">
+    <table class="border w-100">
+      <tr class="border">
+        <td style="height: 60px; max-width: 55px" class="ps-2">
+          Nombre Cliente
+        </td>
+        <td style="height: 60px;">
+          <%= f.text_field :name_client, class:'border w-100 h-100' %>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>
+<table class="border">
+  <tr class="border">
+    <td style="height: 60px; max-width: 55px" class="ps-2">
+      Cantidad Recibida
+    </td>
+    <td style="height: 60px;">
+      <%= f.number_field :sender_local_check, class:'border w-100 h-100' %>
+    </td>
+  </tr>
+</table>
+
+
+
+
+  <h6 class="text-bold text-center py-2 border mb-0">Total: <span id="total-sender-withdrawal-receipt"><%= @withdrawal_receipt&.sender_local_check or 0 %></span></h6>
+
+  <%= f.submit 'Guardar', class:'btn btn-primary mt-3 loader-click' %>
+
+<% end %>

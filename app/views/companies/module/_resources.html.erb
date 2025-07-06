@@ -1,0 +1,46 @@
+<div class="tab-pane fade" id="pills-resources" role="tabpanel" aria-labelledby="pills-resources-tab" tabindex="0">
+    <div class="container bg-light border border-light rounded p-3 mb-3 shadow-sm">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="text-secondary m-0">Recursos API</h5>
+            <%= link_to new_company_resource_path(@company), class:'btn btn-secondary', remote:true do %>
+                <i class="fa-solid fa-plus"></i>
+            <% end %>
+        </div>
+        <div>
+            <% if current_user.admin? || current_user.client? && current_user == @company.owner %>
+                <div class="py-3">
+                    <% if current_user.admin? %>
+                    <div class="col-sm-12 col-md-4 <%= @company.require_api ? 'alert-for-api' : 'success-api' %>">
+                        <%= @company.require_api ? 'Cliente está solicitando conexión a API' : 'API no solicitada' %>
+                    </div>
+                    <% end %>
+
+                    <% if current_user.client? %>
+                        <div class="<%= @company.accepted_api ? 'habilitada' : 'inhabilitada' %>">
+                            La API está <%= @company.accepted_api ? 'habilitada' : 'inhabilitada' %>
+                        </div>
+                    <% else %>
+                        <div class="my-3 <%= @company.accepted_api ? 'habilitada' : 'inhabilitada' %>">
+                            La API está <%= @company.accepted_api ? 'habilitada' : 'inhabilitada' %>
+                        </div>
+                        <div id="button-enable-api">
+                            <% if @company.accepted_api %>
+                                <%= link_to 'Desactivar API', active_api_path(company_id:@company, accepted:false), class:'btn btn-outline-danger', title:'Activa/Desactiva la API del cliente', remote:true %>
+                            <% else %>
+                                <%= link_to 'Activar API', active_api_path(company_id:@company, accepted:true), class:'btn btn-outline-primary', title:'Activa/Desactiva la API del cliente', remote:true %>
+                            <% end %>
+                        </div>
+                    <% end %>
+
+                    </div>
+                <% end %>
+                <div class="bg-white rounded p-3 border mb-3">
+                    <p>¡Bienvenido a nuestra sección de Tokens de Acceso para la API REST! Aquí podrás obtener los tokens necesarios para acceder a nuestra API y comenzar a disfrutar de sus funciones. Para obtener más detalles sobre cómo utilizar estos tokens, consulta la documentación disponible en el siguiente enlace. <%= link_to 'Documentación', api_docs_index_url, target: '_blank', title:'Documentación API' %></p>
+                    <p>Por favor, debe generar un token por sucursal, así la dirección quedará relacionada a su acceso.</p>
+                </div>
+        </div>
+        <div id="resources">
+            <%= render @resources if @company.accepted_api %>
+        </div>
+    </div>
+</div>

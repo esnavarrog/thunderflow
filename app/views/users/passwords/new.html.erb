@@ -1,0 +1,21 @@
+<%= render partial: 'partials/title_module', locals:{sector:'Recuperación de contraseña'} %>
+<div class="container">
+  <div class="bg-white shadow rounded p-3 box-registred">
+    <h5 class="text-info">Olvidaste tu contraseña?</h5>
+    
+    <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+      <%= render "users/shared/error_messages", resource: resource %>
+    
+      <div class="form-group">
+        <%= f.label :email %><br />
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder:'Ingresa email de usuario...', class:'form-control' %>
+      </div>
+    
+      <div class="d-flex mt-3">
+        <%= f.submit "Enviar instrucciones de cambio de contraseña", class:'btn btn-primary w-100' %>
+      </div>
+    <% end %>
+    
+      <%= render "users/shared/links" %>
+  </div>
+</div>

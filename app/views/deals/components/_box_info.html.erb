@@ -1,0 +1,71 @@
+<div class="d-flex flex-nowrap justify-content-between mb-4">
+    <h5 class="text-primary">
+      <% if current_user.admin? %>
+        Cobro realizado al cliente "<%= @deal.company.try(:name) %>" - <%= @deal.company.rut %>
+      <% else %>
+        <small >
+          Para que estas solicitudes sean procesadas el pago debe ser confirmado. Si tienes algún problema, ponte en contacto con <%= link_to 'Soporte', "mailto:enviosaltyro@gmail.com" %>.
+        </small>
+          <div>
+            IMPORTANTE: Ordenes no pagadas se retirarán con normalidad pero sino están canceladas a las 12:00 del medíodia, no saldrán a reparto.
+          </div>
+      <% end %>
+    </h5>
+    <div class="date-deal text-success text-nowrap">
+        <%= format_date @deal.created_at %>
+    </div>
+</div>
+<div class="col-sm-12 col-md-6 col-lg-4 data-deal">
+    <div class="d-flex justify-content-between">
+        <span>Estado</span>
+        <span class="text-info">
+            <%= enum_i18n(Deal, :status_deals, @deal.status_deal) %>
+        </span>
+    </div>
+    <% if @deal.pay_description.present? %>
+    <div class="d-flex justify-content-between">
+        <span>Desc. de pago</span>
+        <span class="text-info">
+            <%= @deal.pay_description.try(:titleize) %>
+        </span>
+    </div>
+    <% end %>
+    <% if @deal.additional_amount.present? %>
+        <div class="d-flex justify-content-between">
+          <span>Adicionales:</span>  <span class="text-info"><%= number_to_currency((@deal.additional_amount.to_f / 1.19), precision:0) %></span>
+        </div>
+    <% end %>
+      <div class="d-flex justify-content-between">
+        <span>Total solicitudes:</span>  <span class="text-info"><%= number_to_currency((@deal.deliveries.map{|a| a.price.to_i}.sum.to_f / 1.19), precision:0) %></span>
+      </div>
+  <hr>
+    <div class="d-flex justify-content-between">
+        <span>Monto Neto:</span>  <span class="text-info"><%= number_to_currency @deal.neto_amount, precision:0 %></span>
+    </div>
+    <div class="d-flex justify-content-between">
+        <span>IVA:</span>  <%= number_to_currency @deal.iva, precision:0 %>
+    </div>
+    <div class="d-flex justify-content-between">
+        <span>Total:</span>  <span class="text-primary"><%= number_to_currency @deal.total_amount, precision:0 %></span>
+    </div>
+    <% if user_signed_in? && current_user.admin? %>
+        <div class="small-text">
+            La siguiente información solo está disponible para el perfil de administrador
+        </div>
+        <div class="small-text-box">
+            <div class="d-flex justify-content-between">
+                <span>Total repartidores: </span> <%= number_to_currency @deal.total_cost, precision:0 %>
+            </div>
+            <div class="d-flex justify-content-between">
+                <span>Utilidades: </span> <%= number_to_currency @deal.utility, precision:0 %>
+            </div>
+        </div>
+    <% end %>
+    <% if @deal.rejected? %>
+        <div class="rounded border p-2 bg-light mt-2">
+            <span>
+                <%= @deal.reason_rejected %>
+            </span>
+        </div>
+    <% end %>
+</div>

@@ -1,0 +1,13 @@
+<div class="form-group w-100">
+    <%= label_tag :date_range, 'Selecciona un rango o fecha entrega', class:'form-label m-0' %>
+    <div class="input-group form-calendar w-100">
+        <%= text_field_tag(
+            :date_range,
+            params[:date_range],
+            options = {
+                placeholder: 'Selecciona rango de fechas',
+                class:'form-control datetimepicker-range select-range w-100',
+                data:{url:select_company_path, company:@company.id, branch:(@branch.id if @branch.present?)}
+            } ) %>
+    </div>
+</div>

@@ -1,0 +1,31 @@
+<tr id="additional-fee-row-<%= additional_fee.id %>">
+  <td class="ps-4">#<%= additional_fee.id %></td>
+  <td><span class="badge bg-success"><%= number_to_currency additional_fee.additional_fee, precision: 0 %></span></td>
+  <td><small class="text-muted"><%= format_date_time additional_fee.created_at %></small></td>
+  <td><%= enum_i18n(AdditionalFee, :additional_types, additional_fee.additional_type)&.titleize %></td>
+  <td><%= enum_i18n(AdditionalFee, :additional_models, additional_fee.additional_model) %></td>
+  <td><span class="badge bg-light text-dark"><%= enum_i18n(AdditionalFee, :name_profiles, additional_fee.name_profile) %></span></td>
+  <td><%= additional_fee.condition %></td>
+  <td class="text-end pe-4">
+    <div class="dropdown">
+      <button class="btn btn-light btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <i class="bi bi-three-dots-vertical"></i>
+      </button>
+      <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+        <li>
+          <%= link_to edit_additional_fee_path(additional_fee, additional_model: :deal), class: 'dropdown-item py-2' do %>
+            <i class="bi bi-pencil-fill me-2 text-primary"></i> Editar
+          <% end %>
+        </li>
+        <li>
+          <%= link_to additional_fee_path(additional_fee),
+                      method: :delete,
+                      class: 'dropdown-item py-2 text-danger',
+                      data: { remote: true, confirm: '¿Estás seguro?' } do %>
+            <i class="bi bi-trash-fill me-2"></i> Eliminar
+          <% end %>
+        </li>
+      </ul>
+    </div>
+  </td>
+</tr>

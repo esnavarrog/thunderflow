@@ -1,0 +1,62 @@
+// Place all the styles related to the Resources controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+@import 'variables';
+.setup-admin{
+    background-color: $background;
+    padding: .5rem;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.alert-for-api{
+    padding: .5rem;
+    background-color: #ff000065;
+    border-radius: 4px;
+    border: 1px solid $red;
+    color: white;
+}
+
+.success-api{
+    padding: .5rem;
+    background-color: #00c60388;
+    border-radius: 4px;
+    border: 1px solid $success;
+    color: white;
+}
+
+.habilitada{
+    color: $success;
+}
+
+.inhabilitada{
+    color: $danger;
+}
+
+#address-branch-selected.active{
+    font-size: .8rem;
+    color: $secondary;
+    margin: 0 10px 1rem 10px;
+    padding: 10px;
+    background: aliceblue;
+    border-radius: 0 0 5px 5px;
+}
+
+.token-resource{
+    font-size: .7rem;
+    color: $info;
+    background: $background;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+#secret-key-company.load-secret-key{
+    font-size: .8rem;
+    color: $info;
+    background: $background;
+    padding: .5rem;
+    border-radius: 4px;
+}

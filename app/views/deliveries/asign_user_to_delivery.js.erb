@@ -1,0 +1,17 @@
+$('#modal').modal('hide');
+<% if @statuses.present? %>
+    $('#statuses-render').html("<%= j render @statuses %>");
+<% end %>
+
+<% if @deliveries.present? %>
+    <% @deliveries.each do |delivery| %>
+        $('#status-list-<%= delivery.id %>').replaceWith("<div id='status-list-<%= delivery.id %>' class='status-list status-list-<%= delivery.status %>'><span><%= enum_i18n(Delivery, :statuses, delivery.status) %></span><div></div></div>");
+        $('#status-<%= delivery.id %>').html("<%= enum_i18n(Delivery, :statuses, delivery.status) %>");
+        $('#delivery-id-<%= delivery.id %>').replaceWith("<%= j render partial:'deliveries/delivery', locals:{delivery:delivery} %>");
+    <% end %>
+    swal({title:'Asignadas!', text:'Haz asignado <%= @deliveries.count %> solicitudes a un repartidor', icon:'success', button:"Aceptar"})
+<% else %>
+    swal({title:'Asignada!', text:'Haz asignado una solicitud a un repartidor', icon:'success', button:"Aceptar"})
+<% end %>
+$("input[name='ids[]']").remove();
+$('#button-send-status, #button-asign-massive, .container-massive-select').fadeOut('slow')

@@ -1,0 +1,14 @@
+// Place all the styles related to the CommunePrices controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+.table-container {
+  max-height: 500px;
+  overflow-y: auto;
+}
+
+.sticky-header {
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 1;
+}

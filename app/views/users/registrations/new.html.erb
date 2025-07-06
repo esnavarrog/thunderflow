@@ -1,0 +1,45 @@
+<div class="container">
+  <div class="bg-white shadow rounded p-3 box-registred">
+    <h5 class="text-info">Regístrate con tu correo</h5>
+    <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= render "users/shared/error_messages", resource: resource %>
+
+      <div class="form-group mb-2">
+        <%= f.label :name, 'Nombre *' %><br />
+        <%= f.text_field :name, autofocus: true, autocomplete: "Nombre...", class:'form-control' %>
+      </div>
+      <div class="form-group mb-2">
+        <%= f.label :email, 'Email *' %><br />
+        <%= f.email_field :email, autocomplete: "email", class:'form-control' %>
+      </div>
+      <div class="form-group mb-2">
+        <%= f.label :avatar, 'Foto de Perfil' %><br />
+        <%= f.file_field :avatar, class:'form-control' %>
+      </div>
+      <div class="form-group mb-2">
+        <%= f.label :rut %><br />
+        <%= f.text_field :rut, autocomplete: "Rut...", class:'form-control rut-input' %>
+      </div>
+      <div class="form-group mb-2">
+        <%= f.label :password %>
+        <% if @minimum_password_length %>
+        <em class="text-subtitle">(<%= @minimum_password_length %> mínimo de caracteres)</em>
+        <% end %><br />
+        <%= f.password_field :password, autocomplete: "new-password", class:'form-control' %>
+      </div>
+
+      <div class="form-group mb-2">
+        <%= f.label :password_confirmation %><br />
+        <%= f.password_field :password_confirmation, autocomplete: "new-password", class:'form-control' %>
+      </div>
+
+      <div class="d-flex mt-3">
+        <%= f.submit "Regístrate", class:'btn btn-primary w-100' %>
+      </div>
+    <% end %>
+
+    <%= render "users/shared/links" %>
+
+
+  </div>
+</div>

@@ -1,0 +1,36 @@
+<%= render partial: 'partials/title_module', locals:{sector:'Solicitudes'} %>
+
+<div class="container">
+    <%= render 'deliveries/partials/reports' %>
+</div>
+<div class="container-fluid">
+    <%= render partial:'deliveries/partials/filters', locals:{id_form: '_top'} %>
+</div>
+
+<div class="container-fluid">
+    <div id="table-deliveries">
+        <%= render 'deliveries/tables/table_deliveries' %>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="paginate-deliveries paginates paginates-index d-flex justify-content-end">
+        <% if (policy(:application).delivery? && params[:status] == "delivered") || !policy(:application).delivery? %>
+            <%= paginate @deliveries, remote: true %>
+        <% end %>
+    </div>
+</div>
+
+<div class="button-filter-mobile">
+    <i class="fa-solid fa-filter"></i>
+</div>
+
+<div class="container-filters-mobile">
+    <div class="d-flex justify-content-between">
+        <h5>Filtrar</h5>
+        <div class="btn btn-light text-info close-mobile"><i class="fa-solid fa-xmark"></i></div>
+    </div>
+    <%= render partial:'deliveries/partials/filters', locals:{id_form: '_bottom'} %>
+</div>
+
+<%= render 'form_massive' %>

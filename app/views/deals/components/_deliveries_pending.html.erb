@@ -1,0 +1,22 @@
+<div id="deliveries-pending" class="text-center rounded py-3">
+  <% deals_count = current_company.deals.deals_pending.count %>
+  <% if @deliveries.present? or deals_count > 0 %>
+    <% if ['welcome'].include?(controller_name) %>
+      <div id="show-modal"></div>
+    <% end %>
+    <% if @deliveries.present? %>
+      <div>Tienes <%= link_to @deliveries.count, new_deal_path %> solicitudes pendientes de pago, paga ahora para que puedan ser procesadas.</div>
+    <% end %>
+    <% if deals_count > 0 %>
+      <div>Tienes <%= link_to deals_count, deals_path %> cobros pendientes de pago, paga ahora para que puedan ser procesadas las solicitudes relacionadas.</div>
+    <% end %>
+    <div class="d-flex justify-content-center gap-2 py-4">
+      <%= link_to 'Ir a Pagar Solicitudes', new_deal_path, class:'btn btn-primary' if @deliveries.present? %>
+      <%= link_to 'Ir a Pagar Cobro', deals_path, class:'btn btn-primary' if deals_count > 0 %>
+    </div>
+  <% else %>
+    <% if ['welcome'].include?(controller_name) %>
+      <div>No tienes solicitudes por pagar</div>
+    <% end %>
+  <% end %>
+</div>

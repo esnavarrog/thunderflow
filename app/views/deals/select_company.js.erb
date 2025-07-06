@@ -1,0 +1,26 @@
+$('#select_deliveries').html("<%= j render 'deals/components/select_deliveries' %>");
+
+<% if params[:company_id].present? && !params[:branch_id].present? %>
+    $('#select-branch').html("<%= j render 'deals/components/filter_branch' %>");
+<% end %>
+
+<% unless params[:date].present? && params[:date] == 'date' %>
+    $('#select-date').html("<%= j render 'deals/components/filter_date' %>");
+<% end %>
+
+
+$('.miles').mask("000.000.000.000", {reverse: true});
+$('.js-basic-single').select2();
+$('.loader-tracking').addClass('d-none')
+
+$(".datetimepicker-range").flatpickr({
+    dateFormat: "d-m-Y",
+    mode: "range",
+    locale: "es"
+});
+
+<% if @message.present? %>
+    swal({title: 'Genial', text: "<%= j @message %>", icon:'success', button:"Aceptar"})
+<% end %>
+
+$('.loader').fadeOut('fast');

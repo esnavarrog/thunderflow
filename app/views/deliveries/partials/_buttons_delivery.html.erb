@@ -1,0 +1,41 @@
+<% if current_user.delivery? %>
+  <div class="container-buttons-delivery">
+    <% if delivery.finish? %>
+      <div class="text-success">Finalizado</div>
+    <% elsif delivery.rejected? %>
+      <div class="text-danger">Rechazado</div>
+    <% else %>
+      <%= link_to change_status_delivery_path(id: delivery, success: false), class:'btn btn-danger text-white', remote: true do %>
+        No <%= delivery.asigned? ? 'retirado' : 'entregado' %>
+      <% end %>
+
+      <%= link_to change_status_delivery_path(id: delivery, success: true), class:'btn btn-success', remote: true do %>
+        <%= delivery.asigned? ? 'Retirado' : 'Entregado' %>
+      <% end %>
+    <% end %>
+  </div>
+
+<% else %>
+
+  <div class="container-buttons-delivery">
+    <% if delivery.preparing? || current_user.admin?  %>
+        <%= link_to delivery_path(delivery), class:'btn btn-outline-danger', data:{ confirm:"Estas seguro de eliminar esta solicitud?" }, method: :delete, remote:true do %>
+            <i class="fa-solid fa-trash"></i>
+        <% end %>
+    <% end %>
+    <% if policy(:application).backoffice? %>
+        <%= link_to asign_user_path(id:delivery), class:'btn btn-outline-info', remote:true do %>
+            Asignar Repartidor
+        <% end %>
+    <% end %>
+    <% if policy(:application).delivery? || policy(:application).backoffice? %>
+        <%= link_to new_status_path(delivery_id:delivery), class:'btn btn-outline-info', remote:true do %>
+            Cambiar estado
+        <% end %>
+    <% end %>
+    <%= link_to delivery_path(delivery), class:'btn btn-success' do %>
+        Ver más
+    <% end %>
+  </div>
+
+<% end %>

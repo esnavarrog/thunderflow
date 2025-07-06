@@ -1,0 +1,23 @@
+<div class="row">
+  <%= form_with url: load_orders_branch_integrations_path(@branch), method: :get, data: { remote: true }, id: 'load-orders-form' do |f| %>
+    <div class="form-group d-flex flex-line gap-4 col-12">
+      <%=
+        f.select :integration_id,
+        options_for_select(@branch.company.integrations.pluck(:name, :id)),
+        { prompt: 'Selecciona un tipo' },
+        { class:'form-select js-basic-single', required: true }
+      %>
+      <%= f.submit 'Cargar', class: 'btn btn-primary' %>
+    </div>
+  <% end %>
+
+  <div id="integration-orders-container" class="col-12">
+    <div id="integration-orders-loader" class="d-none justify-content-center align-items-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  </div>
+  <div id="integration-orders-form-container">
+  </div>
+</div>

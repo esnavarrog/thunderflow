@@ -1,0 +1,31 @@
+<div id="card-<%= company.id %>" class="col-sm-12 col-md-6 col-lg-4 py-2">
+    <div class="card shadow-sm position-relative">
+        <div class="card-header" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<%= company.id %>" aria-expanded="false" aria-controls="collapseExample">
+            <div class="card-sub">
+                <%= company.address_concat%> 
+            </div>
+            <div class="d-flex justify-content-between align-items-center ">
+                <h1 class="text-truncate">
+                    <%= company.name.try(:titleize) %>
+                </h1>
+            </div>
+        </div>
+        <%= link_to edit_company_path(company), class:'btn btn-primary-link', remote:true do %>
+            <i class="bi bi-pencil-square"></i>
+        <% end %>
+        <div id="collapse-<%= company.id %>" class="card-body collapse" >
+            <ul class="list-group list-group-flush border rounded">
+                <%= render 'companies/partials/data' %>
+                
+            </ul>
+        </div>
+        <div class="card-footer">
+            <div class="d-flex justify-content-between">
+                <%= link_to company_path(company), class:'btn btn-outline-primary' do %>
+                    <i class="bi bi-eye"></i>
+                <% end %>
+                <%= link_to 'Agendar retiro', get_deliver_path(company_id:company), class:'btn btn-outline-primary', remote:true %>
+            </div>
+        </div>
+    </div>
+</div>

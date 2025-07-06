@@ -1,0 +1,3 @@
+$('#collapse-<%= @branch.id %>').html('<%= j render 'branches/partials/data' %>')
+$('.title').html('<%= @branch.name.titleize %>');
+$('#modal').modal('toggle');

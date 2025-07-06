@@ -1,0 +1,5 @@
+$('#modal').modal('toggle');
+$('#companies').append('<%= j render @company %>')
+$('#companies-index').prepend('<%= j render @company %>')
+swal( {title:'Genial!', text:"Tu empresa ha sido inscrita exitosamente.", icon:'success', button:"Aceptar"} )
+$('.loader').fadeOut('slow');

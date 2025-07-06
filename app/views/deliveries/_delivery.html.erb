@@ -1,0 +1,5 @@
+<% if current_user.delivery_table? && policy(:application).administration? %>
+  <%= render partial: 'deliveries/index/delivery_administration', locals: { delivery: delivery } %>
+<% else %>
+  <%= render partial: 'deliveries/index/delivery_driver', locals: { delivery: delivery } %>
+<% end %>

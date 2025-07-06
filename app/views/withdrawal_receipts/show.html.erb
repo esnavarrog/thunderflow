@@ -1,0 +1,70 @@
+<div class="container mt-3">
+  <div class="row border rounded-4 bg-light p-3">
+    <div class="d-flex align-items-center border rounded-top-4">
+      <h4 class="col-sm-12 col-md-8 text-center text-bold">Comprobante de recepción  y devolución de mercadería</h4>
+      <div class="col-sm-12 col-md-4"><%= image_tag('logo_altyro', class:'w-100') %></div>
+    </div>
+
+    <table class="border w-100">
+      <tr class="border">
+        <td>
+          Empresa / Tienda
+        </td>
+      </tr>
+      <tr class="border">
+        <td style="height: 60px">
+          <%= link_to @withdrawal_receipt.company.name.try(:titleize), @withdrawal_receipt.company %>
+        </td>
+      </tr>
+    </table>
+
+    <table class="border w-100">
+      <tr class="border">
+        <td>
+          Fecha
+        </td>
+      </tr>
+      <tr class="border">
+        <td style="height: 60px">
+          <%= format_date @withdrawal_receipt.issued_at %>
+        </td>
+      </tr>
+    </table>
+
+    <h6 class="text-bold text-center py-2 border mb-0">Retiro de paquetes</h6>
+
+    <table class="border">
+      <tr class="border">
+        <td style="height: 60px">
+          Cantidad Planilla
+        </td>
+        <td style="height: 60px">
+          <%= @withdrawal_receipt.sender_local_plain %>
+        </td>
+      </tr>
+      <tr class="border">
+        <td style="height: 60px">
+          Cantidad Recibida
+        </td>
+        <td style="height: 60px">
+          <%= @withdrawal_receipt.sender_local_check %>
+        </td>
+      </tr>
+    </table>
+
+    <h6 class="text-bold text-center py-2 border mb-0">Total: <span id="total-sender-withdrawal-receipt"><%= @withdrawal_receipt&.sender_local_check or 0 %></span></h6>
+
+    <% if policy(:application).staff? %>
+      <div class="d-flex justify-content-end">
+        Creado por: <%= @withdrawal_receipt.user.name or @withdrawal_receipt.user.email %>
+      </div>
+    <% end %>
+
+  </div>
+  <% if policy(:application).backoffice? %>
+    <div class="d-flex justify-content-end mt-2">
+      <%= link_to 'Reenviar', send_email_path(@withdrawal_receipt), class:'btn btn-outline-primary', data: { confirm: 'Esta acción reenviará el correo al cliente y administradores, estas seguro de reenviar el comprobante?' }, remote: true %>
+    </div>
+  <% end %>
+
+</div>

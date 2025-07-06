@@ -1,0 +1,5 @@
+<%= form_with url: sessions_switch_path, class: 'submit-on-change', remote: :true do |f| %>
+  <%= f.label :user_id, 'Selecciona un usuario', class: 'text-white' %>
+  <%= f.collection_select :user_id, User.all.order(:name), :id, :name_role,{ selected: current_user.id} ,{ id:"switch-select", class:'form-control js-basic-single', onchange: 'this.form.submit()'} %>
+  <%= f.submit '', class: 'd-none' %>
+<% end %>

@@ -1,0 +1,36 @@
+<li class="list-group-item">
+    <div>Rut</div>                    
+    <%= company.rut.present? ? format_rut(company.rut) : 'Información Faltante' %>
+</li>
+<li class="list-group-item">
+    <div>Razón Social</div>
+    <%= company.fantasy_name.present? ? company.fantasy_name.try(:titleize) : 'Información Faltante' %>
+</li>
+<li class="list-group-item">
+    <div>Dirección</div>
+    <%= company.address_concat.try(:titleize)  %>
+</li>
+<% if company.dpto.present? %>
+    <li class="list-group-item">
+        <div>Depto/Block</div>
+        <%= company.dpto %>
+    </li>
+<% end %>
+<li class="list-group-item">
+    <div>Email Contacto</div>
+    <%= company.email.present? ? company.email : 'Información Faltante' %>
+</li>
+<li class="list-group-item">
+    <div>Número de Contacto</div>
+    <%= company.phone_number.present? ? "+56#{company.phone_number}" : 'Información Faltante' %>
+</li>
+<% if company.web_address.present? %>
+<li class="list-group-item">
+    <div>Dirección Web</div>
+    <%= company.web_address %>
+</li>
+<% end %>
+<li class="list-group-item">
+    <div>Estado Empresa</div>
+    <%= company.status.present? ? enum_i18n(Company, :statuses, company.status) : 'Información Faltante' %>
+</li>

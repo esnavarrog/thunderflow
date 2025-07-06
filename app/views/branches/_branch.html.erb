@@ -1,0 +1,71 @@
+<div class="">
+    <div class="px-3 py-2 mb-1 bg-white shadow-sm rounded">
+        <div class="d-flex justify-content-between align-items-center">
+            <%= link_to branch_path(branch), class:'no-decoration' do %>
+                <div class="commune-list">
+                    Sucursal: <%= branch.name == "Casa Matriz" ? "#{branch.name}" : branch.name.try(:titleize) %>
+                </div>
+                <div class="region-list">
+                    Comuna: <%= branch.try(:commune) %>
+                </div>
+                
+                <div class="id-list">
+                    Id: <%= branch.id %>
+                </div>
+            <% end %>
+            <div class="d-flex justify-content-between align-items-center">
+
+                <div>
+                    <div class="date-list">
+                        <%= branch.address_concat %>
+                    </div>
+                    <div class="date-list d-flex justify-content-end gap-2">
+                        <%= link_to "Empresa #{branch.company.name}", branch.company, class:'no-decoration' %>
+                        <div class="badge rounded-pill bg-<%= branch.company.klass_statuses %>">
+                            <%= enum_i18n(Company, :statuses, branch.company.status) %>
+                        </div>
+                    </div>
+                    <div class="date-list deliveries-count-<%= branch.id %>">
+                        <span><%= branch.deliveries.count %> solicitudes</span>
+                    </div>
+
+                </div>
+                <div class="btn-group dropstart">
+                    <div class="btn btn-link pe-0 ps-3 btn-icon" data-bs-toggle="dropdown" aria-expanded="false">
+                        <%= inline_svg_tag('icons/icon_ellipsis.svg', class:'icon-info')%>
+                    </div>
+                    <ul class="dropdown-menu shadow">
+                        <li>
+                            <%= link_to branch_path(branch), class:'dropdown-item text-success d-flex justify-content-between align-items-center' do %>
+                                <span>Ver</span> <i class="fa-solid fa-chevron-right"></i>
+                            <% end %>
+                        </li>
+                        <li>
+                            <%= link_to new_branch_delivery_path(branch), class:'dropdown-item text-success d-flex justify-content-between align-items-center', remote:true do %>
+                                <span>Nueva Solicitud</span> <i class="fa-solid fa-plus"></i>
+                            <% end %>
+                        </li>
+                        <% if current_user.admin? || current_user.client? %>
+                        <% end %>
+                        <% if current_user.admin? %>
+                            <li>
+                                <%= link_to asign_massive_url(branch_id:branch.id), class:'dropdown-item text-success d-flex justify-content-between align-items-center', remote:true do %>
+                                    <span>Asignar nuevas</span> <i class="fa-solid fa-rotate"></i>
+                                <% end %>
+                            </li>
+                        <% end %>
+                        <% if current_user.admin? || current_user.client? %>
+                            <li>
+                                <%= link_to branch_path(branch, status: :delivered, format: :xlsx), class:'dropdown-item text-success d-flex justify-content-between align-items-center' do %>
+                                <span>Exportar entregados</span> <i class="fa-solid fa-file-excel"></i>
+                                <% end %>
+                            </li>
+                        <% end %>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

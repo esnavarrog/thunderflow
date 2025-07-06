@@ -1,0 +1,48 @@
+<li class="list-group-item">
+    <div>Código Sucursal</div>
+    <%= branch.id  %>
+</li>
+<li class="list-group-item">
+    <div>Nombre Sucursal</div>
+    <%= branch.name.present? ? branch.name : 'Información Faltante' %>
+</li>
+<li class="list-group-item">
+    <div>Nombre Empresa</div>
+    <%= branch.company.name.try(:titleize) %>
+</li>
+<li class="list-group-item">
+    <div>Dirección</div>
+    <%= "#{branch.address_concat}" %>
+</li>
+<li class="list-group-item <%= branch.dpto.present? ? '' : 'd-none' %>">
+    <div>Depto/Block</div>
+    <%= branch.dpto %>
+</li>
+<li class="list-group-item">
+    <div>Responsable</div>
+    <%= branch.responsible_name.try(:titleize) %>
+</li>
+<li class="list-group-item">
+    <div>Email Responsable</div>
+    <%= branch.email %>
+</li>
+<li class="list-group-item">
+    <div>Contacto</div>
+    <%= branch.phone_number %>
+</li>
+<li class="list-group-item d-none">
+    <div>Estado</div>
+    <% case branch.status %>
+    <% when :active.to_s %>
+        <% klass = 'success' %>
+    <% when :inactive.to_s %>
+        <% klass = 'info' %>
+    <% when :locked.to_s %>
+        <% klass = 'secondary' %>
+    <% else %>
+        <% klass = 'light' %>
+    <% end %>
+    <div class="badge rounded-pill bg-<%= klass %>">
+        <%= enum_i18n(Branch, :statuses, branch.status) %>
+    </div>
+</li>

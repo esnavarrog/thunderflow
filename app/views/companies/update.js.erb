@@ -1,0 +1,4 @@
+$('#card-<%= @company.id %>, #company-<%= @company.id %>').replaceWith('<%= j render @company %>')
+$('#company-data').html('<%= j render 'companies/partials/company_data' %>')
+$('#modal').modal('toggle');
+$('.loader').fadeOut('slow');

@@ -1,0 +1,12 @@
+<div class="modal-subtitle">Invita a un usuario a crearse una cuenta para ver esta empresa.</div>
+<%= form_with model:[@company, @user_access], id:'form-edit-administration', data:{remote: true}  do |f| %>
+    <div class="form-group">
+        <%= f.label "Correo electrónico" %>
+        <%= f.text_field :invitation_email, class: "form-control" %>
+    <div class="error"></div>
+    </div>
+    <div class="form-group d-flex justify-content-end">
+        <%= f.submit "Invitar", class: "btn btn-primary" %>
+    </div>
+
+<% end %>

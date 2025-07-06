@@ -1,0 +1,27 @@
+<div id="filters-mobile">
+  <%= link_to welcome_index_path do %>
+      <%=inline_svg_tag("icons/dashboard.svg", class:"footer-icon #{'active' if controller_name == 'welcome'}", title:'Dashboard') %>
+  <%end%>
+  <%= link_to deliveries_path do %>
+      <%=inline_svg_tag("icons/icon_delivery.svg", class:"footer-icon-delivery #{'active' if controller_name == 'deliveries'}", title:'Solicitudes') %>
+  <%end%>
+  <%= link_to profile_path(current_user) do %>
+      <%=inline_svg_tag("icons/icon_user.svg", class:"footer-icon #{'active' if controller_name == 'profiles'}", title:'Perfil') %>
+  <%end%>
+  <%#= link_to profile_path(current_user) do %>
+      <%#=inline_svg_tag("icons/icon_routes.svg", class:"footer-icon-routes #{'active' if controller_name == 'routes'}", title:'Rutas') %>
+  <%#end%>
+  <% if current_user.delivery? %>
+    <%= link_to withdrawal_receipts_path, class:'btn btn-outline-secondary' do %>
+      <%=inline_svg_tag("icons/icon_receipt.svg", class:"footer-icon")%>
+    <% end %>
+    <%= link_to destroy_user_session_path, method: :delete do %>
+      <%=inline_svg_tag("icons/icon_out.svg", class:"footer-icon")%>
+    <% end %>
+  <% else %>
+    <div class="menu-sidebar toggle-sidebar">
+      <%= inline_svg_tag('icons/icon_menu_ham.svg', class:'icon-menu-ham') %>
+      <%= inline_svg_tag('icons/icon_cancel.svg', class:'icon-close-sidebar') %>
+    </div>
+  <% end %>
+</div>

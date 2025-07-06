@@ -1,0 +1,35 @@
+<div class="modal fade" id="modal-download-deliveries" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Descarga un excel con tus solicitudes</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div id="modal-body" class="modal-body">
+    
+                <%= form_tag download_deliveries_path(format: :xlsx), method: :get, id: 'select-deliveries-date' do %>
+                    <div class="row">
+                        <div class="form-group col-sm-12">
+                            <%= label_tag :status, "Selecciona un Estado..." %>
+                            <%= select_tag :status, options_for_select(enum_options_for_select(Delivery, :statuses)), class:'form-control', id:'status-select' %>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group form-calendar form-calendar-label col-sm-12">
+                            <%= label_tag :date_start, 'Selecciona una Fecha...' %>
+                            <%= text_field_tag :date_start, {}, class:'form-control datetimepicker', placeholder:'Selecciona una Fecha...'  %>
+                        </div>
+                        
+
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <%= button_tag name: 'commit', type: :submit, class:'btn btn-primary mt-3' do %>
+                            <i class="bi bi-cloud-download"></i> Descargar
+                        <% end %>
+                    </div>
+                <% end %>
+            </div>
+        </div>
+    </div>
+</div>

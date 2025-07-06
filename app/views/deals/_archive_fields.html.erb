@@ -1,0 +1,31 @@
+<div id="archive-<%= f.object.id %>" class="d-flex justify-content-between align-items-center rounded border p-1 mb-1">
+  <div class="file-name">
+    <div><%= f.object.file.identifier if f.object.file? %></div>
+    <small><%= format_date_human f.object.created_at %></small>
+  </div>
+  <div class="file-input" style="<%= 'display:none;' if f.object.file? %>">
+    <%= f.file_field :file, disabled: current_user == f.object.user  %>
+  </div>
+  <div class="d-flex gap-1">
+    <% if f.object.file? %>
+      <div class="btn btn-link p-1 link-download-archives" data-url="<%= url_for f.object.file.url %>" %>
+        <i class="bi bi-cloud-arrow-down"></i>
+      </div>
+      <div class="btn btn-link p-1 text-primary show-invoice-operation" title="Ver Archivo" data-title="Archivo de cobro" data-archive-url="<%= archive_path(f.object) %>" data-url="<%= url_for f.object.file.url %>">
+        <i class="bi bi-eye"></i>
+      </div>
+      <% if policy(f.object).delete? %>
+        <%= link_to archive_path(f.object), class:'btn btn-link p-1 text-danger', remote: true, method: :delete do %>
+          <i class="bi bi-trash"></i>
+        <% end %>
+      <% end %>
+      <%= f.hidden_field :user_id, value: current_user.id if current_user == f.object.user %>
+    <% else %>
+      <%= f.hidden_field :user_id, value: current_user.id %>
+      <%= link_to_remove_association f, class: "btn btn-link p-1 remove-file text-danger" do %>
+        <i class="bi bi-trash"></i>
+      <% end %>
+    <% end %>
+
+  </div>
+</div>

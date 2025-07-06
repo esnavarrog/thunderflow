@@ -1,0 +1,13 @@
+var input = document.createElement("input");
+input.type = "hidden";
+input.name = "ids";
+input.value = "<%= @deliveries.map(&:to_i) %>";
+$('.modal-body').html('<%= j render "form" %>');
+$('.modal-title').html('Modifica el estado de la solicitud');
+$('#modal').modal('show');
+$('#delivery_id').remove();
+$('#id-delivery').html('<%= @deliveries.map(&:to_i) %>');
+$('#count-massive').html('<%= @deliveries.map(&:to_i).count %>');
+
+
+$('#form-change-status').prepend(input);

@@ -1,0 +1,3 @@
+$('#companies-index').html("<%= j render @companies %>")
+$('.paginates-index').html("<%= j paginate @companies, remote: true %>")
+$('.loader').fadeOut('fast');

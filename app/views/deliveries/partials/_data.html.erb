@@ -1,0 +1,132 @@
+<div class="mt-2 p-2 bg-light rounded border">
+  <% if @delivery.dpto.present? || @delivery.reference.present? %>
+    <div class="border-bottom py-3">
+      <h6><%= @delivery.branch.invert ? "Retiro en:" : "Entrega en:" %></h6>
+      <div class=" <%= @delivery.dpto.present? ? '' : 'd-none' %>">
+        Depto/Block: <%= @delivery.dpto %>
+      </div>
+      <div class=" <%= @delivery.reference.present? ? '' : 'd-none' %>">
+        <%= @delivery.reference %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="border-bottom py-3">
+    <h6><%= @delivery.branch.invert ? "Datos Emisor:" : "Datos Receptor:" %></h6>
+    <div class="">
+      <%= "#{@delivery.contact_name.try(:titleize)} #{@delivery.try(:contact_lastname).try(:titleize)}" %>
+    </div>
+    <% if @delivery.rut.present? %>
+      <div class="text-primary">
+        Rut: <%= @delivery.rut %>
+      </div>
+    <% end %>
+    <% if @delivery.email.present? %>
+      <%= link_to "mailto:#{@delivery.email}", class:'btn btn-sm btn-link' do %>
+        <i class="fa-sharp fa-solid fa-envelope"></i> <%= @delivery.email %>
+      <% end %>
+    <% end %>
+    <div class="mb-2 <%= @delivery.phone_number.present? ? '' : 'd-none' %>">
+      <a class="btn btn-primary btn-sm" href="tel:+56<%= @delivery.phone_number.gsub(/\s+/, " ") %>"><i class="fa-solid fa-phone"></i> <%= @delivery.phone_number %></a>
+    </div>
+  </div>
+
+  <% if @delivery.time_open.present? || @delivery.time_close.present? || @delivery.date_end.present? %>
+    <div class="border-bottom py-3">
+      <h6> <%= @delivery.branch.invert ? "Horarios retiro" : "Horarios entrega" %></h6>
+      <div class=" <%= @delivery.time_open.present? ? '' : 'd-none' %>">
+        Hora Apertura: <%= format_time @delivery.time_open %>
+      </div>
+      <div class=" <%= @delivery.time_close.present? ? '' : 'd-none' %>">
+        Hora Cierre: <%= format_time @delivery.time_close %>
+      </div>
+      <div class=" <%= @delivery.date_end.present? ? '' : 'd-none' %>">
+        Fecha Despacho: <%= format_date @delivery.date_end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="py-3">
+    <h6>Características paquete</h6>
+    <div>
+      <%= @delivery.weight %><small>kg</small>, <%= @delivery.height %><small>cm alto</small>, <%= @delivery.width %><small>cm ancho</small>, <%= @delivery.depth %><small>cm largo</small>
+    </div>
+    <div>
+      <%= @delivery.description.present? ? @delivery.description : @delivery.type_deliver %>
+    </div>
+  </div>
+</div>
+
+<div class="border-bottom border-top py-3 mt-3">
+    <h6><%= @delivery.branch.invert ? "Datos sucursal destino" : "Datos sucursal origen:" %></h6>
+
+    <div class="">
+        <% if current_user.delivery? %>
+            Empresa: <%= @delivery.branch.company.try(:name).try(:titleize) %>
+        <% else %>
+            Empresa: <%= link_to @delivery.branch.company.name.titleize, @delivery.branch.company %>
+        <% end %>
+    </div>
+    <div class="">
+        Sucursal: <%= link_to @delivery.branch.name.titleize, @delivery.branch %>
+    </div>
+    <div>
+        <small class="text-info"><%= @delivery.branch.invert ? "Dirección entrega: " : "Dirección retiro: " %> <%= "#{@delivery.branch.address_concat}" %> <br> <%= "#{@delivery.branch.dpto}" %></small>
+    </div>
+    
+    <div class=" <%= @delivery.reference.present? ? '' : 'd-none' %>">
+        <div>Referencia</div>
+        <%= @delivery.reference %>
+    </div>
+    <div>
+        <small class="text-secondary">
+            Fecha orden: <%= format_date_human @delivery.created_at %>
+        </small>
+    </div>
+    <div>
+        <small class="text-secondary <%= @delivery.date_start.present? ? '' : 'd-none' %>">
+            Fecha retiro: <%= format_date_human @delivery.date_start %>
+        </small>
+    </div>
+    <% if @delivery.branch.phone_number.present? %>
+        <%= link_to "tel:+56#{@delivery.branch.phone_number.gsub(/\s+/, " ")}", class:'btn btn-sm btn-primary' do %>
+            <i class="fa-solid fa-phone"></i> <%= @delivery.branch.phone_number %>
+        <% end %>
+    <% end %>
+</div>
+<% if @delivery.user_asign_id.present? || @delivery.price_deliver.present? || @delivery.price.present? %>
+<div class="py-3">
+    <h6>Datos solicitud:</h6>
+    <div>
+        <div class="text-success">
+            Cod. de Seguimiento: <%= @delivery.order_number %>
+        </div>
+        <% if @delivery.distance_meters %>
+        <div class="text-info <%= @delivery.price.present? ? @delivery.price : 'd-none' %>">
+            <small>Distancia desde sucursal: <%= @delivery.distance_meters/1000 %> km.</small> 
+        </div>
+        <% end %>
+        <% unless current_user.delivery? %>
+            <div class="text-info <%= @delivery.price.present? ? @delivery.price : 'd-none' %>">
+                <small>Precio Pedido: <%= number_to_currency @delivery.price, precision:0 %></small> 
+            </div>
+        <% end %>
+        <% unless current_user.client? %>
+            <% if @delivery.user_asign_id.present? %>
+                <div class="p-2 bg-light">
+                    Repartidor Asignado: <%= User.find(@delivery.user_asign_id).name.present? ? User.find(@delivery.user_asign_id).name.titleize : User.find(@delivery.user_asign_id).email%>
+                </div>
+                <div class="text-info <%= @delivery.price_deliver.present? ? @delivery.price_deliver : 'd-none' %>">
+                    <small>Pago Repartidor: <%= number_to_currency @delivery.price_deliver, precision:0 %></small> 
+                </div>
+                <% if User.find(@delivery.user_asign_id).phone_number.present? %>
+                    <%= link_to "tel:+56#{User.find(@delivery.user_asign_id).phone_number.gsub(/\s+/, " ")}", class:'btn btn-sm btn-primary' do %>
+                        <i class="fa-solid fa-phone"></i> <%= User.find(@delivery.user_asign_id).phone_number.gsub(/\s+/, " ") %>
+                    <% end %>
+                <% end %>
+            <% end %>
+        <% end %>
+        
+    </div>
+</div>
+<% end %>

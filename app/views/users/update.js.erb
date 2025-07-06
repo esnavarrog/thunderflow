@@ -1,0 +1,3 @@
+$('#role-data-<%= @user.id %>').html('<%= enum_i18n(User, :roles, @user.role) %>');
+$('#modal').modal('toggle');
+swal({ text: 'Haz actualizado satisfactoriamente al usuario', icon:'success', button:"Aceptar" })

@@ -1,0 +1,26 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Solicitudes") do |sheet|
+    # Create the header row
+    sheet.add_row ["ID Solicitud", "Fecha de Retiro", "Fecha de entrega", "Nombre de Empresa", "Responsable", "Comuna Retiro", "Dirección entrega", 
+                    "Comuna", "Producto/Características", "Obsr.", "Costo Despachador", "Despachador", "Valor Delivery", "Estado" ]
+    # Create entries for each item
+    @deliveries_xlsx.each do |delivery|
+        sheet.add_row [
+            delivery.id,
+            delivery.date_start,
+            delivery.date_deliver_at,
+            delivery.branch.company.name,
+            delivery.branch.responsible_name,
+            delivery.branch.commune,
+            delivery.address_concat,
+            delivery.commune,
+            delivery.reference,
+            delivery.description,
+            delivery.price_deliver,
+            delivery.name_user_asign,
+            delivery.price,
+            delivery.status
+        ]
+    end
+end

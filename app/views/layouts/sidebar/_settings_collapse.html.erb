@@ -1,0 +1,44 @@
+<% if policy(:application).backoffice? %>
+  <%
+    controller_names_to_be_active = [
+      'warehouses',
+      'settings',
+      'profiles'
+    ]
+
+    is_active = controller_names_to_be_active.include?(controller_name)
+  %>
+  <div class="sidebar-group">
+    <li class="d-flex justify-content-between flex-nowrap<%= 'active' if is_active  %>" data-bs-toggle="collapse" data-bs-target="#warehouses-collapse">
+      <div>
+        <%= inline_svg_tag("icons/settings.svg", class:"sidebar-icon") %>
+        <span>Configuración</span>
+      </div>
+      <%= inline_svg_tag("icons/icon_chevron_down.svg", class:"sidebar-icon") %>
+    </li>
+    <ul id="warehouses-collapse" class="collapse <%= 'show' if is_active %>" data-bs-parent="#sidebar-wrapper">
+
+      <% if policy(:user).index? %>
+        <li class="<%= 'active' if controller_name == 'profiles' %>">
+          <%= link_to profiles_path do %>
+            <span>Usuarios</span>
+          <% end %>
+        </li>
+      <% end %>
+      <% if policy(:user).index? %>
+        <li class="<%= 'active' if controller_name == 'commune_prices' %>">
+          <%= link_to commune_prices_path do %>
+            <span>Precios Comunas</span>
+          <% end %>
+        </li>
+      <% end %>
+      <% if policy(:user).index? %>
+        <li class="<%= 'active' if controller_name == 'additional_fees' %>">
+          <%= link_to additional_fees_path do %>
+            <span class="text-nowrap fs-14">Adicionales</span>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

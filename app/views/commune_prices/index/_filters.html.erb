@@ -1,0 +1,41 @@
+<div class="card">
+  <div class="card-body">
+    <%= form_with url: branches_path, method: :get, data: { remote: true }, id: 'branch-filter-form' do |f| %>
+      <div class="row">
+        <% if policy(:application).backoffice? %>
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+            <div class="form-group">
+              <%= f.label :company_id, Branch.human_attribute_name(:company_id), class: 'form-label' %>
+              <%=
+                f.select :company_id,
+                options_for_select(@companies.pluck(:name, :id)),
+                { prompt: true },
+                { class:"form-control js-basic-single" }
+              %>
+            </div>
+          </div>
+        <% end %>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="form-group">
+            <%= f.label :name, Branch.human_attribute_name(:name), class: 'form-label' %>
+            <%= f.text_field :name, class: 'form-control' %>
+          </div>
+        </div>
+        <div class="col-12 d-flex justify-content-end gap-2">
+          <div class="col-md-3 col-lg-2">
+            <div class="d-grid">
+              <button type="button" class="btn btn-outline-primary clear-form" data-target="#branch-filter-form">
+                <%= I18n::FormHelpers.t(:submit, :clear) %>
+              </button>
+            </div>
+          </div>
+          <div class="col-md-3 col-lg-2">
+            <div class="d-grid">
+              <%= f.submit I18n::FormHelpers.t(:submit, :search), class: 'btn btn-primary' %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

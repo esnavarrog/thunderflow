@@ -1,0 +1,75 @@
+<table>
+    <tr class="">
+      <td>
+        <table>
+          <tr>
+            <td class="text-center image-logo pb-32">
+              <%= email_image_tag("logo_altyro.png") %>
+            </td>
+
+          </tr>
+  
+        </table>
+  
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <div class="pt-48 pb-32">
+            <%= @user.try(:name).try(:titleize) %>,
+            Se ha creado un nuevo cobro para: <%= @deal.company.try(:name) %>
+        </div>
+      </td>
+    </tr>
+
+    <tr>
+        <td class="pb-32">
+            Tienes pendiente de pago las siguientes solicitudes:
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+          <table class="table-striped">
+              <thead>
+                  <tr>
+                      <th>id</th>
+                      <th>Seguimiento</th>
+                      <th>Dirección retiro</th>
+                      <th>Dirección destino</th>
+                      <th>Detalle</th>
+                      <th>Costo</th>
+                  </tr>
+              </thead>
+              <tbody>
+                <% @deal.deliveries.each do |delivery| %>
+                    <tr>
+                        <td><%= delivery.id %></td>
+                        <td><%= link_to delivery.order_number, tracking_index_url(order_number: delivery.order_number) %></td>
+                        <td><%= delivery.branch.address_concat %></td>
+                        <td><%= delivery.address_concat %></td>
+                        <td><%= delivery.description %></td>
+                        <td><%= number_to_currency delivery.price, precision:0 %></td>
+                    </tr>
+                <% end %>
+              </tbody>
+          </table>
+        </td>
+      </tr>
+
+      <tr>
+        <td class="pt-48" style="margin:24px 0; font-weight:600; color:blue;">
+            Total a pagar: <%= number_to_currency @deal.total_amount, precision:0 %>
+        </td>
+      </tr>
+  
+    <tr>
+      <td>
+        <div class="pt-48 pb-48">
+          <%= link_to "Ir a pagar",  deal_url(@deal), class: "btn btn-primary" %>
+        </div>
+  
+      </td>
+  
+    </tr>
+  </table>

@@ -1,0 +1,12 @@
+<%= form_with(model:@user, class:'row', data:{remote:true}, method: :put) do |f| %>
+<h5 class="title-names text-success"> <%= @user.email %></h5>
+
+<div class="form-group">
+    <%= f.label :role, 'Cambiar Rol' %>
+    <%= f.select :role, options_for_select(User.roles.map {|k, v| [enum_i18n(User, :roles, k), k]}), {prompt:'Selecciona Rol'}, class:'form-control' %>
+    <div class="error"></div>
+</div>
+
+<%= f.submit 'Cambiar', class:'btn btn-primary mt-3' %>
+
+<%end%>

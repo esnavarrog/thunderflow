@@ -1,0 +1,12 @@
+<li class="list-group-item">
+    <div>Código Usuario</div>
+    <%= @user.id  %>
+</li>
+<li class="list-group-item">
+    <div>Email</div>
+    <%= @user.email %>
+</li>
+<li class="list-group-item">
+    <div>Role</div>
+    <%= enum_i18n(User, :roles, @user.role) %>
+</li>

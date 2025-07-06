@@ -1,0 +1,25 @@
+<tr id="commune-price-row-<%= commune_price.id %>">
+  <td>#<%= commune_price.id %></td>
+  <td><%= commune_price.region_name&.titleize %></td>
+  <td><%= commune_price.commune&.titleize %></td>
+  <td><%= number_to_currency commune_price.price, precision: 0 %></td>
+  <td class="d-flex gap-2">
+    <div class="btn" data-bs-toggle="dropdown" aria-expanded="false">
+      <i class="bi bi-three-dots-vertical fs-14"></i>
+    </div>
+    <ul class="dropdown-menu shadow">
+      <li>
+        <%= link_to edit_commune_price_path(commune_price), class: 'dropdown-item d-flex justify-content-between align-items-center' do %>
+          <span>Editar</span>
+          <i class="bi bi-pencil-fill fs-20"></i>
+        <% end %>
+      </li>
+      <li>
+        <%= link_to commune_price_path(commune_price), method: :delete, class: 'dropdown-item d-flex justify-content-between align-items-center', data: { remote: true } do %>
+          <span>Eliminar</span>
+          <i class="bi bi-trash-fill fs-20 text-danger"></i>
+        <% end %>
+      </li>
+    </ul>
+  </td>
+</tr>

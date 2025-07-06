@@ -1,0 +1,16 @@
+<div id="branches-table" class="table-responsive table-container">
+  <table class="table">
+    <thead class="sticky-header">
+    <th><%= CommunePrice.human_attribute_name(:id) %></th>
+    <th><%= CommunePrice.human_attribute_name(:region_name) %></th>
+    <th><%= CommunePrice.human_attribute_name(:commune) %></th>
+    <th><%= CommunePrice.human_attribute_name(:price) %></th>
+    <th></th>
+    </thead>
+    <tbody>
+    <% commune_prices.each do |commune_price| %>
+      <%= render partial: 'commune_prices/index/table_row', locals: { commune_price: commune_price } %>
+    <% end %>
+    </tbody>
+  </table>
+</div>

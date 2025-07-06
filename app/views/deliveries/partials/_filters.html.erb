@@ -1,0 +1,81 @@
+<%= form_tag deliveries_path, method: :get, remote: true, id: "search-form#{id_form}", class: 'mt-3 form-submit-on-change' do %>
+  <%= hidden_field_tag :branch_id, @branch.id if ['branches'].include?(controller_name) %>
+  <%= hidden_field_tag :limit, params[:limit] %>
+  <%= hidden_field_tag :page, 1 %>
+  <%= hidden_field_tag :order, 'id', data: { table: '#table-deliveries' } %>
+  <%= hidden_field_tag :direction, 'desc', data: { table: '#table-deliveries' } %>
+  <%= hidden_field_tag :format, 'js' %>
+  <div class="row">
+    <div class="form-group form-search col-sm-12 col-md-6 col-lg-3 col-xl-2">
+      <%= text_field_tag("query", value = nil,
+                         options = { placeholder: 'Buscar', title: 'Seguimiento o Comuna de despacho, dirección', class: 'form-control' }) %>
+    </div>
+    <div class="form-group col-sm-12 col-md-6 col-lg-3 col-xl-2 form-calendar">
+      <%= text_field_tag(
+            :date_range,
+            @start_date,
+            options = {
+              placeholder: 'Fecha de Retiro',
+              class: 'form-control datetimepicker-range' }) %>
+    </div>
+    <div class="form-group col-sm-12 col-md-6 col-lg-3 col-xl-2">
+      <%= select_tag :status, options_for_select(Delivery.statuses.map { |key, value| [enum_i18n(Delivery, :statuses, key), key] }), { class: 'form-select', id: "status#{id_form}", prompt: 'Filtrar por Estado' } %>
+    </div>
+    <div class="form-group col-sm-12 col-md-6 col-lg-3 col-xl-2">
+      <%= select_tag 'communes[]', options_for_select(AdminDivision.communes('Metropolitana de Santiago').map { |commune| [commune.titleize, commune.downcase] }), { class: 'form-select js-basic-single', multiple: true, id: "commune#{id_form}", prompt: 'Filtrar por Comuna' } %>
+    </div>
+    <% if (policy(:application).backoffice? || policy(:application).delivery?) && @companies_deliveries.present? %>
+      <div class="form-group col-sm-12 col-md-6 col-lg-3 col-xl-2">
+        <%= select_tag :company_id, options_from_collection_for_select(@companies_deliveries, :id, :name), { class: 'form-select js-basic-single', id: "company_id#{id_form}", prompt: 'Filtrar por Clientes' } %>
+      </div>
+    <% end %>
+    <% if (policy(:application).backoffice?) %>
+      <div class="form-group col-sm-12 col-md-6 col-lg-3 col-xl-2">
+        <%= select_tag :user_asign_id, options_from_collection_for_select(User.where(role: :delivery), :id, :name), { class: 'form-select js-basic-single', id: "user_asign_id#{id_form}", prompt: 'Repartidor' } %>
+      </div>
+
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="form-group">
+          <%=
+            select_tag :deliveries_payed,
+                       options_for_select([['Pagado', 'yes_payed'], ['Pendientes', 'not_payed']]),
+                       { class:"form-control", prompt: "Selecciona Estado de Pago" }
+          %>
+          <div class="error"></div>
+        </div>
+      </div>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <div class="form-group">
+          <%=
+            select_tag :client_type_payment,
+                       options_for_select([['Autorizado', true], ['No autorizado', false]]),
+                       { class:"form-control", prompt: "Selecciona Tipo de Pago" }
+          %>
+          <div class="error"></div>
+        </div>
+      </div>
+      <% if current_user.admin? %>
+        <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+          <div class="form-group">
+            <%=
+              select_tag :deal_present,
+                         options_for_select([['Con cobro asociado', 'deal_present'], ['Sin cobro asociado', 'deal_not_present']]),
+                         { class:"form-control", prompt: "Con o sin cobro asociado" }
+            %>
+            <div class="error"></div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+    <input type="hidden" id="show-delivery-how" name="show_deliveries" value="<%= current_user.user_setting.show_delivery %>">
+    <div class="form-group col-sm-6 col-md-6 col-lg-3 col-xl-2">
+      <div class="container-buttons-delivery filters">
+        <%= link_to 'Limpiar', deliveries_path, class: 'btn btn-outline-info p-3' %>
+        <%= button_tag name: 'commit', type: :submit, class: 'btn btn-info p-3 filter-button-date' do %>
+          <i class="bi bi-filter-circle-fill me-2"></i> Filtrar
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+<% end %>

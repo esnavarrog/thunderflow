@@ -1,0 +1,5 @@
+$('.modal-title').html('Modifica el estado de la solicitud');
+$('#modal').modal('show');
+$('#modal').find('.modal-body').html('<%= j render "form" %>');
+$('#delivery_id').val('<%= @delivery.id %>');
+$('#id-delivery').html('<%= @delivery.id %>');

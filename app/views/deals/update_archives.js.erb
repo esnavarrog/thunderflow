@@ -1,0 +1,8 @@
+$('#modal').modal('hide');
+
+<% if @count > 0 %>
+  $('#liveToast').toast('show');
+  $('#liveToast').find('strong').html('Archivo Agregado');
+  $('#liveToast').find('small').html('<%= j format_time Time.zone.now %>');
+  $('#liveToast').find('.toast-body').html('Agregaste exitosamente <%= @count %> archivo<%= @count > 1 ? 's' : '' %>');
+<% end %>

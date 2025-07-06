@@ -1,0 +1,9 @@
+
+$('#archive-<%= @archive.id %>').fadeOut(function() {
+    $(this).remove();
+});
+
+$('#liveToast').toast('show');
+$('#liveToast').find('strong').html('Eliminado');
+$('#liveToast').find('small').html('<%= j format_time Time.zone.now %>');
+$('#liveToast').find('.toast-body').html('Eliminamos correctamente el archivo');
