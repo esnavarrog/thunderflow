@@ -31,9 +31,6 @@ class ProfilesController < ApplicationController
 
   def download_deliver_asigned
     user = User.find(params[:user_id])
-    puts '++++++++++++++++++'
-    puts user.email
-    puts '++++++++++++++++++'
     return if user.nil?
 
     @deliveries = user.deliveries_asigned
@@ -67,7 +64,19 @@ class ProfilesController < ApplicationController
     redirect_to profiles_path
   end
 
+  def add_password
+    if current_user.update(password_params)
+      render :add_password
+    else
+      @error = current_user.errors.full_messages.join('. ')
+      render :error_password, status: :unprocessable_entity
+    end
+  end
+
   private
+  def password_params
+    params.permit(:password, :password_confirmation)
+  end
 
   def params_profile
     params.permit(
