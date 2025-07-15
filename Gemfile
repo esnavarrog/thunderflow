@@ -108,6 +108,7 @@ gem 'cocoon'
 # gem 'wicked_pdf'
 gem 'prawn'
 gem 'prawn-table'
+gem 'prawn-svg'
 
 gem 'rqrcode', '~> 2.0'
 gem 'roo', '~> 2.9.0'

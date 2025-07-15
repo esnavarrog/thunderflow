@@ -10,7 +10,25 @@ class Api::V1::DeliveriesController < ApiController
             return
         end
 
-        @deliveries = Delivery.assigned_and_active_for_courier(@resource.result&.id)
+        latitude = params[:latitude]
+        longitude = params[:longitude]
+
+        deliveries = Delivery.assigned_and_active_for_courier(@resource.result&.id)
+        order_ids = Deliveries::RequestOrderService.execute(deliveries, latitude, longitude)
+
+        if order_ids.present?
+            case_sql = +"CASE deliveries.id"
+            order_ids.each_with_index do |id, index|
+                case_sql << " WHEN #{id.to_i} THEN #{index}"
+            end
+
+            case_sql << " ELSE #{order_ids.size} END"
+
+            @deliveries = deliveries.order(Arel.sql(case_sql))
+        else
+            @deliveries = deliveries
+        end
+
         render 'api/v1/deliveries/index'
     end
 

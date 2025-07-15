@@ -8,7 +8,5 @@ class Deliveries::RouteGoogleService < ApplicationService
 
         waypoints = deliveries_asigned.pluck(:latitude, :longitude)
 
-        
-
     end
 end

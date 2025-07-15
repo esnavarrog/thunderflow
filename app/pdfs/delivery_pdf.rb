@@ -1,3 +1,7 @@
+# app/pdfs/delivery_pdf.rb
+
+require 'prawn-svg' # ¡Importante! Requerimos la gema para renderizar SVG
+
 class DeliveryPdf < Prawn::Document
   def initialize(delivery)
     super(
@@ -14,7 +18,21 @@ class DeliveryPdf < Prawn::Document
 
   def header
     text "Solicitud ##{@delivery.id}", align: :center, size: 16, style: :bold
-    move_down 20
+    move_down 15
+
+    if @delivery.id.present?
+      qr_code_svg = @delivery.qr_code_svg
+
+      qr_size = 120
+
+      x_position = (bounds.width - qr_size) / 2
+
+      svg qr_code_svg, at: [x_position, cursor], width: qr_size, height: qr_size
+
+      move_down(20)
+
+      text "ID: #{@delivery.id}", align: :center, size: 10
+    end
   end
 
   def delivery_details
@@ -43,7 +61,7 @@ class DeliveryPdf < Prawn::Document
   def footer
     move_down 50
     table([
-            ["DEVELOPED BY", "https://www.birdti.cl/"],
+            ["DEVELOPED BY", "https://birdti.cl/"],
             ["FOR", "https://sociosaltyro.cl/"]
           ], width: bounds.width) do |t|
       t.cells.borders = [:bottom]
