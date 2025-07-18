@@ -105,4 +105,79 @@ class PaymentsController < ApplicationController
 		@payment = Payment.find(params[:id])
 	end
 
+	def create_checkout
+		# Example items data
+		items_data = [
+			{
+				title: "Producto A",
+				description: "Descripción del Producto A",
+				quantity: 1,
+				unit_price: 100.00
+			},
+			{
+				title: "Producto B",
+				description: "Descripción del Producto B",
+				quantity: 2,
+				unit_price: 50.00
+			}
+		]
+
+		# Example payer data (optional, but good for pre-filling checkout)
+		payer_data = {
+			name: "Juan",
+			surname: "Perez",
+			email: "juan.perez@example.com",
+			phone_area_code: "11",
+			phone_number: "99998888",
+			address_zip_code: "1234",
+			address_street_name: "Calle Falsa",
+			address_street_number: "123"
+		}
+
+		preference = MercadoPagoService.create_payment_preference(items_data, payer_data)
+
+		if preference
+			# Redirect the user to Mercado Pago's checkout page
+			# The 'init_point' is the URL for the checkout
+			redirect_to deal_path(@payment.deal), status: 200
+		else
+			flash[:error] = "Error al crear la preferencia de pago con Mercado Pago."
+			redirect_to root_path
+		end
+	end
+
+	def success
+		# This action will be hit when Mercado Pago redirects back after a successful payment
+		# You can get payment details using the collection_id or payment_id from the URL parameters
+		payment_id = params[:collection_id] || params[:payment_id]
+
+		if payment_id.present?
+			payment_details = MercadoPagoService.get_payment_details(payment_id)
+			if payment_details
+				# Process the successful payment (e.g., update order status in your DB)
+				flash[:success] = "¡Pago exitoso! ID de pago: #{payment_details['id']}"
+				# You might want to render a success page or redirect to an order summary
+				render plain: "Pago exitoso. Detalles: #{payment_details.to_json}"
+			else
+				flash[:error] = "No se pudieron obtener los detalles del pago."
+				render plain: "Error al obtener detalles del pago."
+			end
+		else
+			flash[:error] = "ID de pago no encontrado."
+			render plain: "ID de pago no encontrado."
+		end
+	end
+
+	def pending
+		# Handle pending payments
+		flash[:notice] = "Tu pago está pendiente."
+		render plain: "Pago pendiente."
+	end
+
+	def failure
+		# Handle failed payments
+		flash[:alert] = "Tu pago ha fallado."
+		render plain: "Pago fallido."
+	end
+
 end

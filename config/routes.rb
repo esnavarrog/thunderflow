@@ -132,6 +132,11 @@ Rails.application.routes.draw do
   get 'webpay/nullify', to: 'payments#webpay_nullify', as: :webpay_nullify
   get 'show_table', to: 'deliveries#show_table'
 
+  get 'payments/create_checkout', to: 'payments#create_checkout', as: :create_checkout_payment
+  get 'payments/success', to: 'payments#success', as: :payment_success
+  get 'payments/pending', to: 'payments#pending', as: :payment_pending
+  get 'payments/failure', to: 'payments#failure', as: :payment_failure
+
   # setup API
 
   get 'api_docs_index', to: redirect('/api-docs/index.html')
