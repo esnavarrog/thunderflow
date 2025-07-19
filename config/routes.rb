@@ -142,6 +142,7 @@ Rails.application.routes.draw do
       post 'auth/google_login', to: 'authentication#google_login'
       delete 'logout', to: 'authentication#destroy'
       get 'me', to: 'users#me'
+      resources :driver_positions, only: [:create]
     end
   end
 
