@@ -1,5 +1,5 @@
 class Payment < ApplicationRecord
-	belongs_to :user, optional:true
+	belongs_to :user, optional: true
 	belongs_to :company
 	belongs_to :deal
 
@@ -37,6 +37,23 @@ class Payment < ApplicationRecord
 		payment.status_message = "Pago realizado correctamente."
 		payment.response_json = response.to_s
 		payment.save
+		payment
+	end
+
+	def success_mp_pay(response)
+		payment = self
+		payment.fee = response["fee_details"][0]["type"]
+		payment.balance = response["transaction_amount"]
+		payment.pay_date = response["date_approved"]
+		payment.payer = response["additional_info"]["payer"].to_s
+		payment.currency = response["currency_id"]
+		payment.status = response["status"] == 'approved' ? :payed : :pending
+		payment.status_message = "Pago realizado correctamente."
+		payment.response_json = response.to_s
+		payment.save
+
+		payment.deal.update_column(:status_deal, payment.status)
+		payment.deal.update_status_pay_delivery
 		payment
 	end
 end

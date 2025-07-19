@@ -627,7 +627,7 @@ DEPENDENCIES
   kaminari-bootstrap
   letter_opener
   listen (~> 3.3)
-  mercadopago-sdk (~> 2.3)
+  mercadopago-sdk (~> 2.3.0)
   net-http
   omniauth
   omniauth-google-oauth2
@@ -666,4 +666,4 @@ RUBY VERSION
    ruby 3.2.3p157
 
 BUNDLED WITH
-   2.6.7
+   2.6.9

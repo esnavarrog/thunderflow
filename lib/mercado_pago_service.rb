@@ -1,94 +1,85 @@
 require 'mercadopago'
 module MercadoPagoService
-  include Rails.application.routes.url_helpers
   def self.initialize_sdk
-    access_token = ENV['MERCADOPAGO_API_KEY']
+    access_token = ENV['MERCADOPAGO_SECRET_KEY']
 
-    @mp = MercadoPago.new(access_token)
+    begin
+      @mp = Mercadopago::SDK.new(access_token)
+    rescue NameError => e
+      Rails.logger.error "Mercado Pago SDK Initialization Error: #{e.message}. La clase 'MercadoPago' no fue encontrada. Asegúrate de que la gema 'mercadopago-sdk' esté instalada y cargada correctamente (ejecuta 'bundle install' y reinicia el servidor)."
+      raise # Re-raise the error to make it visible
+    rescue LoadError => e
+      Rails.logger.error "Mercado Pago SDK Initialization Error: #{e.message}. No se pudo cargar la gema 'mercadopago'. Asegúrate de que esté en tu Gemfile y hayas ejecutado 'bundle install'."
+      raise # Re-raise the error to make it visible
+    rescue StandardError => e
+      Rails.logger.error "Mercado Pago SDK Initialization Error: Un error inesperado ocurrió: #{e.message}"
+      raise # Re-raise the error to make it visible
+    end
   end
 
   def self.mp_sdk
     @mp || initialize_sdk
   end
 
-  def self.create_payment_preference(items_data, payer_data = {}, back_urls = {})
+  def self.create_payment_preference(payment)
     sdk = mp_sdk
 
-    items = items_data.map do |item|
+    items = [
       {
-        title: item[:title],
-        description: item[:description],
-        quantity: item[:quantity],
-        currency_id: item[:currency_id] || 'CLP', # Default to Argentine Pesos
-        unit_price: item[:unit_price].to_f
+        title: "Pago Solicitudes Despacho #{payment.deal_id}",
+        description: payment.description,
+        quantity: 1,
+        currency_id: 'CLP',
+        unit_price: payment.amount.to_i
       }
-    end
+    ]
 
-    # Prepare payer data
     payer = {
-      name: payer_data[:name],
-      surname: payer_data[:surname],
-      email: payer_data[:email],
+      name: payment.user.name,
+      surname: payment.user.last_name,
+      email: payment.user.email,
       phone: {
-        area_code: payer_data[:phone_area_code],
-        number: payer_data[:phone_number]
+        area_code: "+56",
+        number: payment.company.phone_number
       },
       address: {
-        zip_code: payer_data[:address_zip_code],
-        street_name: payer_data[:address_street_name],
-        street_number: payer_data[:address_street_number]
+        zip_code: "",
+        street_name: payment.company.address_concat,
+        street_number: payment.company.number_address
       }
     }
 
-    # Prepare back URLs for success, pending, and failure
-    # Example:
-    # back_urls = {
-    #   success: "http://your_domain.com/payments/success",
-    #   pending: "http://your_domain.com/payments/pending",
-    #   failure: "http://your_domain.com/payments/failure"
-    # }
-    urlReturn = success_final_url(Rails.application.config.action_mailer.default_url_options)
-    urlConfirmation = url_helpers.pay_success_url(app_host)
-
-    default_back_urls = {
-      success: urlReturn,
-      pending: "http://localhost:3000/payments/pending", # Replace with your actual pending URL
-      failure: "http://localhost:3000/payments/failure"  # Replace with your actual failure URL
+    url_helpers = Rails.application.routes.url_helpers
+    app_host = ENV['HOST']
+    preference_back_urls = {
+      success: app_host+url_helpers.payment_success_path,
+      pending: app_host+url_helpers.payment_pending_path,
+      failure: app_host+url_helpers.payment_failure_path
     }
 
     preference_data = {
       items: items,
       payer: payer,
-      back_urls: default_back_urls,
-      auto_return: 'approved', # Automatically return to success URL on approved payment
-      external_reference: "your_order_id_#{Time.now.to_i}" # Unique identifier for your order
-      # You can add more parameters as needed, e.g., notification_url, payment_methods, etc.
-      # See Mercado Pago API documentation for all available options.
+      back_urls: preference_back_urls,
+      auto_return: 'approved',
+      external_reference: payment.buy_order
     }
 
-    begin
-      preference = sdk.create_preference(preference_data)
-      if preference['status'] == 201 || preference['status'] == 200
-        # Success, return the preference object
-        preference['response']
-      else
-        # Handle error
-        Rails.logger.error "Mercado Pago Preference Creation Error: #{preference['response']}"
-        nil
-      end
-    rescue StandardError => e
-      Rails.logger.error "Mercado Pago SDK Error: #{e.message}"
+    preference_response = sdk.preference.create(preference_data)
+    if preference_response[:status] == 201 || preference_response[:status] == 200
+      return preference_response[:response]
+    else
+      Rails.logger.error "Mercado Pago Preference Creation Error: #{preference_response['response']}"
       nil
     end
   end
 
-  # Get payment details by ID
   def self.get_payment_details(payment_id)
     sdk = mp_sdk
     begin
-      payment = sdk.get("/v1/payments/#{payment_id}")
-      if payment['status'] == 200
-        payment['response']
+      payment = sdk.payment.get(payment_id)
+      if payment[:status] == 200
+        payment[:response]
       else
         Rails.logger.error "Mercado Pago Get Payment Error: #{payment['response']}"
         nil

@@ -92,9 +92,13 @@
                 <% end %>
             <% end %>
             <% unless @deal.payed? %>
-                <%= link_to deal_payments_path(@deal), method: :post, class:'btn btn-primary me-3 mb-2' do %>
-                    Realizar el pago
+                <%= link_to deal_payments_path(@deal, payment_method: :flow), method: :post, class:'btn btn-primary me-3 mb-2' do %>
+                    Pagar con
                     <%= image_tag('logo-flow.png', class:'icon-button') %>
+                <% end %>
+                <%= link_to deal_payments_path(@deal, payment_method: :mercadopago), method: :post, class:'btn btn-primary me-3 mb-2' do %>
+                    Pagar con
+                    <%= image_tag('logo-mercadopago.png', class:'icon-button') %>
                 <% end %>
             <% end %>
         </div>
