@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: API Despachos Pymes
+  title: API Thunderflow
   description: >-
     La API de despachos de puerta a puerta es una interfaz que te permite
     gestionar las solicitudes de entrega de manera eficiente. A través de esta
@@ -12,7 +12,7 @@ info:
     Para pruebas de integración, debes utilizar nuestro sandbox: `https://despachos-staging.herokuapp.com/api/v1/deliveries/`.
 
 
-    Para producción, debes utilizar: `https://despachospymes.cl/api/v1/deliveries/`
+    Para producción, debes utilizar: `https://sociosaltyro.cl/api/v1/deliveries/`
 
 
     Utiliza el token proporcionado por Despachos Pymes, si tienes dudas, por

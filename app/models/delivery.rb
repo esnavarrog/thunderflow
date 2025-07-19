@@ -285,11 +285,6 @@ class Delivery < FilterableRecord
   end
 
   def is_payed?(current_user)
-    p '++++++++++++++'
-    p current_user.admin?
-    p payed?
-    p deal.payed?
-    p '++++++++++++++'
     return if current_user&.admin?
 
     # errors.add(:payed, "No podemos editar una solicitud pagada") if payed? && deal.payed?

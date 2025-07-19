@@ -1,9 +1,6 @@
 {
-  "name": "despachos-pyme",
+  "name": "thunderflow",
   "private": true,
-  "engines": {
-    "node": "16.x"
-  },
   "dependencies": {
     "@nathanvda/cocoon": "^1.2.14",
     "@popperjs/core": "^2.11.8",
