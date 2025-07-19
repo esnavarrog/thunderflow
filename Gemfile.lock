@@ -139,6 +139,7 @@ GEM
       devise (>= 4.9.0)
       rails-i18n
     diff-lcs (1.6.2)
+    domain_name (0.6.20240107)
     drb (2.2.3)
     erb (5.0.1)
     erubi (1.13.1)
@@ -214,6 +215,9 @@ GEM
       rspec (>= 2.99.0, < 4.0)
     hashie (5.0.0)
     htmlentities (4.3.4)
+    http-accept (1.7.0)
+    http-cookie (1.0.8)
+      domain_name (~> 0.5)
     httparty (0.23.1)
       csv
       mini_mime (>= 1.0.0)
@@ -279,6 +283,9 @@ GEM
       net-smtp
     marcel (1.0.4)
     matrix (0.4.3)
+    mercadopago-sdk (2.3.0)
+      json (~> 2.5)
+      rest-client (~> 2.1)
     method_source (1.1.0)
     mime-types (3.7.0)
       logger
@@ -305,6 +312,7 @@ GEM
       timeout
     net-smtp (0.5.1)
       net-protocol
+    netrc (0.11.0)
     nio4r (2.7.4)
     nokogiri (1.18.8-aarch64-linux-gnu)
       racc (~> 1.4)
@@ -450,6 +458,11 @@ GEM
     responders (3.1.1)
       actionpack (>= 5.2)
       railties (>= 5.2)
+    rest-client (2.1.0)
+      http-accept (>= 1.7.0, < 2.0)
+      http-cookie (>= 1.0.2, < 2.0)
+      mime-types (>= 1.16, < 4.0)
+      netrc (~> 0.8)
     retriable (2.1.0)
     rexml (3.4.1)
     rmagick (6.1.1)
@@ -614,6 +627,7 @@ DEPENDENCIES
   kaminari-bootstrap
   letter_opener
   listen (~> 3.3)
+  mercadopago-sdk (~> 2.3.0)
   net-http
   omniauth
   omniauth-google-oauth2
@@ -652,4 +666,4 @@ RUBY VERSION
    ruby 3.2.3p157
 
 BUNDLED WITH
-   2.6.7
+   2.6.9

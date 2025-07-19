@@ -13,6 +13,34 @@
         <%= sector %>
     </div>
 
+    <% if user_signed_in? and current_user.client? and action_name == 'show' and controller_name == 'deals' and @deal.present? %>
+      <% unless @deal.payed? %>
+        <div class="buttons-navbar">
+          <%= link_to deal_payments_path(@deal, payment_method: :flow), method: :post, class:'btn btn-outline-secondary' do %>
+            Pagar con
+            <%= image_tag('logo-flow.png', class:'icon-button') %>
+          <% end %>
+          <%= link_to deal_payments_path(@deal, payment_method: :mercadopago), method: :post, class:'btn btn-outline-secondary' do %>
+            Pagar con
+            <%= image_tag('logo-mercadopago.png', class:'icon-button') %>
+          <% end %>
+        </div>
+
+        <div class="dropdown-navbar">
+          <div class="dropdown">
+            <%= link_to deal_payments_path(@deal, payment_method: :flow), method: :post, class:'btn btn-outline-secondary btn-icon' do %>
+              Pagar con
+              <%= image_tag('logo-flow.png', class:'icon-dropdown-plus') %>
+            <% end %>
+            <%= link_to deal_payments_path(@deal, payment_method: :mercadopago), method: :post, class:'btn btn-outline-secondary btn-icon' do %>
+              Pagar con
+              <%= image_tag('logo-mercadopago.png', class:'icon-dropdown-plus') %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
     <% if user_signed_in? && action_name == 'index' && controller_name == 'companies' %>
         <div class="buttons-navbar">
             <%= link_to new_company_path(companies:true), class:'btn btn-outline-secondary', remote:true do %>

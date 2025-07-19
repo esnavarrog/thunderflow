@@ -49,11 +49,11 @@ class Flow
     end
 
     def request_headers
-		return {
-			'api_Key' => ENV['api_key_flow'],
-			'Content-Type' => 'application/x-www-form-urlencoded'
-		}
-	end
+      return {
+        'api_Key' => ENV['api_key_flow'],
+        'Content-Type' => 'application/x-www-form-urlencoded'
+      }
+    end
 
   def self.app_host
 		Rails.application.config.action_mailer.default_url_options
