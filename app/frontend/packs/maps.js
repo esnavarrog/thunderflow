@@ -1,5 +1,4 @@
 
-
 function initMap() {
     const coords = document.getElementById("brewers");
     const coords_branch = document.getElementById("brewers-branch");
@@ -456,3 +455,426 @@ function common_events(){
 
 window.initMap = initMap;
 window.launchmap = launchmap;
+
+// Driver Positions Map
+let driverPositionsMap;
+let driverMarkers = [];
+let destinationMarkers = [];
+let fetchIntervalId;
+let allPositions = []; // Para almacenar todas las posiciones
+let selectedUserId = null; // Para filtrar por usuario
+let autoUpdateEnabled = true; // Para controlar la actualización automática
+
+// Funciones para crear iconos personalizados
+function createTruckIcon() {
+    return {
+        url: '/packs/images/icon_driver.png',
+        scaledSize: new google.maps.Size(32, 32),
+        anchor: new google.maps.Point(16, 16)
+    };
+}
+
+function createDestinationIcon() {
+    return {
+        url: '/packs/images/icon_gift.png',
+        scaledSize: new google.maps.Size(32, 32),
+        anchor: new google.maps.Point(16, 16)
+    };
+}
+
+function initDriverPositionsMap() {
+    if (!document.getElementById('map-driver-positions')) return;
+    
+    driverPositionsMap = new google.maps.Map(document.getElementById('map-driver-positions'), {
+        zoom: 12,
+        center: { lat: -33.45, lng: -70.6667 }, // Santiago, Chile
+        mapId: "8ccbea4ce4308a7b",
+        disableDefaultUI: true,
+        mapTypeControl: false
+    });
+    
+    fetchDriverPositions();
+    startAutoUpdate();
+}
+
+function startAutoUpdate() {
+    if (fetchIntervalId) clearInterval(fetchIntervalId);
+    if (autoUpdateEnabled) {
+        fetchIntervalId = setInterval(fetchDriverPositions, 15000);
+    }
+}
+
+function stopAutoUpdate() {
+    if (fetchIntervalId) {
+        clearInterval(fetchIntervalId);
+        fetchIntervalId = null;
+    }
+}
+
+function toggleAutoUpdate() {
+    autoUpdateEnabled = !autoUpdateEnabled;
+    const button = $('#toggle-auto-update');
+    
+    if (autoUpdateEnabled) {
+        startAutoUpdate();
+        button.removeClass('btn-warning').addClass('btn-success');
+        button.html('<i class="fas fa-pause"></i> Pausar');
+    } else {
+        stopAutoUpdate();
+        button.removeClass('btn-success').addClass('btn-warning');
+        button.html('<i class="fas fa-play"></i> Reanudar');
+    }
+}
+
+function adjustMapToMarkers() {
+    if (!driverPositionsMap || !allPositions.length) return;
+    
+    let positionsToShow = allPositions;
+    if (selectedUserId && selectedUserId !== 'all') {
+        const userIdNum = parseInt(selectedUserId);
+        positionsToShow = allPositions.filter(pos => pos.user.id === userIdNum);
+    }
+    
+    if (positionsToShow.length === 1) {
+        const pos = positionsToShow[0];
+        const bounds = new google.maps.LatLngBounds();
+        
+        // Agregar ubicación del conductor
+        bounds.extend({ lat: pos.latitude, lng: pos.longitude });
+        
+        // Agregar destino si existe
+        if (pos.destination_latitude && pos.destination_longitude) {
+            bounds.extend({ lat: pos.destination_latitude, lng: pos.destination_longitude });
+        }
+        
+        driverPositionsMap.fitBounds(bounds);
+        driverPositionsMap.setZoom(Math.min(driverPositionsMap.getZoom(), 14));
+    } else if (positionsToShow.length > 1) {
+        // Ajustar el mapa para mostrar todos los marcadores visibles
+        const bounds = new google.maps.LatLngBounds();
+        positionsToShow.forEach(pos => {
+            bounds.extend({ lat: pos.latitude, lng: pos.longitude });
+            if (pos.destination_latitude && pos.destination_longitude) {
+                bounds.extend({ lat: pos.destination_latitude, lng: pos.destination_longitude });
+            }
+        });
+        driverPositionsMap.fitBounds(bounds);
+    }
+}
+
+function clearDriverMarkers() {
+    driverMarkers.forEach(m => m.setMap(null));
+    driverMarkers = [];
+    destinationMarkers.forEach(m => m.setMap(null));
+    destinationMarkers = [];
+}
+
+function addDriverMarkers(positions) {
+    positions.forEach(function(pos) {
+        // Marcador del conductor con información detallada
+        const driverInfo = `
+            <div style="padding: 10px;">
+                <h6 style="margin: 0; color: #333;">${pos.user.name}</h6>
+                <p style="margin: 5px 0; font-size: 12px; color: #666;">
+                    <strong>Ubicación actual:</strong><br>
+                    Lat: ${pos.latitude.toFixed(6)}<br>
+                    Lng: ${pos.longitude.toFixed(6)}
+                </p>
+                ${pos.destination_latitude && pos.destination_longitude ? 
+                    `<p style="margin: 5px 0; font-size: 12px; color: #0066cc;">
+                        <strong>Destino:</strong><br>
+                        Lat: ${pos.destination_latitude.toFixed(6)}<br>
+                        Lng: ${pos.destination_longitude.toFixed(6)}
+                    </p>` : 
+                    '<p style="margin: 5px 0; font-size: 12px; color: #999;">Sin destino asignado</p>'
+                }
+                <p style="margin: 5px 0; font-size: 11px; color: #888;">
+                    Última actualización: ${formatTime(pos.updated_at)}
+                </p>
+            </div>
+        `;
+        
+        const infoWindow = new google.maps.InfoWindow({
+            content: driverInfo
+        });
+        
+        const marker = new google.maps.Marker({
+            position: { lat: pos.latitude, lng: pos.longitude },
+            map: driverPositionsMap,
+            label: {
+                text: pos.user.name,
+                className: 'driver-label'
+            },
+            title: `${pos.user.name} - Ubicación actual`,
+            icon: createTruckIcon()
+        });
+        
+        // Evento click para mostrar información
+        marker.addListener('click', function() {
+            infoWindow.open(driverPositionsMap, marker);
+        });
+        
+        driverMarkers.push(marker);
+
+        // Marcador de destino (si existe)
+        if (pos.destination_latitude && pos.destination_longitude) {
+            const destinationInfo = `
+                <div style="padding: 10px;">
+                    <h6 style="margin: 0; color: #0066cc;">Destino de ${pos.user.name}</h6>
+                    <p style="margin: 5px 0; font-size: 12px; color: #666;">
+                        <strong>Coordenadas:</strong><br>
+                        Lat: ${pos.destination_latitude.toFixed(6)}<br>
+                        Lng: ${pos.destination_longitude.toFixed(6)}
+                    </p>
+                    <p style="margin: 5px 0; font-size: 11px; color: #888;">
+                        Conductor: ${pos.user.name}
+                    </p>
+                </div>
+            `;
+            
+            const destInfoWindow = new google.maps.InfoWindow({
+                content: destinationInfo
+            });
+            
+            const destMarker = new google.maps.Marker({
+                position: { lat: pos.destination_latitude, lng: pos.destination_longitude },
+                map: driverPositionsMap,
+                icon: createDestinationIcon(),
+                label: {
+                    text: `Destino de ${pos.user.name}`,
+                    className: 'destination-label'
+                },
+                title: `Destino de ${pos.user.name}`
+            });
+            
+            // Evento click para mostrar información del destino
+            destMarker.addListener('click', function() {
+                destInfoWindow.open(driverPositionsMap, destMarker);
+            });
+            
+            destinationMarkers.push(destMarker);
+        }
+    });
+}
+
+function updateUsersList(positions) {
+    const usersList = $('#users-list');
+    usersList.empty();
+    
+    // Agregar opción "Todos los usuarios"
+    const allUsersItem = $(`
+        <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ${selectedUserId === null ? 'active' : ''}" 
+             data-user-id="all">
+            <div>
+                <strong>Todos los usuarios</strong>
+                <br><small class="text-muted">${positions.length} conductores activos</small>
+            </div>
+            <span class="badge bg-primary rounded-pill">${positions.length}</span>
+        </div>
+    `);
+    usersList.append(allUsersItem);
+    
+    // Agregar cada usuario
+    positions.forEach(function(pos) {
+        const userItem = $(`
+            <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ${selectedUserId === pos.user.id ? 'active' : ''}" 
+                 data-user-id="${pos.user.id}">
+                <div>
+                    <strong>${pos.user.name}</strong>
+                    <br><small class="text-muted">Última actualización: ${formatTime(pos.updated_at)}</small>
+                </div>
+                <span class="badge bg-success rounded-pill">Activo</span>
+            </div>
+        `);
+        usersList.append(userItem);
+    });
+    
+
+    
+    // Event listeners para los items
+    usersList.find('.list-group-item').click(function() {
+        const userId = $(this).data('user-id');
+        filterByUser(userId);
+    });
+}
+
+function filterByUser(userId) {
+    selectedUserId = userId === 'all' ? null : userId;
+    
+    // Actualizar clases activas
+    $('#users-list .list-group-item').removeClass('active');
+    $(`[data-user-id="${userId}"]`).addClass('active');
+    
+    // Filtrar marcadores
+    clearDriverMarkers();
+    
+    let positionsToShow = allPositions;
+    if (selectedUserId && selectedUserId !== 'all') {
+        // Convertir a número para comparación correcta
+        const userIdNum = parseInt(selectedUserId);
+        positionsToShow = allPositions.filter(pos => pos.user.id === userIdNum);
+    }
+    
+    // Agregar marcadores con información detallada
+    positionsToShow.forEach(function(pos) {
+        // Marcador del conductor con información detallada
+        const driverInfo = `
+            <div style="padding: 10px;">
+                <h6 style="margin: 0; color: #333;">${pos.user.name}</h6>
+                <p style="margin: 5px 0; font-size: 12px; color: #666;">
+                    <strong>Ubicación actual:</strong><br>
+                    Lat: ${pos.latitude.toFixed(6)}<br>
+                    Lng: ${pos.longitude.toFixed(6)}
+                </p>
+                ${pos.destination_latitude && pos.destination_longitude ? 
+                    `<p style="margin: 5px 0; font-size: 12px; color: #0066cc;">
+                        <strong>Destino:</strong><br>
+                        Lat: ${pos.destination_latitude.toFixed(6)}<br>
+                        Lng: ${pos.destination_longitude.toFixed(6)}
+                    </p>` : 
+                    '<p style="margin: 5px 0; font-size: 12px; color: #999;">Sin destino asignado</p>'
+                }
+                <p style="margin: 5px 0; font-size: 11px; color: #888;">
+                    Última actualización: ${formatTime(pos.updated_at)}
+                </p>
+            </div>
+        `;
+        
+        const infoWindow = new google.maps.InfoWindow({
+            content: driverInfo
+        });
+        
+        const marker = new google.maps.Marker({
+            position: { lat: pos.latitude, lng: pos.longitude },
+            map: driverPositionsMap,
+            label: {
+                text: pos.user.name,
+                className: 'driver-label'
+            },
+            title: `${pos.user.name} - Ubicación actual`,
+            icon: createTruckIcon()
+        });
+        
+        // Evento click para mostrar información
+        marker.addListener('click', function() {
+            infoWindow.open(driverPositionsMap, marker);
+        });
+        
+        driverMarkers.push(marker);
+
+        // Marcador de destino (si existe)
+        if (pos.destination_latitude && pos.destination_longitude) {
+            const destinationInfo = `
+                <div style="padding: 10px;">
+                    <h6 style="margin: 0; color: #0066cc;">Destino de ${pos.user.name}</h6>
+                    <p style="margin: 5px 0; font-size: 12px; color: #666;">
+                        <strong>Coordenadas:</strong><br>
+                        Lat: ${pos.destination_latitude.toFixed(6)}<br>
+                        Lng: ${pos.destination_longitude.toFixed(6)}
+                    </p>
+                    <p style="margin: 5px 0; font-size: 11px; color: #888;">
+                        Conductor: ${pos.user.name}
+                    </p>
+                </div>
+            `;
+            
+            const destInfoWindow = new google.maps.InfoWindow({
+                content: destinationInfo
+            });
+            
+            const destMarker = new google.maps.Marker({
+                position: { lat: pos.destination_latitude, lng: pos.destination_longitude },
+                map: driverPositionsMap,
+                icon: createDestinationIcon(),
+                label: {
+                    text: `Destino de ${pos.user.name}`,
+                    className: 'destination-label'
+                },
+                title: `Destino de ${pos.user.name}`
+            });
+            
+            // Evento click para mostrar información del destino
+            destMarker.addListener('click', function() {
+                destInfoWindow.open(driverPositionsMap, destMarker);
+            });
+            
+            destinationMarkers.push(destMarker);
+        }
+    });
+    
+    // Solo ajustar el mapa si es la primera carga o si el usuario lo solicita explícitamente
+    // No ajustar automáticamente durante las actualizaciones
+}
+
+function formatTime(timestamp) {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    
+    if (diffMins < 1) return 'Ahora mismo';
+    if (diffMins < 60) return `Hace ${diffMins} min`;
+    
+    const diffHours = Math.floor(diffMins / 60);
+    if (diffHours < 24) return `Hace ${diffHours}h`;
+    
+    const diffDays = Math.floor(diffHours / 24);
+    return `Hace ${diffDays}d`;
+}
+
+function fetchDriverPositions() {
+    const url = $('#map-driver-positions').data('positions-url');
+    if (!url) return;
+    
+    $.ajax({
+        url: url,
+        type: 'GET',
+        dataType: 'json',
+        headers: {
+            'X-CSRF-Token': $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+            allPositions = data; // Almacenar todas las posiciones
+            updateUsersList(data); // Actualizar la lista de usuarios
+            
+            // Aplicar filtro actual si existe
+            if (selectedUserId) {
+                filterByUser(selectedUserId);
+            } else {
+                clearDriverMarkers();
+                addDriverMarkers(data);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching driver positions:', error);
+        }
+    });
+}
+
+// Add to common_events function
+$(document).on('turbolinks:load', function() {
+    common_events();
+    
+    // Initialize driver positions map if element exists
+    if ($('#map-driver-positions').length > 0) {
+        initDriverPositionsMap();
+        
+        // Set up event listeners after map initialization
+        setTimeout(function() {
+            // Manual refresh button
+            $('#refresh-map').off('click').on('click', fetchDriverPositions);
+            
+            // Toggle auto update button
+            $('#toggle-auto-update').off('click').on('click', toggleAutoUpdate);
+            
+            // Adjust map button
+            $('#adjust-map').off('click').on('click', adjustMapToMarkers);
+        }, 1000);
+    }
+});
+
+// Make functions globally available
+window.initDriverPositionsMap = initDriverPositionsMap;
+window.fetchDriverPositions = fetchDriverPositions;
+window.toggleAutoUpdate = toggleAutoUpdate;
+window.adjustMapToMarkers = adjustMapToMarkers; 

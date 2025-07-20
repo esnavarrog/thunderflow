@@ -31,6 +31,14 @@
             </div>
         </div>
     <% end %>
+
+    <% if user_signed_in? && current_user.admin? && action_name == 'index' && controller_name == 'driver_positions' %>
+        <div class="buttons-navbar">
+            <button class="refresh-map btn btn-sm btn-outline-light">
+                <i class="fas fa-sync-alt"></i>
+            </button>
+        </div>
+    <% end %>
     
     <% if user_signed_in? && action_name == 'index' && controller_name == 'deliveries' %>
         <div class="container-massive-select">

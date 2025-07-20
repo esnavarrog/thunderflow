@@ -62,6 +62,7 @@ Rails.application.routes.draw do
     end
   end
   resources :default_profile_prices, only: [:create]
+  resources :driver_positions
 
   # resources :users, only:[:index, :show, :update]
   get 'get_deliver', to: 'branches#get_deliver'

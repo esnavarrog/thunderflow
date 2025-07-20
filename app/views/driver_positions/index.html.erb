@@ -1,3 +1,30 @@
-<h1>Ubicaciones de Conductores</h1>
-<button id="refresh-map">Actualizar manualmente</button>
-<div id="map-driver-positions" data-positions-url="<%= driver_positions_path(format: :json) %>" style="height: 600px; width: 100%;"></div>
+<%= render partial: 'partials/title_module', locals: {sector:'Ubicaciones de Conductores'} %>
+
+<div class="position-relative">
+  <div id="map-driver-positions" data-positions-url="<%= driver_positions_path(format: :json) %>" style="height: calc(100vh - 100px); width: 100%;"></div>
+  
+  <!-- Panel flotante -->
+  <div class="position-absolute top-0 end-0 m-3" style="z-index: 1000;">
+    <div class="card shadow" style="max-height: 80vh; overflow-y: auto;">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+        <h6 class="mb-0">Conductores Activos</h6>
+        <div class="d-flex gap-2">
+          <button id="toggle-auto-update" class="btn btn-sm btn-success">
+            <i class="fas fa-pause"></i> Pausar
+          </button>
+          <button id="adjust-map" class="btn btn-sm btn-outline-secondary" title="Ajustar vista a marcadores">
+            <i class="fas fa-crosshairs"></i>
+          </button>
+          <button id="refresh-map" class="btn btn-sm btn-outline-primary">
+            <i class="fas fa-sync-alt"></i>
+          </button>
+        </div>
+      </div>
+      <div class="card-body p-0">
+        <div id="users-list" class="list-group list-group-flush">
+          <!-- Los usuarios se cargarán dinámicamente aquí -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
