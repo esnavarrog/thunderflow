@@ -2,11 +2,11 @@
   "name": "thunderflow",
   "private": true,
   "engines": {
-    "node": ">=20.0.0",
-    "npm": ">=10.0.0"
+    "node": "16.x",
+    "npm": "8.x"
   },
   "scripts": {
-    "build": "NODE_OPTIONS='--openssl-legacy-provider' webpack --config config/webpack/heroku.js",
+    "build": "webpack --config config/webpack/heroku.js",
     "postinstall": "echo 'Node.js version:' && node --version && echo 'NPM version:' && npm --version"
   },
   "dependencies": {
