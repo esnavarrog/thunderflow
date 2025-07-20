@@ -291,10 +291,14 @@ class Delivery < FilterableRecord
   end
 
   def qr_code_svg
-    crypt = ActiveSupport::MessageEncryptor.new(ENV['SECRET_KEY_BASE'][0..31])
-    token = crypt.encrypt_and_sign(attributes.slice('id'))
-    qrcode = RQRCode::QRCode.new(token)
-    svg = qrcode.as_svg
+    qrcode = RQRCode::QRCode.new(self.id.to_s)
+
+    qrcode.as_svg(
+      color: "000",
+      shape_rendering: "crispEdges",
+      module_size: 3,
+      standalone: true
+    )
   end
 
   def disabled_asign_user
