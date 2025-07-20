@@ -661,6 +661,16 @@ function updateUsersList(positions) {
     const usersList = $('#users-list');
     usersList.empty();
     
+    if (!positions || positions.length === 0) {
+        usersList.append(`
+            <div class="list-group-item text-center text-muted">
+                <i class="fas fa-info-circle mb-2"></i>
+                <br>No hay conductores activos
+            </div>
+        `);
+        return;
+    }
+    
     // Agregar opción "Todos los usuarios"
     const allUsersItem = $(`
         <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center ${selectedUserId === null ? 'active' : ''}" 
@@ -688,8 +698,6 @@ function updateUsersList(positions) {
         `);
         usersList.append(userItem);
     });
-    
-
     
     // Event listeners para los items
     usersList.find('.list-group-item').click(function() {
@@ -837,16 +845,28 @@ function fetchDriverPositions() {
             allPositions = data; // Almacenar todas las posiciones
             updateUsersList(data); // Actualizar la lista de usuarios
             
-            // Aplicar filtro actual si existe
-            if (selectedUserId) {
-                filterByUser(selectedUserId);
+            // Mostrar/ocultar mensaje de no hay ubicaciones
+            if (!data || data.length === 0) {
+                $('#no-positions-message').show();
+                $('#map-driver-positions').hide();
             } else {
-                clearDriverMarkers();
-                addDriverMarkers(data);
+                $('#no-positions-message').hide();
+                $('#map-driver-positions').show();
+                
+                // Aplicar filtro actual si existe
+                if (selectedUserId) {
+                    filterByUser(selectedUserId);
+                } else {
+                    clearDriverMarkers();
+                    addDriverMarkers(data);
+                }
             }
         },
         error: function(xhr, status, error) {
             console.error('Error fetching driver positions:', error);
+            // En caso de error, mostrar mensaje
+            $('#no-positions-message').show();
+            $('#map-driver-positions').hide();
         }
     });
 }

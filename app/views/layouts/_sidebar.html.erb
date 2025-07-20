@@ -121,6 +121,13 @@
 					<%end%>
 				</li>
 
+				<li class="<%= controller_name == 'driver_positions' ? 'active' : '' %>">
+					<%= link_to driver_positions_path do %>
+						<%=inline_svg_tag("icons/icon_tool.svg", class:"sidebar-icon")%>
+						<span>Monitoreo</span>
+					<% end %>
+				</li>
+
 			<%end%>
 
 			<li class="<%=controller_name == 'withdrawal_receipts' ? 'active' : ''%>">
