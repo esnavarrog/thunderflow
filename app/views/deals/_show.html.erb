@@ -82,10 +82,8 @@
                 <%= link_to export_deliveries_path(id:@deal, format: :xlsx), class:'btn btn-outline-success me-3 mb-2' do %>
                     <span>Exportar solicitudes</span><i class="bi bi-file-earmark-excel-fill"></i>
                 <% end %>
-                <% if policy(:application).mercadopago_enabled? %>
-                    <%= link_to send_notification_path(@deal, only_save:false), class:'btn btn-outline-info me-3 mb-2', remote:true, method: :put do %>
-                        Enviar cobro <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                    <% end %>
+                <%= link_to send_notification_path(@deal, only_save:false), class:'btn btn-outline-info me-3 mb-2', remote:true, method: :put do %>
+                    Enviar cobro <i class="fa-solid fa-arrow-up-right-from-square"></i>
                 <% end %>
             <% end %>
             <% unless @deal.payed? || @deal.pending? %>
@@ -93,7 +91,7 @@
                     Rechazar cobro <i class="fa-solid fa-xmark"></i>
                 <% end %>
             <% end %>
-            <% unless @deal.payed? %>
+            <% if !@deal.payed? && current_user.client? %>
                 <%= link_to deal_payments_path(@deal, payment_method: :flow), method: :post, class:'btn btn-primary me-3 mb-2' do %>
                     Pagar con
                     <%= image_tag('logo-flow.png', class:'icon-button') %>

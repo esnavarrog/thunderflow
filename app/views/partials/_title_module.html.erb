@@ -14,7 +14,7 @@
     </div>
 
     <% if user_signed_in? and current_user.client? and action_name == 'show' and controller_name == 'deals' and @deal.present? %>
-      <% unless @deal.payed? %>
+      <% if !@deal.payed? && current_user.client? %>
         <div class="buttons-navbar">
           <%= link_to deal_payments_path(@deal, payment_method: :flow), method: :post, class:'btn btn-outline-secondary' do %>
             Pagar con
