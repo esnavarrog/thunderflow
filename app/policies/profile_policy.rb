@@ -26,4 +26,12 @@ class ProfilePolicy < ApplicationPolicy
     def show?
         edit?
     end
+
+    def password_present?
+        user.delivery? && user.encrypted_password.present?
+    end
+
+    def needs_to_set_password?
+        user.delivery? && user.encrypted_password.blank?
+    end
 end

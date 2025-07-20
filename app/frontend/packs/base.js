@@ -348,4 +348,50 @@ function common_events(){
             method: 'get'
         })
     }
+
+    if($('#modal-password').length){
+        $('#modal-password').modal('show');
+        const passwordModalEl = document.getElementById('modal-password');
+        if (!passwordModalEl) return;
+
+        const passwordInput = document.getElementById('user_password');
+        const confirmInput = document.getElementById('user_password_confirmation');
+        const submitButton = document.getElementById('password-submit-btn');
+        const passwordError = document.getElementById('password-error');
+        const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+
+        function validatePasswords() {
+            const passwordsMatch = passwordInput.value === confirmInput.value;
+            const passwordIsNotEmpty = passwordInput.value.length > 0;
+
+            if (!passwordsMatch && confirmInput.value.length > 0) {
+                passwordError.style.display = 'block';
+                confirmInput.classList.add('is-invalid');
+            } else {
+                passwordError.style.display = 'none';
+                confirmInput.classList.remove('is-invalid');
+            }
+
+            submitButton.disabled = !(passwordsMatch && passwordIsNotEmpty);
+        }
+
+        function toggleVisibility(event) {
+            const icon = event.currentTarget;
+            const input = icon.closest('.input-group').querySelector('input');
+
+            const isPassword = input.getAttribute('type') === 'password';
+            input.setAttribute('type', isPassword ? 'text' : 'password');
+
+            icon.classList.toggle('bi-eye');
+            icon.classList.toggle('bi-eye-slash');
+        }
+
+        passwordInput.addEventListener('input', validatePasswords);
+        confirmInput.addEventListener('input', validatePasswords);
+
+        togglePasswordIcons.forEach(icon => {
+            icon.addEventListener('click', toggleVisibility);
+        });
+    }
+
 }

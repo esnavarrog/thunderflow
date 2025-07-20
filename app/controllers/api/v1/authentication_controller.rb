@@ -1,5 +1,3 @@
-# app/controllers/api/v1/authentication_controller.rb
-
 # require 'googleauth/id_tokens' # Asegúrate de que esta línea esté al inicio del archivo o en un initializer
 # require 'googleauth/jwt_store' # Necesario para Google::Auth::IDTokens
 
@@ -12,8 +10,8 @@ class Api::V1::AuthenticationController < ::ApiController
   def login
     user = User.find_by(email: user_params[:email])
 
-    # if user&.valid_password?(user_params[:password])
-    if user
+    if user&.valid_password?(user_params[:password])
+    # if user
       token = JsonWebToken.encode(user_id: user.id)
       render json: {
         auth_token: token,
@@ -26,7 +24,7 @@ class Api::V1::AuthenticationController < ::ApiController
 
   def create
     user = User.find_by_email(user_params[:email])
-    if user
+    if user&.valid_password?(user_params[:password])
       token = JsonWebToken.encode(user_id: user.id)
       render json: {
         auth_token: token,

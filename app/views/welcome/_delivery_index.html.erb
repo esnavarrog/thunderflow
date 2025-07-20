@@ -32,3 +32,5 @@
     </ul>
 
 </div>
+
+<%= render 'users/forms/modal_password' if policy(:profile).needs_to_set_password? %>

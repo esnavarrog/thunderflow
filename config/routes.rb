@@ -117,6 +117,7 @@ Rails.application.routes.draw do
   put 'update_settings_company/:company_id', to: 'companies#update_settings_company', as: 'update_settings_company'
   get 'confirmed_profile/:id', to: 'profiles#confirmed_profile', as: 'confirmed_profile'
   get 'get_pending_deliveries', to: 'welcome#get_pending_deliveries'
+  post 'agrega_contraseña', to: 'profiles#add_password', as: 'add_password'
 
 
   get 'landpage', to: 'pages#landpage'
