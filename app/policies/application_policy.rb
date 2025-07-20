@@ -56,6 +56,10 @@ class ApplicationPolicy
     user.admin? || user.client? || user.delivery?
   end
 
+  def mercadopago_enabled?
+    user.client? && ENV['MERCADOPAGO_ENABLED'] == 'true'
+  end
+
   class Scope
     def initialize(user, scope)
       @user = user

@@ -82,8 +82,10 @@
                 <%= link_to export_deliveries_path(id:@deal, format: :xlsx), class:'btn btn-outline-success me-3 mb-2' do %>
                     <span>Exportar solicitudes</span><i class="bi bi-file-earmark-excel-fill"></i>
                 <% end %>
-                <%= link_to send_notification_path(@deal, only_save:false), class:'btn btn-outline-info me-3 mb-2', remote:true, method: :put do %>
-                    Enviar cobro <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                <% if policy(:application).mercadopago_enabled? %>
+                    <%= link_to send_notification_path(@deal, only_save:false), class:'btn btn-outline-info me-3 mb-2', remote:true, method: :put do %>
+                        Enviar cobro <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                    <% end %>
                 <% end %>
             <% end %>
             <% unless @deal.payed? || @deal.pending? %>
@@ -96,9 +98,11 @@
                     Pagar con
                     <%= image_tag('logo-flow.png', class:'icon-button') %>
                 <% end %>
-                <%= link_to deal_payments_path(@deal, payment_method: :mercadopago), method: :post, class:'btn btn-primary me-3 mb-2' do %>
-                    Pagar con
-                    <%= image_tag('logo-mercadopago.png', class:'icon-button') %>
+                <% if policy(:application).mercadopago_enabled? %>
+                    <%= link_to deal_payments_path(@deal, payment_method: :mercadopago), method: :post, class:'btn btn-primary me-3 mb-2' do %>
+                        Pagar con
+                        <%= image_tag('logo-mercadopago.png', class:'icon-button') %>
+                    <% end %>
                 <% end %>
             <% end %>
         </div>
