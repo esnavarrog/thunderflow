@@ -1,6 +1,9 @@
 {
   "name": "thunderflow",
   "private": true,
+  "engine": {
+    "node": "20.x"
+  },
   "dependencies": {
     "@nathanvda/cocoon": "^1.2.14",
     "@popperjs/core": "^2.11.8",
