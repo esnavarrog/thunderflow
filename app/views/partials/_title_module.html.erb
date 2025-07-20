@@ -20,9 +20,11 @@
             Pagar con
             <%= image_tag('logo-flow.png', class:'icon-button') %>
           <% end %>
-          <%= link_to deal_payments_path(@deal, payment_method: :mercadopago), method: :post, class:'btn btn-outline-secondary' do %>
-            Pagar con
-            <%= image_tag('logo-mercadopago.png', class:'icon-button') %>
+          <% if policy(:application).mercadopago_enabled? %>
+            <%= link_to deal_payments_path(@deal, payment_method: :mercadopago), method: :post, class:'btn btn-outline-secondary' do %>
+                Pagar con
+                <%= image_tag('logo-mercadopago.png', class:'icon-button') %>
+            <% end %>
           <% end %>
         </div>
 
@@ -32,9 +34,11 @@
               Pagar con
               <%= image_tag('logo-flow.png', class:'icon-dropdown-plus') %>
             <% end %>
-            <%= link_to deal_payments_path(@deal, payment_method: :mercadopago), method: :post, class:'btn btn-outline-secondary btn-icon' do %>
-              Pagar con
-              <%= image_tag('logo-mercadopago.png', class:'icon-dropdown-plus') %>
+            <% if policy(:application).mercadopago_enabled? %>
+                <%= link_to deal_payments_path(@deal, payment_method: :mercadopago), method: :post, class:'btn btn-outline-secondary btn-icon' do %>
+                Pagar con
+                <%= image_tag('logo-mercadopago.png', class:'icon-dropdown-plus') %>
+                <% end %>
             <% end %>
           </div>
         </div>
