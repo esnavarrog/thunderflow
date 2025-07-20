@@ -48,4 +48,5 @@ latest_production_sql.dump
 /*.sh
 .vscode/settings.json
 .idea/
+.idea/thunderflow.iml
 .DS_Store
