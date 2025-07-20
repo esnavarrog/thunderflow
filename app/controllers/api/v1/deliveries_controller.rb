@@ -5,12 +5,12 @@ class Api::V1::DeliveriesController < ApiController
     before_action :authenticate_request, only: [:index, :show, :create, :update, :destroy]
 
     def index
-        unless @resource.result&.delivery?
+        unless @current_user&.delivery?
             render json: { errors: ['No estás autorizado para acceder a esta información.'] }, status: :unauthorized
             return
         end
 
-        @deliveries = Delivery.assigned_and_active_for_courier(@resource.result&.id)
+        @deliveries = Delivery.assigned_and_active_for_courier(@current_user.id)
         render 'api/v1/deliveries/index'
     end
 
@@ -70,7 +70,7 @@ class Api::V1::DeliveriesController < ApiController
 
         status = Status.new(status_params)
         status.delivery = delivery
-        status.user_id = @resource.result.id if @resource.present?
+        status.user_id = @current_user.id if @current_user.present?
 
         if status.save
             render json: delivery, status: :ok
@@ -107,7 +107,7 @@ class Api::V1::DeliveriesController < ApiController
     end
 
     def authorized_for_delivery?(delivery)
-        return delivery.user_asign_id == @resource.result.id
+        return delivery.user_asign_id == @current_user.id
     end
 
     def authorized_to_create_for_branch?(branch)

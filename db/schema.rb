@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2025_06_06_000822) do
+ActiveRecord::Schema[7.2].define(version: 2025_07_19_192048) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_stat_statements"
   enable_extension "plpgsql"
@@ -197,6 +197,17 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_06_000822) do
     t.index ["user_id"], name: "index_deliveries_users_on_user_id"
   end
 
+  create_table "driver_positions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.float "latitude"
+    t.float "longitude"
+    t.float "destination_latitude"
+    t.float "destination_longitude"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_driver_positions_on_user_id", unique: true
+  end
+
   create_table "integrations", force: :cascade do |t|
     t.string "name"
     t.string "url"
@@ -322,12 +333,9 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_06_000822) do
     t.string "confirmation_token"
     t.datetime "confirmation_sent_at", precision: nil
     t.string "unconfirmed_email"
-    t.string "nickname"
-    t.json "tokens"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
-    t.index ["uid", "provider"], name: "index_users_on_uid_and_provider", unique: true
   end
 
   create_table "withdrawal_receipts", force: :cascade do |t|
@@ -354,6 +362,7 @@ ActiveRecord::Schema[7.2].define(version: 2025_06_06_000822) do
   add_foreign_key "deliveries", "branches"
   add_foreign_key "deliveries", "companies"
   add_foreign_key "deliveries", "deals"
+  add_foreign_key "driver_positions", "users"
   add_foreign_key "payments", "companies"
   add_foreign_key "payments", "deals"
   add_foreign_key "payments", "users"

@@ -10,5 +10,6 @@ class ApiController < ApplicationController
 
   def authenticate_request
     @resource = AuthorizeApiRequest.new(request.headers).call
+    @current_user = @resource.result
   end
 end

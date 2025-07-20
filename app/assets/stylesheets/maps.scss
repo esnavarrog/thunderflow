@@ -1,0 +1,51 @@
+// Estilos para los labels del mapa de Google Maps
+.driver-label {
+    background-color: white !important;
+    padding: 5px !important;
+    border-radius: 4px !important;
+    border: 1px solid #ccc !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: #333 !important;
+    white-space: nowrap !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    position: relative !important;
+    top: -40px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 1000 !important;
+}
+
+.destination-label {
+    background-color: white !important;
+    padding: 5px !important;
+    border-radius: 4px !important;
+    border: 1px solid #0066cc !important;
+    font-size: 12px !important;
+    font-weight: bold !important;
+    color: #0066cc !important;
+    white-space: nowrap !important;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1) !important;
+    position: relative !important;
+    top: -40px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 1000 !important;
+}
+
+.list-group-item.active {
+    small {
+        color: white !important;
+    }
+}
+
+#no-positions-message {
+    position: absolute;
+    top: 30vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000;
+    text-align: center;
+    width: 80%;
+    padding: 20px;
+}

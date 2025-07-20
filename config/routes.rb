@@ -62,6 +62,7 @@ Rails.application.routes.draw do
     end
   end
   resources :default_profile_prices, only: [:create]
+  resources :driver_positions
 
   # resources :users, only:[:index, :show, :update]
   get 'get_deliver', to: 'branches#get_deliver'
@@ -147,6 +148,7 @@ Rails.application.routes.draw do
       post 'auth/google_login', to: 'authentication#google_login'
       delete 'logout', to: 'authentication#destroy'
       get 'me', to: 'users#me'
+      resources :driver_positions, only: [:create]
     end
   end
 
