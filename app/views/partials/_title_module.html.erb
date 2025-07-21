@@ -80,9 +80,14 @@
                         <i class="fa-solid fa-rotate"></i> Asignación masiva
                     </div>
                 <% end %>
-                <div class="btn btn-outline-secondary" id="button-send-status" data-url="<%= change_massive_status_url %>">
+                <div class="btn btn-outline-secondary me-2" id="button-send-status" data-url="<%= change_massive_status_url %>">
                     <i class="bi bi-signpost-split"></i> Cambiar Estados
                 </div>
+                <% if user_signed_in? && current_user.admin? %>
+                  <div class="btn btn-outline-secondary" id="button-massive-edit" data-url="<%= massive_edit_deliveries_path %>">
+                    <i class="fa-solid fa-pen"></i> Editar Fecha y Referencia
+                  </div>
+                <% end %>
             </div>
         </div>
 

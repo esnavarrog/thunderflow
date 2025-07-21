@@ -1,0 +1,22 @@
+<%= form_with url: update_massive_edit_deliveries_path, method: :post, local: false, id: 'form-massive-edit' do |f| %>
+  <div class="mb-3">
+    <%= f.label :date_start, 'Fecha de inicio' %>
+    <%= f.text_field :date_start, class: 'form-control datetimepicker', autocomplete: 'off', required: true %>
+  </div>
+  <div class="mb-3">
+    <%= f.label :reference, 'Referencia' %>
+    <%= f.text_field :reference, class: 'form-control', maxlength: 255 %>
+  </div>
+  <%= hidden_field_tag :ids, '', id: 'massive-edit-ids' %>
+  <div class="d-flex justify-content-end">
+    <%= f.submit 'Actualizar', class: 'btn btn-primary' %>
+  </div>
+<% end %>
+<script>
+  $(function(){
+    $('.datetimepicker').datetimepicker({
+      format: 'Y-m-d H:i',
+      step: 15
+    });
+  });
+</script> 

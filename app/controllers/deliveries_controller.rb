@@ -275,6 +275,24 @@ class DeliveriesController < ApplicationController
     route = Deliveries::RouteGoogleService.execute(current_user, point_start)
   end
 
+  # GET /deliveries/massive_edit
+  def massive_edit
+    render partial: 'deliveries/modals/massive_edit_form'
+  end
+
+  # POST /deliveries/update_massive_edit
+  def update_massive_edit
+    ids = params[:ids].to_s.split(',')
+    date_start = params[:date_start]
+    reference = params[:reference]
+    deliveries = Delivery.where(id: ids)
+    deliveries.update_all(date_start: date_start, reference: reference)
+    respond_to do |format|
+      format.js { render js: "window.location.reload();" }
+      format.html { redirect_to deliveries_path, notice: 'Solicitudes actualizadas correctamente.' }
+    end
+  end
+
     private
     def params_delivery
         params.require(:delivery).permit(

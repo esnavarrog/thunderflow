@@ -30,6 +30,53 @@ function common_events(){
 
     $('body').on('click', '#button-send-status, #button-asign-massive', clickSubmit)
 
+    // Botón para edición masiva de fecha y referencia
+    $('body').on('click', '#button-massive-edit', function() {
+        let selected = $('.select-delivery:checked');
+        let ids = [];
+        selected.each(function() {
+            ids.push($(this).data('id'));
+        });
+        if(ids.length === 0) {
+            alert('Selecciona al menos una solicitud.');
+            return;
+        }
+        // Cargar el modal y el formulario
+        $.ajax({
+            url: $(this).data('url'),
+            type: 'GET',
+            success: function(data) {
+                $('#modal .modal-title').text('Editar Fecha y Referencia');
+                $('#modal-body').html(data);
+                $('#modal').modal('show');
+                // Poner los IDs en el hidden
+                $('#massive-edit-ids').val(ids.join(','));
+                // Inicializar flatpickr en los nuevos inputs
+                if (typeof flatpickr !== 'undefined') {
+                  $('.datetimepicker').flatpickr({
+                    dateFormat: "d-m-Y",
+                    locale: "es"
+                  });
+                }
+            }
+        });
+    });
+
+    // Enviar el formulario de edición masiva por AJAX
+    $('body').on('submit', '#form-massive-edit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        $.ajax({
+            url: form.attr('action'),
+            type: 'POST',
+            data: form.serialize(),
+            dataType: 'script',
+            success: function() {
+                $('#modal').modal('hide');
+            }
+        });
+    });
+
     function add_input(){
         let id = $(this).data('id');
         let container = $('#form-add-delivery');

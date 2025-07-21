@@ -29,7 +29,12 @@ Rails.application.routes.draw do
     resources :branches
     resources :deliveries
   end
-  resources :deliveries, path: 'solicitudes'
+  resources :deliveries, path: 'solicitudes' do
+    collection do
+      get :massive_edit
+      post :update_massive_edit
+    end
+  end
   resources :statuses
   resources :commune_prices, path: 'precios_comunas'
   resources :additional_fees, path: 'adicionales'
