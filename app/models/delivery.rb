@@ -308,7 +308,7 @@ class Delivery < FilterableRecord
   end
 
   def set_price_for_commune
-    commune_price = CommunePrice.where(commune: commune, name_profile: company.name_profile).first
+    commune_price = CommunePrice.where("LOWER(commune) = ?", commune.downcase).where(name_profile: company.name_profile).first
     default_price = DefaultProfilePrice.find_by(name_profile: company.name_profile)
 
     return if commune_price.present? && price === commune_price.price
