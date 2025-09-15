@@ -1,28 +1,58 @@
 <div class="container mt-3">
     <section class="row mb-3">
         <!-- report of deliveries -->
+        <% if current_user.admin? %>
         <div class="col-md-3 my-2">
-            <%= link_to "Reportes", report_form_path, class:'btn btn-outline-primary', remote:true if current_user.admin? %>
+            <%= link_to report_form_path, remote: true, class: 'text-decoration-none' do %>
+              <div class="card text-center shadow-sm h-100">
+                  <div class="card-body">
+                      <i class="bi bi-bar-chart-fill text-primary" style="font-size: 2rem;"></i>
+                      <div class="mt-2 text-primary">Reportes</div>
+                  </div>
+              </div>
+            <% end %>
         </div>
         <div class="col-md-3 my-2">
-            <%= link_to "Descargar por ids", open_modal_ids_path, class:'btn btn-outline-primary', remote:true if current_user.admin? %>
+            <%= link_to open_modal_ids_path, remote: true, class: 'text-decoration-none' do %>
+              <div class="card text-center shadow-sm h-100">
+                  <div class="card-body">
+                      <i class="bi bi-download text-primary" style="font-size: 2rem;"></i>
+                      <div class="mt-2 text-primary">Descargar por IDs</div>
+                  </div>
+              </div>
+            <% end %>
         </div>
         <div class="col-md-3 my-2">
-            <%= link_to "Exportar entregas por mes/cliente", export_deliveries_by_month_and_company_path(year: params[:year], month: params[:month], format: :xlsx), class: 'btn btn-outline-success' if current_user.admin? %>
+            <%= link_to export_deliveries_by_month_and_company_path(year: params[:year], month: params[:month], format: :xlsx), class: 'text-decoration-none' do %>
+              <div class="card text-center shadow-sm h-100">
+                  <div class="card-body">
+                      <i class="bi bi-file-earmark-excel-fill text-success" style="font-size: 2rem;"></i>
+                      <div class="mt-2 text-success">Exportar entregas por mes/cliente</div>
+                  </div>
+              </div>
+            <% end %>
         </div>
+        <% end %>
     </section>
 
-    <%= form_with(url: metrics_path, method: :get, data:{remote:true}, class:'row mb-3') do |f| %>
-        <div class="form-group col-sm-12 col-md-6 col-lg-3">
-            <%= f.select :month, I18n.t('date.month_names').compact.each_with_index.map { |m, i| [m, i+1] }, { include_blank: true, selected: Date.current.month }, class: 'form-control' %>
-        </div>
-        <div class="form-group col-sm-12 col-md-6 col-lg-3">
-            <%= f.select :year, (Date.current.year - 3..Date.current.year).to_a.reverse, { include_blank: true, selected: Date.current.year }, class: 'form-control', class: 'form-control' %>
-        </div>
-        <div class="col-sm-12 col-md-6 col-lg-2">
-            <%= f.submit 'Filtrar', class: 'btn btn-primary' %>
-        </div>
-    <% end %>
+    <!-- Filtros de mes y año con mejor UX/UI -->
+    <div class="row mb-4 align-items-end">
+      <div class="col-md-3 col-sm-6 mb-2">
+        <label for="month-select" class="form-label fw-bold">Mes</label>
+        <%= form_with(url: metrics_path, method: :get, data:{remote:true}, html: {class:'d-flex gap-2 align-items-end'}, local: true) do |f| %>
+          <%= f.select :month, I18n.t('date.month_names').compact.each_with_index.map { |m, i| [m.capitalize, i+1] }, { include_blank: 'Todos los meses', selected: params[:month] || Date.current.month }, class: 'form-select', id: 'month-select' %>
+      </div>
+      <div class="col-md-3 col-sm-6 mb-2">
+        <label for="year-select" class="form-label fw-bold">Año</label>
+        <%= f.select :year, (Date.current.year - 3..Date.current.year).to_a.reverse, { include_blank: 'Todos los años', selected: params[:year] || Date.current.year }, class: 'form-select', id: 'year-select' %>
+      </div>
+      <div class="col-md-2 col-sm-12 mb-2">
+        <%= f.button type: 'submit', class: 'btn btn-primary w-100 d-flex align-items-center justify-content-center gap-2' do %>
+          <i class="bi bi-funnel"></i> Filtrar
+        <% end %>
+      </div>
+        <% end %>
+    </div>
 
     <div id="metrics"></div>
 
