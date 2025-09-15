@@ -12,6 +12,20 @@ class CompaniesController < ApplicationController
     @companies_search = current_user.client? ? current_user.companies.fetch(options) : Company.all
   end
 
+  def export
+    options = params
+    options = options.merge({no_limit: true})
+    respond_to do |format|
+      format.xlsx {
+        @companies = Company.all.fetch(options)
+        title = "#{ApplicationController.helpers.format_date(Time.zone.now)}"
+        response.headers[
+          'Content-Disposition'
+        ] = "attachment; filename=Clientes #{title}.xlsx"
+      }
+    end
+  end
+
   def show
     authorize @company
     options = {}

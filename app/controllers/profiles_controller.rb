@@ -8,6 +8,20 @@ class ProfilesController < ApplicationController
     @profiles = User.fetch(options)
   end
 
+  def export
+    options = params
+    options = options.merge({no_limit: true})
+    respond_to do |format|
+      format.xlsx {
+        @profiles = UserAccess.where(is_valid: true).where.not(user_id: nil)
+        title = "#{ApplicationController.helpers.format_date(Time.zone.now)}"
+        response.headers[
+          'Content-Disposition'
+        ] = "attachment; filename=Usuarios #{title}.xlsx"
+      }
+    end
+  end
+
   def show
     authorize @profile
     options = params

@@ -7,6 +7,9 @@
         <div class="col-md-3 my-2">
             <%= link_to "Descargar por ids", open_modal_ids_path, class:'btn btn-outline-primary', remote:true if current_user.admin? %>
         </div>
+        <div class="col-md-3 my-2">
+            <%= link_to "Exportar entregas por mes/cliente", export_deliveries_by_month_and_company_path(year: params[:year], month: params[:month], format: :xlsx), class: 'btn btn-outline-success' if current_user.admin? %>
+        </div>
     </section>
 
     <%= form_with(url: metrics_path, method: :get, data:{remote:true}, class:'row mb-3') do |f| %>

@@ -47,6 +47,11 @@
 
     <% if user_signed_in? && action_name == 'index' && controller_name == 'companies' %>
         <div class="buttons-navbar">
+          <% if current_user.email == 'esteban.navarro@despachospymes.cl' %>
+            <%= link_to export_companies_path(format: :xlsx), class:'btn btn-outline-secondary' do %>
+              Exportar
+            <% end %>
+          <% end %>
             <%= link_to new_company_path(companies:true), class:'btn btn-outline-secondary', remote:true do %>
                 Nueva Empresa
             <% end %>
@@ -60,9 +65,41 @@
                 <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
                     <%= link_to 'Nueva empresa', new_company_path, class:'btn btn-outline-secondary', remote:true %>
                 </div>
+                <% if current_user.email == 'esteban.navarro@despachospymes.cl' %>
+                    <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+                        <%= link_to export_companies_path(format: :xlsx), class:'btn btn-outline-secondary' do %>
+                            Exportar
+                        <% end %>
+                    </div>
+                <% end %>
             </div>
         </div>
     <% end %>
+
+  <% if user_signed_in? && action_name == 'index' && controller_name == 'profiles' %>
+    <div class="buttons-navbar">
+      <% if current_user.email == 'esteban.navarro@despachospymes.cl' %>
+        <%= link_to export_profiles_path(format: :xlsx), class:'btn btn-outline-secondary' do %>
+          Exportar
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="dropdown-navbar">
+      <div class="dropdown">
+        <a type="button" class="btn btn-outline-secondary btn-icon" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <%=inline_svg_tag("icons/icon_download.svg", class:'icon-dropdown-plus')%>
+        </a>
+        <% if current_user.email == 'esteban.navarro@despachospymes.cl' %>
+          <div class="dropdown-menu dropdown-menu-buttons shadow-sm" aria-labelledby="user-menu" >
+            <%= link_to export_profiles_path(format: :xlsx), class:'btn btn-outline-secondary' do %>
+              Exportar
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
 
     <% if user_signed_in? && current_user.admin? && action_name == 'index' && controller_name == 'driver_positions' %>
         <div class="buttons-navbar">

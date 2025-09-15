@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     resources :integrations
     post :switch_current_company, on: :collection
     get :new_first_company, on: :collection
+    get :export, on: :collection
   end
 
   resources :user_accesses
@@ -57,6 +58,7 @@ Rails.application.routes.draw do
   resources :profiles, path: 'perfiles'
   resources :profiles do
     get :paginate_profiles, on: :collection
+    get :export, on: :collection
   end
   resources :map_view_routes, path: 'rutas'
   resources :archives
@@ -123,6 +125,7 @@ Rails.application.routes.draw do
   get 'confirmed_profile/:id', to: 'profiles#confirmed_profile', as: 'confirmed_profile'
   get 'get_pending_deliveries', to: 'welcome#get_pending_deliveries'
   post 'agrega_contraseña', to: 'profiles#add_password', as: 'add_password'
+  get 'export_deliveries_by_month_and_company', to: 'welcome#export_deliveries_by_month_and_company'
 
 
   get 'landpage', to: 'pages#landpage'

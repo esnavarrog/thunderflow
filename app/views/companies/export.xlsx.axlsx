@@ -1,0 +1,28 @@
+wb = xlsx_package.workbook
+
+wb.add_worksheet(name: "Clientes") do |sheet|
+    # Create the header row
+    sheet.add_row ["ID", "Rut", "Nombre Empresa", "Dirección", "Email Principal",
+                    "Teléfono", "Cantidad Admins",
+                    "Emails Admins", "Fecha Registro",
+                    "Total Envíos", "Envíos/Mes Promedio", "Fecha Último Envío",
+                    "Estado"]
+    # Create entries for each item
+    @companies.each do |company|
+        sheet.add_row [
+            company.id,
+            company.rut,
+            company.name,
+            company.address_concat,
+            company.email,
+            company.phone_number,
+            company.user_accesses.count,
+            company.admins_emails,
+            company.created_at,
+            company.deliveries.count,
+            company.deliveries_promedium,
+            company.last_delivery_date,
+            company.delivery_status
+        ]
+    end
+end

@@ -10,7 +10,7 @@ class Company < FilterableRecord
   has_many :withdrawal_receipts
   has_many :deals
 
-  validates :name, presence: { message: "Razon Social no puede estar en blanco" }
+  validates :name, presence: { message: "Razón Social no puede estar en blanco" }
   validates :phone_number, presence: { message: "Tu contacto telefónico no puede estar en blanco" }
   validates :commune, presence: { message: "No puede estar en blanco" }
   validates :address_concat, presence: { message: "No puede estar en blanco" }
@@ -30,6 +30,7 @@ class Company < FilterableRecord
     collection = super(options)
     collection = attribute_filter(collection, "user_id", options)
     collection = company_filter(collection, options)
+    collection
   end
 
   def self.company_filter(collection, options)
@@ -112,5 +113,37 @@ class Company < FilterableRecord
     end
 
     result
+  end
+
+  def admins_emails
+    admins_emails = user_accesses.where(is_valid: true).pluck(:invitation_email)
+    admins_emails.join(", ")
+  end
+
+  def deliveries_promedium
+
+    # Define the date range for the entire year 2025
+    year_range = Date.new(2025, 1, 1).all_year
+
+    # Count deliveries where date_start is within 2025
+    total_deliveries_2025 = deliveries.where(date_start: year_range).count
+
+    # Calculate the monthly average for 2025 and round it
+    (total_deliveries_2025.to_f / 12).round(2)
+  end
+
+  def last_delivery_date
+    deliveries.maximum(:date_start)
+  end
+
+  def delivery_status
+    last_date = last_delivery_date
+    return "Inactivo" if last_date.nil?
+
+    if last_date < 2.months.ago
+      "Inactivo"
+    else
+      "Activo"
+    end
   end
 end
