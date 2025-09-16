@@ -1,96 +1,64 @@
-<section class="row mb-3">
-  <div class="col-sm-12 col-md-3">
-      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
-          <div class="text-secondary">
-              <%= link_to deliveries_path(status: :preparing), class:'no-decoration' do %>
-              <h5>
-                  Pedidos nuevos
-              </h5>
-              <% end %>
-              <small>Mes de <%= l(@date, format:'%B de %Y').titleize %></small>
-          </div>
-          <div class="text-secondary">
-              <%= @metrics.where(status: :preparing).count %>
-          </div>
-      </div>
-  </div>
+<!-- Las tarjetas de estadísticas se actualizarán aquí vía AJAX -->
+<div class="stats-grid">
+    <div class="stat-card nuevos">
+        <div class="stat-number"><%= @metrics.where(status: :preparing).count rescue 0 %></div>
+        <div class="stat-label">
+          <%= link_to deliveries_path(status: [:preparing]), class:'no-decoration' do %>
+            <span class="status-indicator green"></span>Pedidos nuevos
+          <% end %>
+        </div>
+        <div class="stat-subtitle">Mes de <%= I18n.l(@date, format: '%B') rescue I18n.l(Date.current, format: '%B') %></div>
+    </div>
 
-  <div class="col-sm-12 col-md-3">
-      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
-          <div class="text-secondary">
-              <%= link_to deliveries_path(status: [:asigned, :to_withdraw, :retired, :in_route]), class:'no-decoration' do %>
-              <h5>
-                  Pedidos por entregar
-              </h5>
-              <% end %>
-              <small>Mes de <%= l(@date, format:'%B de %Y').titleize %></small>
-          </div>
-          <div class="text-secondary">
-              <%= @metrics.where.not(status:[ :preparing, :delivered, :returned]).count %>
-          </div>
-      </div>
-  </div>
+    <div class="stat-card entregar">
+        <div class="stat-number"><%= @metrics.where.not(status: Delivery::FOR_DELIVER).count rescue 0 %></div>
+        <div class="stat-label">
+          <%= link_to deliveries_path(status: Delivery::FOR_DELIVER), class:'no-decoration' do %>
+            <span class="status-indicator orange"></span>Por entregar
+          <% end %>
+        </div>
+        <div class="stat-subtitle">Mes de <%= I18n.l(@date, format: '%B') rescue I18n.l(Date.current, format: '%B') %></div>
+    </div>
 
-  <div class="col-sm-12 col-md-3">
-      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
-          <div class="text-secondary">
-              <%= link_to deliveries_path(status: :delivered), class:'no-decoration' do %>
-              <h5>Pedidos entregados</h5>
-              <% end %>
-              <small>Mes de <%= l(@date, format:'%B de %Y').titleize %></small>
-          </div>
-          <div class="text-secondary">
-              <%= @metrics.where(status: :delivered).count %>
-          </div>
-      </div>
-  </div>
+    <div class="stat-card entregados">
+        <div class="stat-number"><%= @metrics.where(status: :delivered).count rescue 0 %></div>
+        <div class="stat-label">
+          <%= link_to deliveries_path(status: :delivered), class:'no-decoration' do %>
+            <span class="status-indicator blue"></span>Entregados
+          <% end %>
+        </div>
+        <div class="stat-subtitle">Mes de <%= I18n.l(@date, format: '%B') rescue I18n.l(Date.current, format: '%B') %></div>
+    </div>
 
-  <div class="col-sm-12 col-md-3">
-      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
-          <div class="text-secondary">
-              <%= link_to deliveries_path(status: :rejected), class:'no-decoration' do %>
-              <h5>
-                  Pedidos rechazados
-              </h5>
-              <% end %>
-              <small>Mes de <%= l(@date, format:'%B de %Y').titleize %></small>
-          </div>
-          <div class="text-secondary">
-              <%= @metrics.where(status: :returned).count %>
-          </div>
-      </div>
-  </div>
-</section>
+    <div class="stat-card entregar">
+        <div class="stat-number"><%= @metrics.where.not(status: :returned).count rescue 0 %></div>
+        <div class="stat-label">
+          <%= link_to deliveries_path(status: :returned), class:'no-decoration' do %>
+            <span class="status-indicator orange"></span>Devueltos
+          <% end %>
+        </div>
+        <div class="stat-subtitle">Mes de <%= I18n.l(@date, format: '%B') rescue I18n.l(Date.current, format: '%B') %></div>
+    </div>
 
-<section class="row mb-3">
-  <div class="col-sm-12 col-md-3">
-      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
-          <div class="text-secondary">
-              <%= link_to deliveries_path(date_start: format_date(Time.zone.now)), class:'no-decoration' do %>
-              <h5>
-                Agendados hoy
-              </h5>
-              <% end %>
-              <small><%= l(Time.zone.now, format:'%A').titleize %></small>
-          </div>
-          <div class="text-secondary">
-              <%= Delivery.where(date_start: format_date(Time.zone.now)).count %>
-          </div>
-      </div>
-  </div>
-  <div class="col-sm-12 col-md-3">
-      <div class=" bg-white p-2 d-flex justify-content-between shadow-sm rounded">
-          <div class="text-secondary">
-              <%= link_to deliveries_path(date_start: format_date(Time.zone.now.tomorrow)), class:'no-decoration' do %>
-              <h5>
-                Agendados mañana
-              </h5>
-              <% end %>
-              <small><%= l(Time.zone.now.tomorrow, format:'%A').titleize %></small>
-          </div>
-          <div class="text-secondary">
-              <%= Delivery.where(date_start: format_date(Time.zone.now.tomorrow)).count %>
-          </div>
-      </div>
-  </div>
-</section>
+    <div class="stat-card rechazados">
+        <div class="stat-number"><%= @metrics.where(status: :rejected).count rescue 0 %></div>
+        <div class="stat-label">
+          <%= link_to deliveries_path(status: :rejected), class:'no-decoration' do %>
+            <span class="status-indicator red"></span>Rechazados
+          <% end %>
+        </div>
+        <div class="stat-subtitle">Mes de <%= I18n.l(@date, format: '%B') rescue I18n.l(Date.current, format: '%B') %></div>
+    </div>
+
+    <div class="stat-card agendados">
+        <div class="stat-number"><%= @metrics.where('date_start::date = ?', Date.current).count rescue 0 %></div>
+        <div class="stat-label"><span class="status-indicator purple"></span>Agendados hoy</div>
+        <div class="stat-subtitle"><%= I18n.l(Date.current, format: '%A') %></div>
+    </div>
+
+    <div class="stat-card agendados">
+        <div class="stat-number"><%= @metrics.where('date_start::date = ?', Date.current + 1.day).count rescue 0 %></div>
+        <div class="stat-label"><span class="status-indicator purple"></span>Agendados mañana</div>
+        <div class="stat-subtitle"><%= I18n.l(Date.current + 1.day, format: '%A') %></div>
+    </div>
+</div>

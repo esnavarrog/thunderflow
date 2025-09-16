@@ -1,5 +1,5 @@
 <div class="col-sm-12 col-md-12 col-lg-6 mb-2">
-    <div class="p-2 box-charts bg-white rounded-4 shadow-sm">
+    <div class="box-charts bg-white rounded-4 shadow-sm">
         <div class="title text-primary p-2 d-flex justify-content-between">
             <span>Solicitudes por mes</span>
             <div class="form-group">
@@ -23,7 +23,7 @@
 </div>
 <% if current_user.admin? %>
 <div class="col-sm-12 col-md-12 col-lg-6 mb-2">
-    <div class="p-2 box-charts bg-white rounded-4 shadow-sm">
+    <div class="box-charts bg-white rounded-4 shadow-sm">
         <div class="title text-primary p-2">Clientes inscritos por mes</div>
         <%= line_chart @clients_chart, datasets:[], loading: "Cargando...", colors: ["#00C8DC", "#3e8d63"],
             thousands: ".",
