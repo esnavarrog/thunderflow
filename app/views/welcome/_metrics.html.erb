@@ -11,7 +11,7 @@
     </div>
 
     <div class="stat-card entregar">
-        <div class="stat-number"><%= @metrics.where.not(status: Delivery::FOR_DELIVER).count rescue 0 %></div>
+        <div class="stat-number"><%= @metrics.where(status: Delivery::FOR_DELIVER).count rescue 0 %></div>
         <div class="stat-label">
           <%= link_to deliveries_path(status: Delivery::FOR_DELIVER), class:'no-decoration' do %>
             <span class="status-indicator orange"></span>Por entregar
@@ -31,7 +31,7 @@
     </div>
 
     <div class="stat-card entregar">
-        <div class="stat-number"><%= @metrics.where.not(status: :returned).count rescue 0 %></div>
+        <div class="stat-number"><%= @metrics.where(status: :returned).count rescue 0 %></div>
         <div class="stat-label">
           <%= link_to deliveries_path(status: :returned), class:'no-decoration' do %>
             <span class="status-indicator orange"></span>Devueltos
