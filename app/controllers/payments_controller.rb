@@ -22,6 +22,7 @@ class PaymentsController < ApplicationController
 			redirect_to response['init_point'], allow_other_host: true
 		else
 			response = Flow.init_transaction(@payment)
+
 			if response && response['token'].present? && response['url'].present?
 				token = response['token']
 				url   = response['url']
@@ -81,19 +82,34 @@ class PaymentsController < ApplicationController
 
 			@payment = @payment.success_pay(response)
 			params_response = JSON.parse(response.body)
+			status = params_response["status"].to_i
 
-			@payment.deal.update(status_deal: params_response["status"])
+			@user = @payment.user if @payment.user.present?
 
-			if @payment.media.nil?
-				@payment.update(status_message: "Pago no realizado por algún error...")
-			elsif @user.present?
-				@user = @payment.user
+			case status
+			when 1 # pendiente de pago
+				flash[:notice] = "El pago está pendiente de confirmación"
+				redirect_to payment_pending_path(id: @payment)
+			when 2 # pagada
+				if @payment.media.nil?
+					@payment.update(status_message: "Pago no realizado por algún error...")
+					redirect_to payment_error_path(id: @payment)
+				else
+					redirect_to payment_receipt_path(id: @payment), status: 303
+				end
+			when 3 # rechazada
+				flash[:error] = "El pago ha sido rechazado"
+				redirect_to payment_rejected_path(id: @payment)
+			when 4 # anulada
+				flash[:error] = "El pago ha sido anulado"
+				redirect_to payment_cancelled_path(id: @payment)
+			else
+				flash[:error] = "Estado de pago desconocido"
+				redirect_to root_path
 			end
-
-			redirect_to payment_receipt_path(id: @payment), status: 303
 		else
 			flash[:error] = "Error en la transacción"
-			redirect_to webpay_error_path
+			redirect_to payment_error_path(id: @payment)
 		end
 	end
 
@@ -155,15 +171,23 @@ class PaymentsController < ApplicationController
 	end
 
 	def pending
-		# Handle pending payments
-		flash[:notice] = "Tu pago está pendiente."
-		render plain: "Pago pendiente."
+		@payment = Payment.find(params[:id])
+		@user = @payment.user
 	end
 
-	def failure
-		# Handle failed payments
-		flash[:alert] = "Tu pago ha fallado."
-		render plain: "Pago fallido."
+	def rejected
+		@payment = Payment.find(params[:id])
+		@user = @payment.user
+	end
+
+	def cancelled
+		@payment = Payment.find(params[:id])
+		@user = @payment.user
+	end
+
+	def error
+		@payment = Payment.find(params[:id])
+		@user = @payment.user
 	end
 
 end

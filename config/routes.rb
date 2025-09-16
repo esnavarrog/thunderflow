@@ -144,6 +144,7 @@ Rails.application.routes.draw do
   get 'payments/pending', to: 'payments#pending', as: :payment_pending
   get 'payments/failure', to: 'payments#failure', as: :payment_failure
   get 'payments/receipt', to: 'payments#receipt', as: :payment_receipt
+  get 'payments/rejected', to: 'payments#rejected', as: :payment_rejected
   # setup API
 
   get 'api_docs_index', to: redirect('/api-docs/index.html')

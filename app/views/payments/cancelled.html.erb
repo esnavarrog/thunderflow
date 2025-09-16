@@ -1,0 +1,47 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card text-center shadow-sm">
+        <div class="card-body p-5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" fill="currentColor" class="bi bi-slash-circle-fill text-secondary mb-3" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-4.646-2.646a.5.5 0 0 0-.708-.708l-6 6a.5.5 0 0 0 .708.708l6-6z"/>
+          </svg>
+
+          <h1 class="card-title">Pago Anulado</h1>
+          <p class="lead">La transacción ha sido anulada. Esto puede deberse a que cancelaste el proceso de pago o hubo una interrupción durante la transacción.</p>
+          <hr>
+
+          <div class="text-start mt-4">
+            <h5 class="mb-3">Detalles de la Transacción</h5>
+
+            <p>
+              <strong>Nº de Orden:</strong>
+              <span><%= @payment.buy_order %></span>
+            </p>
+
+            <p>
+              <strong>Fecha:</strong>
+              <span><%= l(@payment.created_at, format: :long) %></span>
+            </p>
+
+            <p>
+              <strong>Monto:</strong>
+              <span><%= number_to_currency(@payment.amount, unit: 'CLP', separator: ",", delimiter: ".", precision: 0) %></span>
+            </p>
+
+            <% if @user.present? %>
+              <p>
+                <strong>Usuario:</strong>
+                <span><%= @user.email %></span>
+              </p>
+            <% end %>
+          </div>
+
+          <div class="mt-5">
+            <%= link_to 'Volver a cobros', deals_path, class: 'btn btn-outline-secondary' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

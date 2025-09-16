@@ -15,7 +15,10 @@ class Flow
       }
 
       response = HTTParty.post(url, body: body, headers: headers)
+      p '+++++++++++++++++++++'
       p response.inspect
+      p response.code
+      p '+++++++++++++++++++++'
 
       if response.code == 200
         return response

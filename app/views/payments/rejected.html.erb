@@ -1,0 +1,52 @@
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card text-center shadow-sm">
+        <div class="card-body p-5">
+          <svg xmlns="http://www.w3.org/2000/svg" width="72" height="72" fill="currentColor" class="bi bi-x-circle-fill text-danger mb-3" viewBox="0 0 16 16">
+            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM5.354 4.646a.5.5 0 1 0-.708.708L7.293 8l-2.647 2.646a.5.5 0 0 0 .708.708L8 8.707l2.646 2.647a.5.5 0 0 0 .708-.708L8.707 8l2.647-2.646a.5.5 0 0 0-.708-.708L8 7.293 5.354 4.646z"/>
+          </svg>
+
+          <h1 class="card-title">Pago Rechazado</h1>
+          <p class="lead">Lo sentimos, tu pago ha sido rechazado. Esto puede deberse a fondos insuficientes o problemas con el método de pago.</p>
+          <hr>
+
+          <div class="text-start mt-4">
+            <h5 class="mb-3">Detalles de la Transacción</h5>
+
+            <p>
+              <strong>Nº de Orden:</strong>
+              <span><%= @payment.buy_order %></span>
+            </p>
+
+            <p>
+              <strong>Fecha:</strong>
+              <span><%= l(@payment.created_at, format: :long) %></span>
+            </p>
+
+            <p>
+              <strong>Monto:</strong>
+              <span><%= number_to_currency(@payment.amount, unit: 'CLP', separator: ",", delimiter: ".", precision: 0) %></span>
+            </p>
+
+            <% if @user.present? %>
+              <p>
+                <strong>Usuario:</strong>
+                <span><%= @user.email %></span>
+              </p>
+            <% end %>
+
+            <div class="alert alert-danger mt-3">
+              <strong>Motivo del rechazo:</strong>
+              <p class="mb-0"><%= @payment.status_message %></p>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <%= link_to 'Volver a cobros', deals_path, class: 'btn btn-outline-secondary' %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

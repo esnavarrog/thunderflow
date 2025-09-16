@@ -34,9 +34,22 @@ class Payment < ApplicationRecord
 		payment.currency = response["currency"]
 		payment.status = response["status"]
 		payment.flow_order = response["flowOrder"]
-		payment.status_message = "Pago realizado correctamente."
+		payment.status_message = case response["status"].to_i
+			when 1
+				"El pago está pendiente de confirmación"
+			when 2
+				"Pago realizado correctamente"
+			when 3
+				"El pago ha sido rechazado"
+			when 4
+				"El pago ha sido anulado"
+			else
+				"Estado de pago desconocido"
+		end
+
 		payment.response_json = response.to_s
 		payment.save
+		payment.deal.update(status_deal: payment.status)
 		payment
 	end
 
@@ -52,8 +65,7 @@ class Payment < ApplicationRecord
 		payment.response_json = response.to_s
 		payment.save
 
-		payment.deal.update_column(:status_deal, payment.status)
-		payment.deal.update_status_pay_delivery
+		payment.deal.update(status_deal: payment.status)
 		payment
 	end
 end
