@@ -122,6 +122,93 @@ No authorization required
  - **Content-Type**: application/json
  - **Accept**: application/json
 
+# Thunderflow - Docker y Despliegue en AWS EC2
+
+## Desarrollo local con Docker
+
+1. Copia tus archivos de ejemplo de configuración si es necesario:
+   ```sh
+   cp config/database.yml.example config/database.yml
+   cp config/master.key.example config/master.key
+   ```
+   (Asegúrate de tener las claves y configuraciones necesarias)
+
+2. Levanta los servicios (Rails, PostgreSQL 16, Redis):
+   ```sh
+   docker-compose up --build
+   ```
+   Esto iniciará la app en http://localhost:3000
+
+3. Ejecuta las migraciones y carga datos si es necesario:
+   ```sh
+   docker-compose exec web rails db:create db:migrate db:seed
+   ```
+
+4. Hot reload: cualquier cambio en el código se reflejará automáticamente.
+
+---
+
+## Producción en AWS EC2 (con Nginx)
+
+1. Construye la imagen de producción:
+   ```sh
+   docker build -t thunderflow:prod .
+   ```
+
+2. Prepara un archivo `docker-compose.prod.yml` (ejemplo):
+   ```yaml
+   version: '3.9'
+   services:
+     db:
+       image: postgres:16
+       environment:
+         POSTGRES_USER: postgres
+         POSTGRES_PASSWORD: password
+         POSTGRES_DB: thunderflow_production
+       volumes:
+         - pgdata:/var/lib/postgresql/data
+     redis:
+       image: redis:7
+     web:
+       image: thunderflow:prod
+       environment:
+         RAILS_ENV: production
+         DATABASE_HOST: db
+         DATABASE_USERNAME: postgres
+         DATABASE_PASSWORD: password
+         REDIS_URL: redis://redis:6379/0
+       depends_on:
+         - db
+         - redis
+     nginx:
+       image: nginx:alpine
+       ports:
+         - "80:80"
+       volumes:
+         - ./nginx.conf:/etc/nginx/nginx.conf:ro
+         - ./public:/app/public:ro
+       depends_on:
+         - web
+   volumes:
+     pgdata:
+   ```
+
+3. Sube los archivos necesarios a tu EC2 (código, Dockerfile, nginx.conf, etc.)
+
+4. Levanta los servicios en producción:
+   ```sh
+   docker-compose -f docker-compose.prod.yml up --build -d
+   ```
+
+5. Accede a la app desde el navegador usando la IP pública de tu EC2.
+
+---
+
+## Notas
+- Cambia las variables de entorno y contraseñas en producción.
+- Puedes agregar Sidekiq fácilmente conectando el servicio a Redis.
+- Para más seguridad, configura HTTPS en Nginx.
+
 
 
 

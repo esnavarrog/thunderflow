@@ -1,0 +1,29 @@
+# Dockerfile.dev
+FROM ruby:3.2.3
+
+# Instala dependencias del sistema y Node.js
+RUN apt-get update -qq && \
+    apt-get install -y build-essential libpq-dev curl && \
+    curl -fsSL https://deb.nodesource.com/setup_16.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install -g yarn
+
+# Crea y usa el directorio de la app
+WORKDIR /app
+
+# Instala gems
+COPY Gemfile Gemfile.lock ./
+RUN bundle install
+
+# Instala dependencias JS
+COPY package.json yarn.lock ./
+RUN yarn install --ignore-engines
+
+# Copia el resto del código
+COPY . .
+
+# Expone el puerto
+EXPOSE 3000
+
+# Comando para desarrollo con hot reload
+CMD ["bash", "-c", "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0 -p 3000"]
