@@ -2,8 +2,30 @@
 <div class="m-2">
     <%= form_with(model:@deal, data:{remote:true}, method: action_name == "edit" || @action_name == "edit" ? :put : :post) do |f| %>
         <%= f.hidden_field :company_id, value:@company.present? ? @company.id : @deal.company.id %>
-        <%= hidden_field_tag :ids, "#{@ids.present? ? @ids : ids.present? ? ids : @deal.deliveries.ids}" %>
+        <%
+          ids_dup = if @ids.present?
+                      @ids
+                    elsif ids.present?
+                      ids
+                    else
+                      @deal.deliveries.ids
+                    end
+        %>
+        <%= hidden_field_tag :ids, ids_dup.split(',').join(',') %>
 
+        <% if current_user.admin? %>
+          <div class="d-flex justify-content-end mt-3">
+            <div id="only-save" class="btn btn-outline-primary me-2">Guardar</div>
+            <%= f.submit 'Enviar a cobrar', class:'btn btn-primary' %>
+          </div>
+        <% else %>
+          <div class="d-flex justify-content-end mt-3">
+            <%= f.button type: 'submit', class: 'btn btn-success btn-lg d-flex align-items-center' do %>
+              <i class="bi bi-shield-check me-2"></i>
+              <span>Pagar de forma segura</span>
+            <% end %>
+          </div>
+        <% end %>
         <% if current_user.admin? %>
           <div class="row border rounded mb-2">
               <div class="form-group col-sm-10 col-md-10 d-flex align-items-center p-2">
@@ -134,28 +156,34 @@
             </div>
         </div>
       <% end %>
-        <div class="row rounded border p-2">
-          <div>
-            <%= f.label :archives, 'Adjunta documentos' %>
-            <div id="archives" class="form-group">
-              <%= f.fields_for :archives do |archive_fields| %>
-                <%= render 'deals/archive_fields', f: archive_fields %>
-              <% end %>
-            </div>
-            <%= link_to_add_association 'Agregar archivo', f, :archives %>
-          </div>
+    <div class="row rounded border p-2">
+      <div>
+        <%
+          title = current_user.admin? ? 'Adjuntos' : 'Si pagas con transferencia, adjunta el comprobante de pago'
+        %>
 
-        </div>
-        <% if current_user.admin? %>
-          <div class="d-flex justify-content-end mt-3">
-              <div id="only-save" class="btn btn-outline-primary me-2">Solo Guardar</div>
-              <%= f.submit 'Guardar y cobrar', class:'btn btn-primary' %>
-          </div>
-        <% else %>
-          <div class="d-flex justify-content-end mt-3">
-            <%= f.submit 'Guardar y Pagar', class:'btn btn-primary' %>
-          </div>
+        <%# Etiqueta mejorada con ícono y alineación Flexbox %>
+        <%= f.label :archives, class: 'd-flex align-items-center' do %>
+          <%# Icono de Bootstrap %>
+          <i class="bi bi-paperclip me-2 fs-5"></i>
+
+          <%# Texto de la etiqueta %>
+          <span class="text-success fn-semibold">
+            <%= title %>
+          </span>
         <% end %>
+
+        <div id="archives" class="form-group">
+          <%= f.fields_for :archives do |archive_fields| %>
+            <%= render 'deals/archive_fields', f: archive_fields %>
+          <% end %>
+        </div>
+        <%= link_to_add_association f, :archives, class: 'btn btn-outline-primary btn-sm d-inline-flex align-items-center' do %>
+          <i class="bi bi-plus-lg me-2"></i>
+          <span>Agregar archivo (PDF, PNG)</span>
+        <% end %>
+      </div>
+    </div>
     <% end %>
 
 </div>

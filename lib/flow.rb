@@ -45,10 +45,16 @@ class Flow
     end
 
     def self.signature_encripted(params)
-        secret_key = ENV['secret_key_flow']
-        string_to_sign = Hash[params.sort].map{|i| i * "" } * ""
-        signature_encripted = OpenSSL::HMAC.hexdigest(OpenSSL::Digest.new('sha256'), secret_key, string_to_sign)
-        signature_encripted
+      secret_key = ENV['secret_key_flow']
+      # Ordenar los parámetros por clave (alfabéticamente)
+      sorted_params = params.sort_by { |k, _v| k.to_s }
+
+      # Concatenar clave y valor para cada parámetro
+      string_to_sign = sorted_params.map { |k, v| "#{k}#{v}" }.join
+
+      # Generar el HMAC-SHA256
+      signature = OpenSSL::HMAC.hexdigest('sha256', secret_key, string_to_sign)
+      signature
     end
 
     def request_headers

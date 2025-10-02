@@ -1,5 +1,17 @@
 <% if @deliveries.present? %>
 <%= hidden_field_tag :delivery_ids, "#{@deliveries.pluck(:id)}" %>
+  <% if current_user.admin? %>
+    <div class="d-flex justify-content-end mt-2">
+
+      <%= link_to "Calcular", get_result_prices_path(company_id:@company.id, action_name:action_name, ids: @deliveries.pluck(:id)), id:'calc-deliveries', class:'btn btn-primary', remote:true %>
+    </div>
+  <% end %>
+  <div id="calc-prices">
+
+    <%= render partial:'deals/form', locals:{ ids: @deliveries.pluck(:id) } if current_user.client? %>
+  </div>
+
+
     <div class="shadow-sm">
         <div class="title-deal d-flex justify-content-between">
             <div>
@@ -128,15 +140,6 @@
             </table>
         </div>
         
-    </div>
-    <div class="d-flex justify-content-end mt-2">
-        <div class="btn btn-primary" id="get-result" data-company="<%= @company.id %>" data-url="<%= get_result_prices_path %>">
-            <%= current_user.client? ? 'Recalcular' : 'Calcular' %>
-        </div>
-    </div>
-    <div id="calc-prices">
-
-      <%= render partial:'deals/form', locals:{ ids: @deliveries.ids } if current_user.client? %>
     </div>
 <% else %>
     <div class="d-flex align-items-center justify-content-center p-3 my-3 rounded shadow-sm">

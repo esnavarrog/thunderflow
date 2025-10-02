@@ -12,6 +12,7 @@ class Payment < ApplicationRecord
 		payment.company = deal.company
 		payment.deal = deal
 		payment.user = user || nil
+    payment.status = :nothing
 		payment.description = "Pago de cobro #{payment.deal_id} por #{ActionController::Base.helpers.number_to_currency(payment.amount, precision:0, delimiter:".")}"
 		payment.save
 		payment
@@ -32,24 +33,26 @@ class Payment < ApplicationRecord
 		payment.media = response["paymentData"]["media"]
 		payment.transfer_date = response["paymentData"]["transferDate"]
 		payment.currency = response["currency"]
-		payment.status = response["status"]
 		payment.flow_order = response["flowOrder"]
-		payment.status_message = case response["status"].to_i
-			when 1
-				"El pago está pendiente de confirmación"
-			when 2
-				"Pago realizado correctamente"
-			when 3
-				"El pago ha sido rechazado"
-			when 4
-				"El pago ha sido anulado"
-			else
-				"Estado de pago desconocido"
-		end
+    response_status = response["status"].to_i
+    self.status = case response_status
+                  when 1 then :pending
+                  when 2 then :payed
+                  when 3 then :rejected
+                  when 4 then :canceled
+                  else :nothing
+                  end
+		payment.status_message =  case response["status"].to_i
+                              when 1 then "El pago está pendiente de confirmación"
+                              when 2 then "Pago realizado correctamente"
+                              when 3 then "El pago ha sido rechazado"
+                              when 4 then "El pago ha sido anulado"
+                              else "Estado de pago desconocido"
+                              end
 
 		payment.response_json = response.to_s
 		payment.save
-		payment.deal.update(status_deal: payment.status)
+		payment.deal.update(status_deal: payment.status) if self.deal.present?
 		payment
 	end
 

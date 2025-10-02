@@ -78,7 +78,7 @@ class DealsController < ApplicationController
   end
 
   def create
-    deliveries = JSON.parse(params[:ids]).map { |id| Delivery.find(id) }
+    deliveries = params[:ids].split(',').map { |id| Delivery.find(id) }
     data = OpenStruct.new(Deliveries::CalcPricesService.execute([deliveries].flatten, current_user, current_company)) if current_company.present? && current_user.client?
     update_params = params_deal
     company = Company.find(params_deal[:company_id])
@@ -189,11 +189,8 @@ class DealsController < ApplicationController
 
   def get_result_prices
     @action_name = params[:action_name]
-    @deal = if params[:id].present?
-              Deal.find(params[:id])
-            else
-              Deal.new
-            end
+    @deal = Deal.find_or_initialize_by(id: params[:id])
+
     @ids = if @action_name == 'edit'
              @deal.deliveries.ids
            else

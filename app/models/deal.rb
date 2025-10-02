@@ -8,7 +8,8 @@ class Deal < FilterableRecord
     MESSAGE = "No puede estar en blanco"
 
     enum status_deal: [:nothing, :pending, :payed, :rejected, :canceled]
-    scope :deals_pending, -> { where.not(status_deal: [:payed, :rejected, :canceled]) }
+    scope :deals_pending, -> { where.not(status_deal: [:payed, :rejected, :canceled]).clean_without_deliveries }
+    scope :clean_without_deliveries, -> { joins(:deliveries).distinct }
 
     before_destroy :check_payments_existence
     before_create :set_status
@@ -21,6 +22,7 @@ class Deal < FilterableRecord
         collection = attribute_filter(collection,"company_id", options)
         collection = attribute_filter(collection,"created_at", options)
         collection = attribute_filter(collection,"status_deal", options)
+        collection = collection.clean_without_deliveries
         collection
     end
 

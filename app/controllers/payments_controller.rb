@@ -36,9 +36,34 @@ class PaymentsController < ApplicationController
 	end
 
 	# Función que presenta un resumen del pago
-	def pay_success
-		response = Flow.success_flow(params)
-	end
+  def pay_success
+    # Flow envía los parámetros como un POST
+    token = params[:token]
+
+    # 1. Validar que el token exista
+    return head :bad_request unless token.present?
+
+    # 2. Obtener el estado real desde Flow
+    response = Flow.success_flow(params)
+
+    # 3. Procesar la respuesta
+    if response&.code == 200
+      payment = Payment.where(token: token).lock(true).take
+
+      # Solo procesamos si encontramos el pago y si NO ha sido pagado previamente
+      # Esto evita procesar dos veces la misma notificación (idempotencia)
+      if payment.present? && !payment.payed?
+        payment.success_pay(response) # Usamos tu método existente para actualizar el pago
+      end
+
+      # 4. Respondemos a Flow que recibimos la notificación correctamente
+      head :ok
+    else
+      # Si no pudimos obtener el estado de Flow, respondemos un error
+      # Flow podría reintentar la notificación más tarde.
+      head :unprocessable_entity
+    end
+  end
 	#Función que despliega una vista, indicando un error en la transacción
 	def webpay_error
 		webpay_success
@@ -69,49 +94,44 @@ class PaymentsController < ApplicationController
 	# 	end
 	# end
 
-	def success_final
-		response = Flow.success_flow(params)
+  def success_final
+    token = params['token']
+    @payment = Payment.find_by(token: token)
 
-		if response&.code == 200
-			@payment = Payment.where(token: params['token']).lock(true).take
+    if @payment.nil?
+      flash[:error] = "No se encontró la transacción asociada. Por favor, contacte a soporte."
+      return redirect_to root_path
+    end
 
-			if @payment.nil?
-				flash[:error] = "No se encontró el pago asociado"
-				return redirect_to root_path
-			end
-
-			@payment = @payment.success_pay(response)
-			params_response = JSON.parse(response.body)
-			status = params_response["status"].to_i
-
-			@user = @payment.user if @payment.user.present?
-
-			case status
-			when 1 # pendiente de pago
-				flash[:notice] = "El pago está pendiente de confirmación"
-				redirect_to payment_pending_path(id: @payment)
-			when 2 # pagada
-				if @payment.media.nil?
-					@payment.update(status_message: "Pago no realizado por algún error...")
-					redirect_to payment_error_path(id: @payment)
-				else
-					redirect_to payment_receipt_path(id: @payment), status: 303
-				end
-			when 3 # rechazada
-				flash[:error] = "El pago ha sido rechazado"
-				redirect_to payment_rejected_path(id: @payment)
-			when 4 # anulada
-				flash[:error] = "El pago ha sido anulado"
-				redirect_to payment_cancelled_path(id: @payment)
-			else
-				flash[:error] = "Estado de pago desconocido"
-				redirect_to root_path
-			end
-		else
-			flash[:error] = "Error en la transacción"
-			redirect_to payment_error_path(id: @payment)
-		end
-	end
+    # La lógica de redirección se mantiene, pero ya no actualiza el pago aquí.
+    # Simplemente consulta el estado actual del @payment que debería haber sido
+    # actualizado por pay_success.
+    case @payment.status.to_sym
+    when :payed
+      # El pago ya fue confirmado por pay_success, redirigimos al recibo.
+      redirect_to payment_receipt_path(id: @payment), status: 303, allow_other_host: true
+    when :pending
+      flash[:notice] = "El pago está pendiente de confirmación. Te notificaremos cuando se complete."
+      redirect_to payment_pending_path(id: @payment)
+    when :rejected
+      flash[:error] = "El pago ha sido rechazado."
+      redirect_to payment_rejected_path(id: @payment)
+    when :canceled
+      flash[:error] = "El pago ha sido anulado."
+      redirect_to payment_cancelled_path(id: @payment)
+    else
+      # Si el estado es 'nothing' o desconocido, es bueno volver a consultar a Flow
+      # por si la notificación asíncrona aún no ha llegado.
+      response = Flow.success_flow(params)
+      if response&.code == 200
+        @payment.success_pay(response) # Actualizamos por si acaso
+        # Y re-evaluamos el caso basado en el nuevo estado
+        return redirect_based_on_status(@payment)
+      end
+      flash[:error] = "El estado del pago es desconocido. Por favor, contacte a soporte."
+      redirect_to root_path
+    end
+  end
 
 	def show
 		@payment = Payment.find(params[:id])
@@ -188,6 +208,23 @@ class PaymentsController < ApplicationController
 	def error
 		@payment = Payment.find(params[:id])
 		@user = @payment.user
-	end
+  end
+
+  private
+
+  def redirect_based_on_status(payment)
+    case payment.status.to_sym
+    when :payed
+      redirect_to payment_receipt_path(id: payment), status: 303, allow_other_host: true
+    when :pending
+      redirect_to payment_pending_path(id: payment)
+    when :rejected
+      redirect_to payment_rejected_path(id: payment)
+    when :canceled
+      redirect_to payment_cancelled_path(id: payment)
+    else
+      redirect_to root_path
+    end
+  end
 
 end
